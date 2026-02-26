@@ -135,6 +135,7 @@ export default function RecapPage() {
         { onConflict: 'student_id,day_number' }
       )
 
+      
     if (error) {
       console.error('Failed to save recap progress', error)
     }
