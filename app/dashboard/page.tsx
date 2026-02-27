@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase'
 
 const BATCH_SIZE = 6
 
+
 type Progress = {
   day_number: number | null
   recap_completed: boolean | null
@@ -24,6 +25,18 @@ export default function DashboardPage() {
 
   const [progressByDay, setProgressByDay] = useState<Record<number, Progress>>({})
   const [loading, setLoading] = useState(true)
+  const [pbDoneMap, setPbDoneMap] = useState<Record<number, boolean>>({})
+
+  // Load practice box completion from localStorage on mount (client only)
+  useEffect(() => {
+    const map: Record<number, boolean> = {}
+    for (let b = 1; b <= 50; b++) {
+      try {
+        map[b] = localStorage.getItem(`practice_quiz_score_batch${b}`) !== null
+      } catch { map[b] = false }
+    }
+    setPbDoneMap(map)
+  }, [])
 
   useEffect(() => {
     const loadProgress = async () => {
@@ -83,7 +96,11 @@ export default function DashboardPage() {
   const isBatchUnlocked = (batchIndex: number): boolean => {
     if (batchIndex === 0) return true
     const prevBatch = batches[batchIndex - 1]
-    return prevBatch.every((dayNum) => isDayFullyDone(dayNum))
+    const prevBatchDone = prevBatch.every((dayNum) => isDayFullyDone(dayNum))
+    if (!prevBatchDone) return false
+    // Also need practice box for prevBatch to be done
+    const prevBatchId = batchIndex // batchIndex is 0-based, prevBatch is batchIndex (1-based = batchIndex)
+    return pbDoneMap[prevBatchId] === true
   }
 
   // How many batches are currently visible (unlocked or the first locked one as "next up")
@@ -144,7 +161,7 @@ export default function DashboardPage() {
                 {/* Batch label */}
                 <div className="flex items-center gap-3">
                   <h2 className="text-base font-semibold">
-                    Batch {batchIndex + 1}
+                    Sprint {batchIndex + 1}
                     <span className="ml-2 text-sm font-normal muted-text">
                       (Days {batch[0]}–{batch[batch.length - 1]})
                     </span>
@@ -170,14 +187,25 @@ export default function DashboardPage() {
                     const completionPct = Math.round((completedCount / 4) * 100)
                     const isFullyDone = completedCount === 4
 
-                    // Within a batch: day 1 of each batch is unlocked when the batch is;
-                    // subsequent days require the previous day within the batch to be complete
+                    // ── Permanent Unlock Logic ────────────────────────────────────
+                    // A day is unlocked if ANY of these are true:
+                    // 1. It's the very first day (globalIndex === 0)
+                    // 2. Its DB row exists (pre-created when prev day quiz was submitted)
+                    //    → Row existence = permanently unlocked, can NEVER be re-locked
+                    // 3. Previous day fully completed (backward compatibility)
                     const prevDayNumber = globalIndex > 0 ? days[globalIndex - 1] : null
                     const prevDayCompleted =
                       prevDayNumber === null
                         ? true
                         : getCompletedCount(progressByDay[prevDayNumber]) === 4
-                    const isUnlocked = globalIndex === 0 || prevDayCompleted
+                    const rowExists = progressByDay[dayNumber] !== undefined
+
+                    // Practice box gate for first day of a non-first batch
+                    const isFirstDayOfBatch = indexInBatch === 0
+                    const practiceBoxRequired = isFirstDayOfBatch && batchIndex > 0
+                    const practiceBoxOk = practiceBoxRequired ? pbDoneMap[batchIndex] === true : true
+
+                    const isUnlocked = (globalIndex === 0 || rowExists || prevDayCompleted) && practiceBoxOk
 
                     if (!isUnlocked) {
                       return (
@@ -224,62 +252,82 @@ export default function DashboardPage() {
                   })}
                 </div>
 
-                {/* Practice Box — appears after batch is fully completed */}
-                {batchDone && (
-                  <Link
-                    href={`/dashboard/practice/${batchIndex + 1}`}
-                    className="flex items-center gap-4 rounded-2xl border-2 border-purple-400 bg-gradient-to-r from-purple-900/30 to-blue-900/30 p-4 hover:from-purple-900/50 hover:to-blue-900/50 transition-all hover:shadow-lg hover:shadow-purple-500/20 group"
-                  >
-                    <span className="text-3xl">🔥</span>
-                    <div className="flex-1">
-                      <p className="font-bold text-purple-300 group-hover:text-purple-200">
-                        Practice Box — Batch {batchIndex + 1}
-                      </p>
-                      <p className="text-sm text-purple-400/80">
-                        Review all interview, scenario &amp; quiz Qs from Days {batch[0]}–{batch[batch.length - 1]}
-                      </p>
-                    </div>
-                    <span className="text-purple-400 group-hover:translate-x-1 transition-transform text-xl">→</span>
-                  </Link>
-                )}
+                {/* Practice Box — appears after the last day of the sprint is done, even if rest isn't */}
+                {(() => {
+                  const lastDay = batch[batch.length - 1]
+                  const lastDayDone = isDayFullyDone(lastDay)
+                  const pbDone = pbDoneMap[batchIndex + 1] === true
+                  if (!lastDayDone) return null
+                  return (
+                    <Link
+                      href={`/dashboard/practice/${batchIndex + 1}`}
+                      className={`flex items-center gap-4 rounded-2xl border-2 p-4 transition-all hover:shadow-lg group ${pbDone
+                        ? 'border-green-500/50 bg-gradient-to-r from-green-900/20 to-emerald-900/10 hover:from-green-900/40'
+                        : 'border-purple-400 bg-gradient-to-r from-purple-900/30 to-blue-900/30 hover:from-purple-900/50 hover:to-blue-900/50 hover:shadow-purple-500/20'
+                        }`}
+                    >
+                      <span className="text-3xl">{pbDone ? '✅' : '🔥'}</span>
+                      <div className="flex-1">
+                        <p className={`font-bold group-hover:opacity-90 ${pbDone ? 'text-green-400' : 'text-purple-300 group-hover:text-purple-200'}`}>
+                          Practice Box — Sprint {batchIndex + 1}
+                          {pbDone && <span className="ml-2 text-xs font-normal text-green-500">Completed ✔</span>}
+                        </p>
+                        <p className={`text-sm ${pbDone ? 'text-green-400/70' : 'text-purple-400/80'}`}>
+                          {pbDone
+                            ? 'Practice box completed. Next sprint unlocked!'
+                            : `Review all interview, scenario & quiz Qs from Days ${batch[0]}–${batch[batch.length - 1]}`
+                          }
+                        </p>
+                      </div>
+                      <span className={`group-hover:translate-x-1 transition-transform text-xl ${pbDone ? 'text-green-400' : 'text-purple-400'}`}>→</span>
+                    </Link>
+                  )
+                })()}
               </section>
             )
           })}
 
           {/* Next batch teaser — shows what's coming and how close the user is */}
-          {nextLockedBatch && (
-            <section className="space-y-3">
-              <h2 className="text-base font-semibold text-[var(--muted)]">
-                Batch {firstLockedBatchIndex + 1}
-                <span className="ml-2 text-sm font-normal">
-                  (Days {nextLockedBatch[0]}–{nextLockedBatch[nextLockedBatch.length - 1]})
-                </span>
-              </h2>
+          {nextLockedBatch && (() => {
+            const prevBatchId = firstLockedBatchIndex // 1-based
+            const allDaysInPrevBatchDone = currentBatchDoneCount === currentBatchTotal
+            const pbPending = allDaysInPrevBatchDone && !pbDoneMap[prevBatchId]
+            return (
+              <section className="space-y-3">
+                <h2 className="text-base font-semibold text-[var(--muted)]">
+                  Sprint {firstLockedBatchIndex + 1}
+                  <span className="ml-2 text-sm font-normal">
+                    (Days {nextLockedBatch[0]}–{nextLockedBatch[nextLockedBatch.length - 1]})
+                  </span>
+                </h2>
 
-              <div className="surface-card p-6 text-center opacity-60 border-2 border-dashed">
-                <p className="text-3xl mb-2">🔒</p>
-                <p className="font-semibold">Next batch locked</p>
-                <p className="mt-1 text-sm muted-text">
-                  Complete all {currentBatchTotal} days in Batch {firstLockedBatchIndex} to unlock{' '}
-                  {nextLockedBatch.length} more days.
-                </p>
-
-                {/* Progress towards unlocking */}
-                <div className="mt-4 max-w-xs mx-auto">
-                  <div className="flex justify-between text-xs muted-text mb-1">
-                    <span>Batch {firstLockedBatchIndex} progress</span>
-                    <span>{currentBatchDoneCount}/{currentBatchTotal}</span>
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-gray-200">
-                    <div
-                      className="h-2 rounded-full bg-[var(--primary)] transition-all"
-                      style={{ width: `${(currentBatchDoneCount / currentBatchTotal) * 100}%` }}
-                    />
-                  </div>
+                <div className="surface-card p-6 text-center opacity-60 border-2 border-dashed">
+                  <p className="text-3xl mb-2">{pbPending ? '🔥' : '🔒'}</p>
+                  <p className="font-semibold">Next Sprint locked</p>
+                  <p className="mt-1 text-sm muted-text">
+                    {pbPending
+                      ? `Complete Practice Box ${prevBatchId} to unlock Sprint ${firstLockedBatchIndex + 1}.`
+                      : `Complete all ${currentBatchTotal} days in Sprint ${firstLockedBatchIndex} to unlock ${nextLockedBatch.length} more days.`
+                    }
+                  </p>
+                  {!pbPending && (
+                    <div className="mt-4 max-w-xs mx-auto">
+                      <div className="flex justify-between text-xs muted-text mb-1">
+                        <span>Sprint {firstLockedBatchIndex} progress</span>
+                        <span>{currentBatchDoneCount}/{currentBatchTotal}</span>
+                      </div>
+                      <div className="w-full h-2 rounded-full bg-gray-200">
+                        <div
+                          className="h-2 rounded-full bg-[var(--primary)] transition-all"
+                          style={{ width: `${(currentBatchDoneCount / currentBatchTotal) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </section>
-          )}
+              </section>
+            )
+          })()}
 
           {/* All done! */}
           {!nextLockedBatch && fullyCompletedDays === totalDays && totalDays > 0 && (

@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import LearningPathNav from '@/components/learning-path-nav'
 import { ensureDayProgressRow } from '@/lib/auth'
 import { recapContent } from '@/lib/recapContent'
@@ -40,6 +40,7 @@ const parseMultiline = (value: string | null | undefined): string[] => {
 
 export default function RecapPage() {
   const params = useParams<{ dayNumber: string }>()
+  const router = useRouter()
   const recapByDay = useMemo(
     () => recapContent as Record<number, RecapSection[]>,
     []
@@ -135,7 +136,7 @@ export default function RecapPage() {
         { onConflict: 'student_id,day_number' }
       )
 
-      
+
     if (error) {
       console.error('Failed to save recap progress', error)
     }
@@ -157,6 +158,11 @@ export default function RecapPage() {
 
   return (
     <div className="space-y-6">
+      {/* Floating back button */}
+      <button onClick={() => router.back()}
+        className="fixed top-20 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-lg transition-all hover:scale-110"
+        title="Go back">←</button>
+
       <div className="surface-card p-5 md:p-6">
         <h1 className="text-2xl font-bold md:text-3xl">Recap - Day {dayNumber}</h1>
         <p className="mt-2 text-sm muted-text">
@@ -236,8 +242,8 @@ export default function RecapPage() {
                         )}
 
                         {exampleExplanation && (
-                          <p className="mt-2 text-sm muted-text">
-                            {parseMultiline(exampleExplanation).map((line, index, lines) => (
+                          <p className="mt-2 text-sm font-semibold">
+                            {parseMultiline(exampleExplanation.replace(/^"|"$/g, '').replace(/^‘|’$/g, '').trim()).map((line, index, lines) => (
                               <Fragment key={`${topic.id}-example-${exampleIndex}-line-${index}`}>
                                 {line}
                                 {index < lines.length - 1 && <br />}
@@ -251,13 +257,13 @@ export default function RecapPage() {
                 </div>
               )}
 
-              <label className="mt-3 inline-flex items-center gap-2">
+              <label className="mt-3 inline-flex items-center gap-2 cursor-pointer group">
                 <input
                   type="checkbox"
                   checked={checked.includes(topic.id)}
                   onChange={() => toggle(topic.id)}
                 />
-                Mark as completed
+                <span className="group-hover:text-[var(--primary)] transition-colors">Mark as completed</span>
               </label>
             </div>
           ))}

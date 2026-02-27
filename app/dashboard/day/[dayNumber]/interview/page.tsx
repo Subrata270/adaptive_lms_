@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import LearningPathNav from '@/components/learning-path-nav'
 import { ensureDayProgressRow } from '@/lib/auth'
 import {
@@ -30,6 +30,7 @@ const parseMultiline = (value: string): string[] =>
 
 export default function InterviewPage() {
   const params = useParams<{ dayNumber: string }>()
+  const router = useRouter()
   const dayNumber = useMemo(
     () => parseDayNumber(params.dayNumber),
     [params.dayNumber]
@@ -221,6 +222,11 @@ export default function InterviewPage() {
 
   return (
     <div className="space-y-6">
+      {/* Floating back button */}
+      <button onClick={() => router.back()}
+        className="fixed top-20 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-lg transition-all hover:scale-110"
+        title="Go back">←</button>
+
       <div className="surface-card p-5 md:p-6">
         <h1 className="text-2xl font-bold md:text-3xl">Interview - Day {dayNumber}</h1>
         <p className="mt-2 text-sm muted-text">
@@ -254,31 +260,32 @@ export default function InterviewPage() {
             </h3>
 
             {answer.length > 0 && (
-              <p className="mt-2 muted-text">
-                <span className="font-medium">Answer:</span>{' '}
-                {parseMultiline(answer).map((line, lineIndex, lines) => (
-                  <Fragment key={`${q.id}-answer-${lineIndex}`}>
-                    {line}
-                    {lineIndex < lines.length - 1 && <br />}
-                  </Fragment>
-                ))}
-              </p>
+              <div className="mt-2 rounded-xl bg-[var(--bg-soft)] p-3">
+                <p className="text-sm font-semibold leading-relaxed">
+                  {parseMultiline(answer).map((line, lineIndex, lines) => (
+                    <Fragment key={`${q.id}-answer-${lineIndex}`}>
+                      {line}
+                      {lineIndex < lines.length - 1 && <br />}
+                    </Fragment>
+                  ))}
+                </p>
+              </div>
             )}
 
-            <label className="mt-3 inline-flex items-center gap-2">
+            <label className="mt-3 inline-flex items-center gap-2 cursor-pointer group">
               <input
                 type="checkbox"
                 checked={checked.includes(q.id)}
                 onChange={() => toggle(q.id)}
               />
-              Mark as completed
+              <span className="group-hover:text-[var(--primary)] transition-colors">Mark as completed</span>
             </label>
           </div>
         )
       })}
 
       <div className="mt-1 flex flex-wrap items-center gap-4">
-        {hasMore && questions.length < targetCount && (
+        {hasMore && (
           <button
             onClick={loadMore}
             disabled={loadingMore}
@@ -288,13 +295,18 @@ export default function InterviewPage() {
           </button>
         )}
 
-        <Link
-          href={`/dashboard/day/${dayNumber}/scenario`}
-          className={`inline-block rounded-xl px-4 py-2 font-semibold text-white ${isComplete ? 'bg-green-600' : 'bg-gray-400 pointer-events-none'
-            }`}
-        >
-          Continue to Scenario
-        </Link>
+        {!hasMore && isComplete && (
+          <Link
+            href={`/dashboard/day/${dayNumber}/scenario`}
+            className="inline-block rounded-xl px-4 py-2 font-semibold text-white bg-green-600"
+          >
+            Continue to Scenario
+          </Link>
+        )}
+
+        {!hasMore && !isComplete && questions.length > 0 && (
+          <p className="text-sm muted-text italic">Mark all questions as completed to continue.</p>
+        )}
       </div>
     </div>
   )

@@ -21,8 +21,8 @@ const THEME_INIT_SCRIPT = `
 (() => {
   try {
     const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const dark = saved ? saved === 'dark' : prefersDark;
+    // Default is light mode — only apply dark if user explicitly chose it
+    const dark = saved === 'dark';
     document.documentElement.classList.toggle('dark', dark);
   } catch (_) {}
 })();
