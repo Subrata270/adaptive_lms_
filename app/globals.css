@@ -265,7 +265,6 @@ html.dark .theme-toggle__thumb {
 .theme-toggle[aria-checked='false'] .theme-toggle__thumb {
   transform: translateX(0);
 }
-
 .quick-btn {
   display: inline-flex;
   align-items: center;
