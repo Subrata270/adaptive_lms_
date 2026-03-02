@@ -49,7 +49,6 @@ export const recapContent = {
       ]
     }
   ],
-
   2: [
     {
       id: "sc_day_2",
