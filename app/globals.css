@@ -442,3 +442,8 @@ html:not(.dark) .text-purple-400 {
 .border-t {
   border-color: var(--border) !important;
 }
+
+/* Practice Box – subtitle text: black in light mode only */
+html:not(.dark) .pb-subtitle-black {
+  color: #000000 !important;
+}

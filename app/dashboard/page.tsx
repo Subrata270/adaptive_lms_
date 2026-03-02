@@ -321,30 +321,34 @@ export default function DashboardPage() {
                     <Link
                       href={`/dashboard/practice/${batchIndex + 1}`}
                       className={`group flex w-full cursor-pointer items-center gap-4 rounded-2xl border-2 bg-white p-4 text-black shadow-[var(--shadow-soft)] transition-all duration-200 hover:shadow-lg ${pbDone
-                        ? 'border-green-300 hover:border-green-400 dark:border-green-500/50 dark:bg-gradient-to-r dark:from-green-900/20 dark:to-emerald-900/10 dark:text-slate-100 dark:hover:from-green-900/40'
+                        // Light mode only: bolder green border (bg-white stays white in light, dark card color in dark via globals.css)
+                        // Dark mode: ALL dark: classes are identical to original — gradient overlays the dark card bg
+                        ? 'border-green-600 hover:border-green-700 dark:border-green-500/50 dark:bg-gradient-to-r dark:from-green-900/20 dark:to-emerald-900/10 dark:text-slate-100 dark:hover:from-green-900/40'
                         : 'border-[var(--border)] hover:border-slate-400 dark:border-purple-400 dark:bg-gradient-to-r dark:from-purple-900/30 dark:to-blue-900/30 dark:text-slate-100 dark:hover:from-purple-900/50 dark:hover:to-blue-900/50 dark:hover:shadow-purple-500/20'
                         }`}
                     >
-                      <span className="rounded-full bg-white-100 px-2.5 py-1 text-xs font-semibold text-black dark:bg-slate-800 dark:text-slate-200">
-                        {pbDone ? '' : 'PENDING'}
+                      {/* Badge — light mode: solid green pill; dark mode inherits dark:bg-* */}
+                      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${pbDone ? 'bg-green-600 text-white dark:bg-slate-700 dark:text-green-300' : 'bg-[var(--bg-soft)] text-[var(--muted)] dark:bg-slate-800 dark:text-slate-200'}`}>
+                        {pbDone ? '✓ DONE' : 'PENDING'}
                       </span>
                       <div className="flex-1">
                         <p className="font-bold text-black dark:text-slate-100">
                           Practice Box - Sprint {batchIndex + 1}
                           {pbDone && (
-                            <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                            // Light mode: solid green badge; dark mode: subtle green
+                            <span className="ml-2 rounded-full bg-green-600 px-2 py-0.5 text-xs font-semibold text-white dark:bg-green-800 dark:text-green-200">
                               Completed
                             </span>
                           )}
                         </p>
-                        <p className="text-sm text-black dark:text-slate-300">
+                        <p className="pb-subtitle-black text-sm text-black dark:text-slate-300">
                           {pbDone
                             ? 'Practice box completed. Next sprint unlocked!'
                             : `Review all interview, scenario & quiz Qs from Days ${batch[0]}-${batch[batch.length - 1]}`
                           }
                         </p>
                       </div>
-                      <span className="text-xl text-black transition-transform group-hover:translate-x-1 dark:text-slate-200">{'->'}</span>
+                      <span className="text-xl text-[var(--muted)] transition-transform group-hover:translate-x-1 dark:text-slate-200">{'->'}</span>
                     </Link>
                   )
                 })()}

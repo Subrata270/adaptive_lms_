@@ -107,7 +107,11 @@ export default function QuizPage() {
           .eq('student_id', access.user.id).eq('day_number', dayNumber).maybeSingle()
         if (progressError) console.error('Failed to load progress', progressError)
 
-        const unlocked = Boolean(progress?.scenario_completed)
+        // ── Permanent unlock: Quiz stays accessible if scenario was ever completed
+        // OR if quiz itself was already completed (revision-safe). ────────────────
+        const unlocked =
+          Boolean(progress?.scenario_completed) ||
+          Boolean(progress?.quiz_completed)
         setIsUnlocked(unlocked)
         setProgressState({
           recapCompleted: Boolean(progress?.recap_completed),

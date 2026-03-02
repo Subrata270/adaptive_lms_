@@ -103,7 +103,7 @@ export default function RecapPage() {
 
       const { data: progress, error } = await supabase
         .from('student_day_progress')
-        .select('recap_checked,interview_completed,scenario_completed,quiz_completed')
+        .select('recap_checked,recap_completed,interview_completed,scenario_completed,quiz_completed')
         .eq('student_id', access.user.id)
         .eq('day_number', dayNumber)
         .maybeSingle()
@@ -115,11 +115,13 @@ export default function RecapPage() {
 
       setUserId(access.user.id)
       setChecked(normalizeStringArray(progress?.recap_checked))
+      // Preserve any already-unlocked downstream state from DB
       setDownstreamProgress({
         interviewCompleted: Boolean(progress?.interview_completed),
         scenarioCompleted: Boolean(progress?.scenario_completed),
         quizCompleted: Boolean(progress?.quiz_completed),
       })
+      // recap_completed already loaded via select above; downstream sections are set
       setLoading(false)
     }
 
@@ -138,25 +140,37 @@ export default function RecapPage() {
 
     setChecked(updated)
 
+    const allDone = totalTopics > 0 && updated.length === totalTopics
+
+    // ── Permanent unlock: ONLY ever set recap_completed=true, never false ────────
+    // If not all topics done yet, omit recap_completed from the upsert so the
+    // existing DB value (which may already be true) is not overwritten.
+    const upsertPayload: Record<string, unknown> = {
+      student_id: userId,
+      day_number: dayNumber,
+      recap_checked: updated,
+    }
+    if (allDone) {
+      upsertPayload.recap_completed = true
+    }
+
     const { error } = await supabase
       .from('student_day_progress')
-      .upsert(
-        {
-          student_id: userId,
-          day_number: dayNumber,
-          recap_checked: updated,
-          recap_completed: totalTopics > 0 && updated.length === totalTopics,
-        },
-        { onConflict: 'student_id,day_number' }
-      )
-
+      .upsert(upsertPayload, { onConflict: 'student_id,day_number' })
 
     if (error) {
       console.error('Failed to save recap progress', error)
     }
   }
 
-  const recapCompleted = isAdminView || (totalTopics > 0 && checked.length >= totalTopics)
+  // recapCompleted drives the UI nav; also show as complete if downstreamProgress
+  // shows any section was already unlocked (meaning recap was done before).
+  const recapCompletedByCheckbox = totalTopics > 0 && checked.length >= totalTopics
+  const recapCompletedByDownstream =
+    downstreamProgress.interviewCompleted ||
+    downstreamProgress.scenarioCompleted ||
+    downstreamProgress.quizCompleted
+  const recapCompleted = isAdminView || recapCompletedByCheckbox || recapCompletedByDownstream
 
   if (dayNumber === null) {
     return <p>Invalid day number.</p>

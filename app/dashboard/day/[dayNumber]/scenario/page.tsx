@@ -130,7 +130,12 @@ export default function ScenarioPage() {
         console.error('Failed to load scenario progress', error)
       }
 
-      const unlocked = Boolean(progress?.interview_completed)
+      // ── Permanent unlock: Scenario stays accessible if interview was ever completed
+      // OR if any downstream section was ever unlocked (revision-safe). ────────────
+      const unlocked =
+        Boolean(progress?.interview_completed) ||
+        Boolean(progress?.scenario_completed) ||
+        Boolean(progress?.quiz_completed)
       setIsUnlocked(unlocked)
       setUserId(access.user.id)
       setChecked(normalizeStringArray(progress?.scenario_checked))
@@ -157,6 +162,8 @@ export default function ScenarioPage() {
   useEffect(() => {
     const syncCompletion = async () => {
       if (isAdminView || !userId || dayNumber === null || !isUnlocked) return
+      // ── Permanent unlock: only ever write true, never revert to false ────────────
+      if (!isComplete) return
 
       const { error } = await supabase
         .from('student_day_progress')
@@ -165,7 +172,7 @@ export default function ScenarioPage() {
             student_id: userId,
             day_number: dayNumber,
             scenario_checked: checked,
-            scenario_completed: isComplete,
+            scenario_completed: true,
           },
           { onConflict: 'student_id,day_number' }
         )
@@ -177,7 +184,7 @@ export default function ScenarioPage() {
 
       setProgressState((prev) => ({
         ...prev,
-        scenarioCompleted: isComplete,
+        scenarioCompleted: true,
       }))
     }
 

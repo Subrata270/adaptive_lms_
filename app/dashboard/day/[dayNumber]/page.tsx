@@ -98,6 +98,14 @@ export default function DayPage() {
   const scenarioDone = Boolean(progress?.scenario_completed)
   const quizDone = Boolean(progress?.quiz_completed)
 
+  // ── Permanent unlock helpers ────────────────────────────────────────────
+  // Interview: accessible if recap was ever done OR any downstream is done
+  const interviewUnlocked = isAdminView || recapDone || interviewDone || scenarioDone || quizDone
+  // Scenario: accessible if interview was ever done OR any downstream is done
+  const scenarioUnlocked = isAdminView || interviewDone || scenarioDone || quizDone
+  // Quiz: accessible if scenario was ever done OR quiz itself is done
+  const quizUnlocked = isAdminView || scenarioDone || quizDone
+
   const getNextSectionLabel = () => {
     if (!recapDone) return 'Recap'
     if (!interviewDone) return 'Interview'
@@ -172,27 +180,24 @@ export default function DayPage() {
 
         <Link
           href={`/dashboard/day/${dayNumber}/interview`}
-          className={`surface-card p-4 font-medium hover:shadow-lg ${
-            !progress?.recap_completed ? 'pointer-events-none opacity-50' : ''
-          }`}
+          className={`surface-card p-4 font-medium hover:shadow-lg ${!interviewUnlocked ? 'pointer-events-none opacity-50' : ''
+            }`}
         >
           Interview
         </Link>
 
         <Link
           href={`/dashboard/day/${dayNumber}/scenario`}
-          className={`surface-card p-4 font-medium hover:shadow-lg ${
-            !progress?.interview_completed ? 'pointer-events-none opacity-50' : ''
-          }`}
+          className={`surface-card p-4 font-medium hover:shadow-lg ${!scenarioUnlocked ? 'pointer-events-none opacity-50' : ''
+            }`}
         >
           Scenario
         </Link>
 
         <Link
           href={`/dashboard/day/${dayNumber}/quiz`}
-          className={`surface-card p-4 font-medium hover:shadow-lg ${
-            !progress?.scenario_completed ? 'pointer-events-none opacity-50' : ''
-          }`}
+          className={`surface-card p-4 font-medium hover:shadow-lg ${!quizUnlocked ? 'pointer-events-none opacity-50' : ''
+            }`}
         >
           Quiz
         </Link>
