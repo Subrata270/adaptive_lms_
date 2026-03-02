@@ -5,14 +5,34 @@ import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
 import LearningPathNav from '@/components/learning-path-nav'
 import { ensureDayProgressRow, getAccessContext } from '@/lib/auth'
-import { QUIZ_QUESTION_COUNT, getOrderedDayNumbers, parseDayNumber } from '@/lib/helpers'
+import { getOrderedDayNumbers, parseDayNumber } from '@/lib/helpers'
 import { recapContent } from '@/lib/recapContent'
 import { supabase } from '@/lib/supabase'
 
 type QuizQuestion = { id: string; prompt: string; options: unknown; correct_answer: string | null }
 type AttemptReview = { questionId: string; prompt: string; selected: string | null; correct: string | null; isCorrect: boolean }
 
-// ─── localStorage ─────────────────────────────────────────────────────────────
+// ── Validation helpers ────────────────────────────────────────────────────────
+// Normalise options: only keep non-empty strings
+const normalise = (options: unknown): string[] => {
+  if (!Array.isArray(options)) return []
+  return options.filter((o): o is string => typeof o === 'string' && o.trim().length > 0)
+}
+
+// A question is only shown if:
+//  1. It has a non-empty prompt
+//  2. It has at least 2 answer options
+//  3. It has a correct_answer that actually appears in the options
+const isValidQuestion = (q: QuizQuestion): boolean => {
+  if (!q.prompt || q.prompt.trim().length === 0) return false
+  const opts = normalise(q.options)
+  if (opts.length < 2) return false
+  if (!q.correct_answer || q.correct_answer.trim().length === 0) return false
+  if (!opts.includes(q.correct_answer)) return false
+  return true
+}
+
+// ── localStorage ──────────────────────────────────────────────────────────────
 function storageKey(day: number) { return `quiz_progress_day${day}` }
 type SavedProgress = { currentIndex: number; firstAttemptAnswers: Record<string, string>; correctlyAnswered: string[] }
 function loadProgress(day: number): SavedProgress | null {
@@ -23,11 +43,6 @@ function saveProgress(day: number, p: SavedProgress) {
 }
 function clearProgress(day: number) {
   try { localStorage.removeItem(storageKey(day)) } catch { /** */ }
-}
-
-const normalise = (options: unknown): string[] => {
-  if (!Array.isArray(options)) return []
-  return options.filter((o): o is string => typeof o === 'string')
 }
 
 export default function QuizPage() {
@@ -122,14 +137,17 @@ export default function QuizPage() {
         if (!unlocked) { if (active) setLoading(false); return }
       }
 
+      // ── Fetch ALL questions — no hardcoded limit ──────────────────────────────
       const { data, error } = await supabase
         .from('questions').select('id,prompt,options,correct_answer')
         .eq('type', 'quiz').eq('day_number', dayNumber).eq('active', true)
         .order('created_at', { ascending: true }).order('id', { ascending: true })
-        .limit(QUIZ_QUESTION_COUNT)
       if (!active) return
       if (error) console.error('Failed to load quiz questions', error)
-      const loaded = (data as QuizQuestion[] | null) || []
+
+      // ── Filter: keep only fully valid questions ───────────────────────────────
+      const raw = (data as QuizQuestion[] | null) ?? []
+      const loaded = raw.filter(isValidQuestion)
       setQuestions(loaded)
 
       // Restore saved progress (reload persistence)
@@ -140,7 +158,7 @@ export default function QuizPage() {
         for (const [id, ans] of Object.entries(saved.firstAttemptAnswers)) {
           if (validIds.has(id)) validFirst[id] = ans
         }
-        const validCorrect = new Set(saved.correctlyAnswered.filter(id => validIds.has(id)))
+        const validCorrect = new Set(saved.correctlyAnswered.filter((id: string) => validIds.has(id)))
         setFirstAttemptAnswers(validFirst); setCorrectlyAnswered(validCorrect)
         setAttempted(new Set(Object.keys(validFirst)))
         const idx = Math.max(0, Math.min(saved.currentIndex, loaded.length - 1))
@@ -219,7 +237,6 @@ export default function QuizPage() {
     else {
       setProgressState(prev => ({ ...prev, quizCompleted: true }))
       // ── Permanent unlock: pre-create next day's row so it can never be re-locked ──
-      // nextDayNumber is the day immediately after this one in the ordered list
       if (nextDayNumber !== null && userId) {
         await ensureDayProgressRow(userId, nextDayNumber)
       }
@@ -243,7 +260,27 @@ export default function QuizPage() {
     )
   }
 
-  if (questions.length === 0) return <p>No quiz questions found for this day.</p>
+  // ── No valid questions — show informative message, do NOT open quiz ───────────
+  if (questions.length === 0) {
+    return (
+      <div className="space-y-4">
+        <LearningPathNav dayNumber={dayNumber} currentSection="quiz" progress={progressState} />
+        <div className="surface-card p-6 md:p-8 text-center space-y-4">
+          <p className="text-4xl">📭</p>
+          <h1 className="text-xl font-bold">Quiz - Day {dayNumber}</h1>
+          <p className="muted-text text-sm font-medium">
+            No quiz available for this section.
+          </p>
+          <p className="text-xs muted-text">
+            Questions may be missing, incomplete, or have no valid answer options.
+          </p>
+          <Link href={`/dashboard/day/${dayNumber}`} className="quick-btn mt-2 inline-block">
+            ← Back to Day {dayNumber}
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   // ── Pre-quiz information screen ──────────────────────────────────────────────
   if (!quizStarted && !submitted) {
@@ -264,11 +301,15 @@ export default function QuizPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
+            {/* Dynamic question count — based on valid questions only */}
             <div className="rounded-xl bg-[var(--bg-soft)] p-4 flex items-start gap-3">
               <span className="text-2xl">📋</span>
               <div>
-                <p className="font-semibold text-sm">Total Questions</p>
+                <p className="font-semibold text-sm">Valid Questions</p>
                 <p className="text-2xl font-bold text-[var(--primary)]">{questions.length}</p>
+                <p className="text-xs muted-text mt-0.5">
+                  {questions.length} question{questions.length !== 1 ? 's' : ''} available
+                </p>
               </div>
             </div>
             <div className="rounded-xl bg-[var(--bg-soft)] p-4 flex items-start gap-3">
@@ -283,7 +324,7 @@ export default function QuizPage() {
           <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] p-4 space-y-3">
             <p className="font-semibold text-sm flex items-center gap-2"><span>📌</span> Instructions</p>
             <ul className="space-y-2 text-sm muted-text list-none">
-              <li>✅ Each question has 4 options — choose the best one.</li>
+              <li>✅ Each question has multiple options — choose the best one.</li>
               <li>📊 Score is calculated based on <strong>first-attempt accuracy</strong>.</li>
               <li>🔄 You can navigate between answered questions freely.</li>
               <li>✔️ You must answer all questions before submitting.</li>
@@ -474,6 +515,3 @@ export default function QuizPage() {
     </div>
   )
 }
-
-
-
