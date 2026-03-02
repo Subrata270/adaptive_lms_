@@ -380,7 +380,7 @@ export default function PracticePage() {
             }
 
             if (canResume) {
-                quizzes = cachedQs // reload Ã¢â‚¬â€ exact same questions
+                quizzes = cachedQs ?? [] // reload — exact same questions
             } else {
                 const excl = loadExcluded(batchId)
                 quizzes = await fetchQuizQs(excl)
@@ -727,8 +727,8 @@ export default function PracticePage() {
                         </span>
                         <span
                             className={`rounded-full px-2 py-0.5 text-xs font-semibold ${eligibleToUnlock
-                                    ? 'bg-emerald-100 text-emerald-700'
-                                    : 'bg-amber-100 text-amber-700'
+                                ? 'bg-emerald-100 text-emerald-700'
+                                : 'bg-amber-100 text-amber-700'
                                 }`}
                         >
                             {eligibleToUnlock
