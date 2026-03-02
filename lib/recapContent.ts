@@ -335,20 +335,20 @@ export const recapContent = {
           id: "sc_day_6_t1",
           title: "Concept Overview",
           explanation:
-            '• Generative AI is transforming how modern websites are designed and developed.\n• In this section, you will understand what GenAI is and how it supports frontend development.\n• You will learn how AI models can generate HTML and CSS from prompts.\n• Understanding core technologies like HTML and CSS is essential before using AI effectively.\n• This overview builds your foundation so that practical implementation becomes easier and more meaningful.'
+            '• AI is transforming the way websites are built and designed.\n• Generative AI helps developers generate HTML and CSS from prompts.\n• A website is the visual interface users see in a browser.\n• Basic websites are built using HTML and CSS.\n• In real-world development, developers work using design mockups as references.\n• Understanding frontend fundamentals is essential before using AI tools effectively.'
         },
         {
           id: "sc_day_6_t2",
-          title: "Hands-on Practice",
+          title: "Generative AI Models & GPT-4o",
           explanation:
-            '• In this section, you will use AI tools to generate website code from mockups.\n• You will practice writing clear prompts to get accurate HTML and CSS output.\n• You will experiment with layout matching, spacing, fonts, and design accuracy.\n• You will test responsiveness for desktop and mobile views.\n• Hands-on practice helps convert conceptual knowledge into real frontend development skills.'
+            '• Multiple AI models are available such as GPT, Gemini, Claude, Meta, DeepSeek, and Grok.\n• These models can generate content and frontend code.\n• GPT-4o supports text, image, audio, and video inputs.\n• AI tools can convert design mockups into working HTML and CSS.\n• Clear prompts improve the quality and accuracy of generated websites.'
         },
         {
           id: "sc_day_6_t3",
-          title: "Mini Assignment / Implementation",
+          title: "Prompt Guidelines for Website Generation",
           explanation:
-            '• In this mini assignment, you will transform a given mockup into a colorful website.\n• You will generate HTML and CSS separately using an AI tool.\n• You must follow guidelines such as using Unsplash images and matching the design exactly.\n• Include animations and transitions to enhance user experience.\n• This implementation reinforces your understanding of GenAI-assisted web development.'
-        }
+            '• Provide clear instructions to replicate the mockup exactly.\n• Match layout, colors, fonts, spacing, borders, and shadows.\n• Use valid image links from Unsplash.\n• Keep HTML and CSS code separate.\n• Include animations and transitions to enhance user experience.'
+        },
       ]
     }
   ],
