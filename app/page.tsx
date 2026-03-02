@@ -61,7 +61,7 @@ export default function HomePage() {
           <h1 className="text-xl font-semibold tracking-wide">Adaptive LMS</h1>
 
 
-          <ThemeToggle className="rounded-lg border border-[color:var(--home-border)] bg-[var(--home-glass)] px-4 py-2 text-sm font-medium text-[var(--home-text)] transition hover:bg-[var(--home-glass-hover)]" />
+          <ThemeToggle />
         </div>
       </header>
 

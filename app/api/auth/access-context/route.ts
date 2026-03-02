@@ -11,6 +11,8 @@ type ProfileRoleRow = {
 type AllowedEmailRow = {
   email: string
   is_used: boolean | null
+  Student_Name: string | null
+  Student_id: string | null
 }
 
 const getBearerToken = (request: Request): string | null => {
@@ -50,7 +52,7 @@ export async function GET(request: Request) {
       normalizedEmail
         ? admin
             .from('allowed_emails')
-            .select('email,is_used')
+            .select('*')
             .ilike('email', normalizedEmail)
             .maybeSingle()
         : Promise.resolve({ data: null, error: null } as const),

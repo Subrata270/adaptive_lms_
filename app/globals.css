@@ -2,23 +2,23 @@
 @source not "../lib/**";
 
 :root {
-  --bg: #e8ebf0;
-  --bg-soft: #f0f3f8;
+  --bg: #e1e8f2;
+  --bg-soft: #f1f5fb;
   --card: #ffffff;
-  --card-strong: #f8fafe;
-  --text: #183d5e;
-  --muted: #5d7590;
-  --border: #d2dceb;
-  --primary: #0d66c2;
-  --primary-strong: #0a56a2;
-  --navy: #123c62;
-  --success: #0f8f60;
-  --danger: #bd3f53;
-  --warning: #ef8a17;
+  --card-strong: #f7fbff;
+  --text: #0f2f4f;
+  --muted: #3f5c79;
+  --border: #b9cade;
+  --primary: #0a63c8;
+  --primary-strong: #084e9d;
+  --navy: #0f3558;
+  --success: #0f8b58;
+  --danger: #b7394c;
+  --warning: #d97b12;
   --accent-start: #4f7ce8;
   --accent-end: #8b3fe8;
-  --shadow: 0 18px 36px rgba(19, 58, 96, 0.12);
-  --shadow-soft: 0 10px 22px rgba(19, 58, 96, 0.08);
+  --shadow: 0 18px 38px rgba(12, 40, 74, 0.18);
+  --shadow-soft: 0 10px 22px rgba(12, 40, 74, 0.13);
   --home-bg-start: #f4f8ff;
   --home-bg-mid: #edf2ff;
   --home-bg-end: #e6eeff;
@@ -80,8 +80,8 @@ body {
 }
 
 body {
-  background: radial-gradient(1200px 480px at 95% -10%, rgba(79, 124, 232, 0.2), transparent),
-    radial-gradient(900px 420px at -10% 0%, rgba(139, 63, 232, 0.12), transparent),
+  background: radial-gradient(1200px 480px at 95% -10%, rgba(25, 110, 196, 0.21), transparent),
+    radial-gradient(900px 420px at -10% 0%, rgba(20, 88, 164, 0.14), transparent),
     var(--bg);
   color: var(--text);
 }
@@ -186,8 +186,8 @@ tbody tr:hover {
 
 .nav-btn {
   border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--muted);
+  background: color-mix(in oklab, var(--card) 92%, var(--bg-soft));
+  color: var(--text);
   border-radius: 999px;
   padding: 0.48rem 0.86rem;
   font-size: 0.9rem;
@@ -200,6 +200,7 @@ tbody tr:hover {
 .nav-btn:hover {
   color: var(--primary);
   border-color: color-mix(in oklab, var(--primary) 45%, var(--border));
+  background: color-mix(in oklab, var(--primary) 12%, var(--card));
   box-shadow: var(--shadow-soft);
   transform: translateY(-1px);
 }
@@ -211,34 +212,101 @@ tbody tr:hover {
 }
 
 .theme-toggle {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 3.1rem;
+  height: 2.1rem;
+  padding: 0.12rem;
+  border: 1px solid color-mix(in oklab, var(--border) 72%, transparent);
   border-radius: 999px;
-  padding: 0.45rem 0.75rem;
-  font-size: 0.85rem;
-  font-weight: 600;
+  background: color-mix(in oklab, var(--card) 82%, var(--bg-soft));
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.theme-toggle__thumb {
+  position: absolute;
+  top: 0.14rem;
+  left: 0.18rem;
+  width: 1.78rem;
+  height: 1.78rem;
+  border-radius: 1000px;
+  border: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+  background: #ffffff;
+  color: #b89484;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 18px rgba(10, 19, 33, 0.18);
+  transition: left 0.22s ease, background-color 0.22s ease, color 0.22s ease;
+}
+
+.theme-toggle__icon {
+  width: 1.08rem;
+  height: 1.08rem;
+}
+
+html.dark .theme-toggle {
+  border-color: #2a3140;
+  background: #171a21;
+  color: #f8fbff;
+}
+
+html.dark .theme-toggle__thumb {
+  left: calc(100% - 1.92rem);
+  border-color: #2a3140;
+  background: #f6f8fd;
+}
+
+.theme-toggle[aria-checked='false'] .theme-toggle__thumb {
+  transform: translateX(0);
 }
 
 .quick-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
   border-radius: 0.75rem;
+  border: 1px solid color-mix(in oklab, var(--primary) 60%, #083563);
   padding: 0.62rem 1rem;
   font-weight: 700;
   color: #fff;
-  background: var(--primary);
-  box-shadow: var(--shadow-soft);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--primary) 88%, #5ea9ff), var(--primary));
+  box-shadow: 0 10px 18px rgba(9, 58, 110, 0.24);
+  transition: transform 0.16s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .quick-btn:hover {
-  background: var(--primary-strong);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--primary-strong) 88%, #4d8ede), var(--primary-strong));
+  box-shadow: 0 14px 22px rgba(9, 58, 110, 0.3);
+  filter: saturate(1.06);
+}
+
+.quick-btn:focus-visible,
+.nav-btn:focus-visible,
+.theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 24%, transparent);
 }
 
 .quick-btn.secondary {
-  background: var(--navy);
+  border-color: color-mix(in oklab, var(--navy) 60%, #081b2f);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--navy) 84%, #2b5f8f), var(--navy));
 }
 
 .quick-btn.success {
-  background: var(--success);
+  border-color: color-mix(in oklab, var(--success) 65%, #0d3f2b);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--success) 88%, #4dc48a), var(--success));
+}
+
+.quick-btn.danger {
+  border-color: color-mix(in oklab, var(--danger) 65%, #5a1421);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--danger) 88%, #e06b7d), var(--danger));
 }
 
 .muted-text {
@@ -357,6 +425,17 @@ tbody tr:hover {
 
 .text-green-700 {
   color: var(--success) !important;
+}
+
+html:not(.dark) .text-green-400,
+html:not(.dark) .text-emerald-400,
+html:not(.dark) .text-green-500 {
+  color: color-mix(in oklab, var(--success) 88%, #07281d) !important;
+}
+
+html:not(.dark) .text-purple-300,
+html:not(.dark) .text-purple-400 {
+  color: color-mix(in oklab, var(--primary) 76%, #1a304d) !important;
 }
 
 .border,

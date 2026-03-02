@@ -4,6 +4,8 @@ import { supabase } from '@/lib/supabase'
 type AllowedEmailRow = {
   email: string
   is_used: boolean | null
+  Student_Name: string | null
+  Student_id: string | null
 }
 
 export type AccessContext = {

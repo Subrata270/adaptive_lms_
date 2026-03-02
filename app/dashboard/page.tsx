@@ -2,11 +2,14 @@
 
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
+import { getAccessContext } from '@/lib/auth'
 import { getOrderedDayNumbers } from '@/lib/helpers'
 import { recapContent } from '@/lib/recapContent'
 import { supabase } from '@/lib/supabase'
 
 const BATCH_SIZE = 6
+const UNLOCK_PERCENTAGE = 70
+const PRACTICE_SCORE_COLUMN = 'Practice Quiz Scores' as const
 
 
 type Progress = {
@@ -15,7 +18,36 @@ type Progress = {
   interview_completed: boolean | null
   scenario_completed: boolean | null
   quiz_completed: boolean | null
+  [PRACTICE_SCORE_COLUMN]?: unknown
 }
+
+type PracticeAttemptLite = {
+  percentage: number
+  score: number
+  total: number
+}
+
+const parsePracticeAttempts = (value: unknown): PracticeAttemptLite[] => {
+  if (!Array.isArray(value)) return []
+  return value
+    .map((entry) => {
+      if (!entry || typeof entry !== 'object') return null
+      const item = entry as Record<string, unknown>
+      const score = Number(item.score ?? 0)
+      const total = Number(item.total ?? 0)
+      if (!Number.isFinite(score) || !Number.isFinite(total) || total <= 0) return null
+      const percentage = Number(item.percentage ?? Math.round((score / total) * 100))
+      return {
+        score,
+        total,
+        percentage: Number.isFinite(percentage) ? percentage : Math.round((score / total) * 100),
+      } satisfies PracticeAttemptLite
+    })
+    .filter((entry): entry is PracticeAttemptLite => entry !== null)
+}
+
+const hasPassingAttempt = (attempts: PracticeAttemptLite[]): boolean =>
+  attempts.some((attempt) => attempt.percentage > UNLOCK_PERCENTAGE)
 
 export default function DashboardPage() {
   const days = useMemo(
@@ -26,29 +58,36 @@ export default function DashboardPage() {
   const [progressByDay, setProgressByDay] = useState<Record<number, Progress>>({})
   const [loading, setLoading] = useState(true)
   const [pbDoneMap, setPbDoneMap] = useState<Record<number, boolean>>({})
+  const [isAdminView, setIsAdminView] = useState(false)
 
-  // Load practice box completion from localStorage on mount (client only)
-  useEffect(() => {
-    const map: Record<number, boolean> = {}
-    for (let b = 1; b <= 50; b++) {
-      try {
-        map[b] = localStorage.getItem(`practice_quiz_score_batch${b}`) !== null
-      } catch { map[b] = false }
+  const batches = useMemo(() => {
+    const grouped: number[][] = []
+    for (let i = 0; i < days.length; i += BATCH_SIZE) {
+      grouped.push(days.slice(i, i + BATCH_SIZE))
     }
-    setPbDoneMap(map)
-  }, [])
+    return grouped
+  }, [days])
 
   useEffect(() => {
     const loadProgress = async () => {
-      const { data: userData } = await supabase.auth.getUser()
-      if (!userData.user) { setLoading(false); return }
+      const access = await getAccessContext()
+      if (!access.user) {
+        setLoading(false)
+        return
+      }
+
+      if (access.role === 'admin') {
+        setIsAdminView(true)
+        setLoading(false)
+        return
+      }
 
       const { data, error } = await supabase
         .from('student_day_progress')
         .select(
-          'day_number,recap_completed,interview_completed,scenario_completed,quiz_completed'
+          'day_number,recap_completed,interview_completed,scenario_completed,quiz_completed,"Practice Quiz Scores"'
         )
-        .eq('student_id', userData.user.id)
+        .eq('student_id', access.user.id)
 
       if (error) {
         console.error('Failed to load dashboard progress', error)
@@ -66,11 +105,21 @@ export default function DashboardPage() {
       }
 
       setProgressByDay(mapped)
+      const practiceMap: Record<number, boolean> = {}
+      for (let index = 0; index < batches.length; index++) {
+        const sprintNumber = index + 1
+        const batch = batches[index]
+        const lastDay = batch[batch.length - 1]
+        const row = (data as Progress[] | null)?.find((item) => Number(item.day_number) === lastDay)
+        const attempts = parsePracticeAttempts(row?.[PRACTICE_SCORE_COLUMN])
+        practiceMap[sprintNumber] = hasPassingAttempt(attempts)
+      }
+      setPbDoneMap(practiceMap)
       setLoading(false)
     }
 
     loadProgress()
-  }, [])
+  }, [batches])
 
   // Count how many of the 4 steps are done for a day
   const getCompletedCount = (row?: Progress): number => {
@@ -86,14 +135,9 @@ export default function DashboardPage() {
   const isDayFullyDone = (dayNumber: number) =>
     getCompletedCount(progressByDay[dayNumber]) === 4
 
-  // Split all days into batches of BATCH_SIZE
-  const batches: number[][] = []
-  for (let i = 0; i < days.length; i += BATCH_SIZE) {
-    batches.push(days.slice(i, i + BATCH_SIZE))
-  }
-
   // A batch is unlocked if it's the first batch OR the previous batch is 100% complete
   const isBatchUnlocked = (batchIndex: number): boolean => {
+    if (isAdminView) return true
     if (batchIndex === 0) return true
     const prevBatch = batches[batchIndex - 1]
     const prevBatchDone = prevBatch.every((dayNum) => isDayFullyDone(dayNum))
@@ -104,11 +148,15 @@ export default function DashboardPage() {
   }
 
   // How many batches are currently visible (unlocked or the first locked one as "next up")
-  const firstLockedBatchIndex = batches.findIndex((_, i) => !isBatchUnlocked(i))
+  const firstLockedBatchIndex = isAdminView
+    ? -1
+    : batches.findIndex((_, i) => !isBatchUnlocked(i))
   // Show all unlocked batches + 0 hidden (don't show any locked batch cards)
-  const visibleBatches = firstLockedBatchIndex === -1
-    ? batches                              // all unlocked
-    : batches.slice(0, firstLockedBatchIndex) // only unlocked ones
+  const visibleBatches = isAdminView
+    ? batches
+    : firstLockedBatchIndex === -1
+      ? batches
+      : batches.slice(0, firstLockedBatchIndex)
 
   // Stats
   const totalDays = days.length
@@ -134,6 +182,11 @@ export default function DashboardPage() {
         <p className="mt-2 text-sm muted-text">
           Complete all {BATCH_SIZE} days in a batch to unlock the next batch.
         </p>
+        {isAdminView && (
+          <p className="mt-2 rounded-xl bg-[var(--bg-soft)] px-3 py-2 text-xs font-semibold text-[var(--primary)]">
+            Admin preview mode: all days are unlocked for review.
+          </p>
+        )}
       </div>
 
       {/* Stats row */}
@@ -163,12 +216,12 @@ export default function DashboardPage() {
                   <h2 className="text-base font-semibold">
                     Sprint {batchIndex + 1}
                     <span className="ml-2 text-sm font-normal muted-text">
-                      (Days {batch[0]}–{batch[batch.length - 1]})
+                      (Days {batch[0]}-{batch[batch.length - 1]})
                     </span>
                   </h2>
                   {batchDone && (
                     <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
-                      ✅ Complete
+                      Complete
                     </span>
                   )}
                   {!batchDone && batchIndex < visibleBatches.length && (
@@ -187,11 +240,11 @@ export default function DashboardPage() {
                     const completionPct = Math.round((completedCount / 4) * 100)
                     const isFullyDone = completedCount === 4
 
-                    // ── Permanent Unlock Logic ────────────────────────────────────
+                    // â”€â”€ Permanent Unlock Logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                     // A day is unlocked if ANY of these are true:
                     // 1. It's the very first day (globalIndex === 0)
                     // 2. Its DB row exists (pre-created when prev day quiz was submitted)
-                    //    → Row existence = permanently unlocked, can NEVER be re-locked
+                    //    â†’ Row existence = permanently unlocked, can NEVER be re-locked
                     // 3. Previous day fully completed (backward compatibility)
                     const prevDayNumber = globalIndex > 0 ? days[globalIndex - 1] : null
                     const prevDayCompleted =
@@ -203,9 +256,15 @@ export default function DashboardPage() {
                     // Practice box gate for first day of a non-first batch
                     const isFirstDayOfBatch = indexInBatch === 0
                     const practiceBoxRequired = isFirstDayOfBatch && batchIndex > 0
-                    const practiceBoxOk = practiceBoxRequired ? pbDoneMap[batchIndex] === true : true
+                    const practiceBoxOk = isAdminView
+                      ? true
+                      : practiceBoxRequired
+                        ? pbDoneMap[batchIndex] === true
+                        : true
 
-                    const isUnlocked = (globalIndex === 0 || rowExists || prevDayCompleted) && practiceBoxOk
+                    const isUnlocked =
+                      isAdminView ||
+                      ((globalIndex === 0 || rowExists || prevDayCompleted) && practiceBoxOk)
 
                     if (!isUnlocked) {
                       return (
@@ -216,7 +275,7 @@ export default function DashboardPage() {
                         >
                           <div className="flex items-center justify-center gap-2">
                             <span className="text-lg font-semibold">Day {dayNumber}</span>
-                            <span className="text-base">🔒</span>
+                            <span className="text-xs font-semibold">LOCKED</span>
                           </div>
                           <p className="mt-1 text-xs text-center muted-text">Locked</p>
                           <div className="mt-3 h-2 w-full rounded-full bg-gray-300">
@@ -235,7 +294,7 @@ export default function DashboardPage() {
                       >
                         <div className="flex items-center justify-center gap-2">
                           <p className="text-lg font-semibold">Day {dayNumber}</p>
-                          {isFullyDone && <span className="text-base">✅</span>}
+                          {isFullyDone && <span className="text-xs font-semibold text-green-700">Done</span>}
                         </div>
                         <p className="mt-1 text-xs text-center muted-text">
                           {completedCount}/4 completed
@@ -252,7 +311,7 @@ export default function DashboardPage() {
                   })}
                 </div>
 
-                {/* Practice Box — appears after the last day of the sprint is done, even if rest isn't */}
+                {/* Practice Box â€” appears after the last day of the sprint is done, even if rest isn't */}
                 {(() => {
                   const lastDay = batch[batch.length - 1]
                   const lastDayDone = isDayFullyDone(lastDay)
@@ -261,25 +320,31 @@ export default function DashboardPage() {
                   return (
                     <Link
                       href={`/dashboard/practice/${batchIndex + 1}`}
-                      className={`flex items-center gap-4 rounded-2xl border-2 p-4 transition-all hover:shadow-lg group ${pbDone
-                        ? 'border-green-500/50 bg-gradient-to-r from-green-900/20 to-emerald-900/10 hover:from-green-900/40'
-                        : 'border-purple-400 bg-gradient-to-r from-purple-900/30 to-blue-900/30 hover:from-purple-900/50 hover:to-blue-900/50 hover:shadow-purple-500/20'
+                      className={`group flex w-full cursor-pointer items-center gap-4 rounded-2xl border-2 bg-white p-4 text-black shadow-[var(--shadow-soft)] transition-all duration-200 hover:shadow-lg ${pbDone
+                        ? 'border-green-300 hover:border-green-400 dark:border-green-500/50 dark:bg-gradient-to-r dark:from-green-900/20 dark:to-emerald-900/10 dark:text-slate-100 dark:hover:from-green-900/40'
+                        : 'border-[var(--border)] hover:border-slate-400 dark:border-purple-400 dark:bg-gradient-to-r dark:from-purple-900/30 dark:to-blue-900/30 dark:text-slate-100 dark:hover:from-purple-900/50 dark:hover:to-blue-900/50 dark:hover:shadow-purple-500/20'
                         }`}
                     >
-                      <span className="text-3xl">{pbDone ? '✅' : '🔥'}</span>
+                      <span className="rounded-full bg-white-100 px-2.5 py-1 text-xs font-semibold text-black dark:bg-slate-800 dark:text-slate-200">
+                        {pbDone ? '' : 'PENDING'}
+                      </span>
                       <div className="flex-1">
-                        <p className={`font-bold group-hover:opacity-90 ${pbDone ? 'text-green-400' : 'text-purple-300 group-hover:text-purple-200'}`}>
-                          Practice Box — Sprint {batchIndex + 1}
-                          {pbDone && <span className="ml-2 text-xs font-normal text-green-500">Completed ✔</span>}
+                        <p className="font-bold text-black dark:text-slate-100">
+                          Practice Box - Sprint {batchIndex + 1}
+                          {pbDone && (
+                            <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                              Completed
+                            </span>
+                          )}
                         </p>
-                        <p className={`text-sm ${pbDone ? 'text-green-400/70' : 'text-purple-400/80'}`}>
+                        <p className="text-sm text-black dark:text-slate-300">
                           {pbDone
                             ? 'Practice box completed. Next sprint unlocked!'
-                            : `Review all interview, scenario & quiz Qs from Days ${batch[0]}–${batch[batch.length - 1]}`
+                            : `Review all interview, scenario & quiz Qs from Days ${batch[0]}-${batch[batch.length - 1]}`
                           }
                         </p>
                       </div>
-                      <span className={`group-hover:translate-x-1 transition-transform text-xl ${pbDone ? 'text-green-400' : 'text-purple-400'}`}>→</span>
+                      <span className="text-xl text-black transition-transform group-hover:translate-x-1 dark:text-slate-200">{'->'}</span>
                     </Link>
                   )
                 })()}
@@ -287,8 +352,8 @@ export default function DashboardPage() {
             )
           })}
 
-          {/* Next batch teaser — shows what's coming and how close the user is */}
-          {nextLockedBatch && (() => {
+          {/* Next batch teaser â€” shows what's coming and how close the user is */}
+          {!isAdminView && nextLockedBatch && (() => {
             const prevBatchId = firstLockedBatchIndex // 1-based
             const allDaysInPrevBatchDone = currentBatchDoneCount === currentBatchTotal
             const pbPending = allDaysInPrevBatchDone && !pbDoneMap[prevBatchId]
@@ -297,12 +362,12 @@ export default function DashboardPage() {
                 <h2 className="text-base font-semibold text-[var(--muted)]">
                   Sprint {firstLockedBatchIndex + 1}
                   <span className="ml-2 text-sm font-normal">
-                    (Days {nextLockedBatch[0]}–{nextLockedBatch[nextLockedBatch.length - 1]})
+                    (Days {nextLockedBatch[0]}-{nextLockedBatch[nextLockedBatch.length - 1]})
                   </span>
                 </h2>
 
                 <div className="surface-card p-6 text-center opacity-60 border-2 border-dashed">
-                  <p className="text-3xl mb-2">{pbPending ? '🔥' : '🔒'}</p>
+                  <p className="text-sm mb-2 font-semibold">{pbPending ? 'PENDING' : 'LOCKED'}</p>
                   <p className="font-semibold">Next Sprint locked</p>
                   <p className="mt-1 text-sm muted-text">
                     {pbPending
@@ -332,7 +397,6 @@ export default function DashboardPage() {
           {/* All done! */}
           {!nextLockedBatch && fullyCompletedDays === totalDays && totalDays > 0 && (
             <div className="surface-card p-8 text-center">
-              <p className="text-4xl mb-3">🎓</p>
               <p className="text-xl font-bold">All days completed!</p>
               <p className="mt-1 muted-text">You&apos;ve finished the entire curriculum.</p>
             </div>

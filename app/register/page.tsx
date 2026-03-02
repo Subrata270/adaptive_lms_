@@ -3,11 +3,9 @@
 import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import PublicHeader from '@/components/public-header'
+// import PublicHeader from '@/components/public-header'
 import { checkAllowedEmail, normalizeEmail } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-
-const DEFAULT_STUDENT_PASSWORD = '1234567890'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -52,27 +50,22 @@ export default function RegisterPage() {
       return
     }
 
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email: normalizedEmail,
-      password,
+    const registerResponse = await fetch('/api/auth/student-register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: normalizedEmail, password }),
     })
+    const registerBody = (await registerResponse.json().catch(() => null)) as
+      | { error?: string }
+      | null
 
-    if (signUpError) {
+    if (!registerResponse.ok) {
       setLoading(false)
-      const alreadyRegistered = signUpError.message
-        .toLowerCase()
-        .includes('already registered')
-      setErrorMessage(
-        alreadyRegistered
-          ? `This email is already registered. Please login. Forgot password: ${DEFAULT_STUDENT_PASSWORD}`
-          : signUpError.message
-      )
-      return
-    }
-
-    if (signUpData.session) {
-      setLoading(false)
-      router.replace('/dashboard')
+      const fallbackError =
+        registerResponse.status === 409
+          ? 'This email is already registered. Please login or use Forgot Password.'
+          : 'Registration failed.'
+      setErrorMessage(registerBody?.error ?? fallbackError)
       return
     }
 
@@ -88,14 +81,12 @@ export default function RegisterPage() {
     }
 
     setLoading(false)
-    setSuccessMessage(
-      `Registration completed. Please login. Forgot password: ${DEFAULT_STUDENT_PASSWORD}`
-    )
+    setSuccessMessage('Registration completed. Please login.')
   }
 
   return (
     <div className="min-h-screen">
-      <PublicHeader />
+      {/* <PublicHeader /> */}
 
       <main className="mx-auto flex max-w-7xl items-center justify-center px-4 py-10 md:px-6 md:py-14">
         <form

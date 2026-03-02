@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import LearningPathNav from '@/components/learning-path-nav'
-import { ensureDayProgressRow } from '@/lib/auth'
+import { ensureDayProgressRow, getAccessContext } from '@/lib/auth'
 import {
   INTERVIEW_REQUIRED_COUNT,
   mergeUniqueById,
@@ -30,7 +30,6 @@ const parseMultiline = (value: string): string[] =>
 
 export default function InterviewPage() {
   const params = useParams<{ dayNumber: string }>()
-  const router = useRouter()
   const dayNumber = useMemo(
     () => parseDayNumber(params.dayNumber),
     [params.dayNumber]
@@ -43,6 +42,7 @@ export default function InterviewPage() {
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [isUnlocked, setIsUnlocked] = useState(false)
+  const [isAdminView, setIsAdminView] = useState(false)
   const [progressState, setProgressState] = useState({
     recapCompleted: false,
     interviewCompleted: false,
@@ -92,20 +92,36 @@ export default function InterviewPage() {
       }
 
       setLoading(true)
-      const { data } = await supabase.auth.getUser()
-      if (!data.user) {
+      const access = await getAccessContext()
+      if (!access.user) {
         if (active) setLoading(false)
         return
       }
 
-      await ensureDayProgressRow(data.user.id, dayNumber)
+      if (access.role === 'admin') {
+        setIsAdminView(true)
+        setIsUnlocked(true)
+        setUserId(null)
+        setChecked([])
+        setProgressState({
+          recapCompleted: true,
+          interviewCompleted: true,
+          scenarioCompleted: true,
+          quizCompleted: true,
+        })
+        await loadQuestions(0, false)
+        if (active) setLoading(false)
+        return
+      }
+
+      await ensureDayProgressRow(access.user.id, dayNumber)
 
       const { data: progress, error } = await supabase
         .from('student_day_progress')
         .select(
           'recap_completed,interview_checked,interview_completed,scenario_completed,quiz_completed'
         )
-        .eq('student_id', data.user.id)
+        .eq('student_id', access.user.id)
         .eq('day_number', dayNumber)
         .maybeSingle()
 
@@ -116,7 +132,7 @@ export default function InterviewPage() {
 
       const unlocked = Boolean(progress?.recap_completed)
       setIsUnlocked(unlocked)
-      setUserId(data.user.id)
+      setUserId(access.user.id)
       setChecked(normalizeStringArray(progress?.interview_checked))
       setProgressState({
         recapCompleted: Boolean(progress?.recap_completed),
@@ -140,7 +156,7 @@ export default function InterviewPage() {
 
   useEffect(() => {
     const syncCompletion = async () => {
-      if (!userId || dayNumber === null || !isUnlocked) return
+      if (isAdminView || !userId || dayNumber === null || !isUnlocked) return
 
       const { error } = await supabase
         .from('student_day_progress')
@@ -166,7 +182,7 @@ export default function InterviewPage() {
     }
 
     syncCompletion()
-  }, [checked, dayNumber, isComplete, isUnlocked, userId])
+  }, [checked, dayNumber, isAdminView, isComplete, isUnlocked, userId])
 
   const toggle = (questionId: string) => {
     setChecked((prev) =>
@@ -222,16 +238,16 @@ export default function InterviewPage() {
 
   return (
     <div className="space-y-6">
-      {/* Floating back button */}
-      <button onClick={() => router.back()}
-        className="fixed top-20 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-lg transition-all hover:scale-110"
-        title="Go back">←</button>
-
       <div className="surface-card p-5 md:p-6">
         <h1 className="text-2xl font-bold md:text-3xl">Interview - Day {dayNumber}</h1>
         <p className="mt-2 text-sm muted-text">
           Check completed questions to unlock scenario.
         </p>
+        {isAdminView && (
+          <p className="mt-2 rounded-xl bg-[var(--bg-soft)] px-3 py-2 text-xs font-semibold text-[var(--primary)]">
+            Admin preview mode: all sections unlocked and progress writes disabled.
+          </p>
+        )}
       </div>
 
       <LearningPathNav

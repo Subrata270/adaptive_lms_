@@ -2,10 +2,10 @@
 
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import LearningPathNav from '@/components/learning-path-nav'
-import { ensureDayProgressRow } from '@/lib/auth'
-import { QUIZ_QUESTION_COUNT, getOrderedDayNumbers, normalizeStringArray, parseDayNumber } from '@/lib/helpers'
+import { ensureDayProgressRow, getAccessContext } from '@/lib/auth'
+import { QUIZ_QUESTION_COUNT, getOrderedDayNumbers, parseDayNumber } from '@/lib/helpers'
 import { recapContent } from '@/lib/recapContent'
 import { supabase } from '@/lib/supabase'
 
@@ -32,7 +32,6 @@ const normalise = (options: unknown): string[] => {
 
 export default function QuizPage() {
   const params = useParams<{ dayNumber: string }>()
-  const router = useRouter()
   const dayNumber = useMemo(() => parseDayNumber(params.dayNumber), [params.dayNumber])
 
   // Next day for post-quiz navigation
@@ -54,6 +53,7 @@ export default function QuizPage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [isUnlocked, setIsUnlocked] = useState(false)
+  const [isAdminView, setIsAdminView] = useState(false)
   const [progressState, setProgressState] = useState({
     recapCompleted: false, interviewCompleted: false, scenarioCompleted: false, quizCompleted: false,
   })
@@ -84,26 +84,39 @@ export default function QuizPage() {
     const fetchQuiz = async () => {
       if (dayNumber === null) { setLoading(false); return }
       setLoading(true)
-      const { data: userData } = await supabase.auth.getUser()
-      if (!userData.user) { if (active) setLoading(false); return }
-      setUserId(userData.user.id)
-      await ensureDayProgressRow(userData.user.id, dayNumber)
+      const access = await getAccessContext()
+      if (!access.user) { if (active) setLoading(false); return }
 
-      const { data: progress, error: progressError } = await supabase
-        .from('student_day_progress')
-        .select('recap_completed,interview_completed,scenario_completed,quiz_completed')
-        .eq('student_id', userData.user.id).eq('day_number', dayNumber).maybeSingle()
-      if (progressError) console.error('Failed to load progress', progressError)
+      if (access.role === 'admin') {
+        setIsAdminView(true)
+        setUserId(null)
+        setIsUnlocked(true)
+        setProgressState({
+          recapCompleted: true,
+          interviewCompleted: true,
+          scenarioCompleted: true,
+          quizCompleted: true,
+        })
+      } else {
+        setUserId(access.user.id)
+        await ensureDayProgressRow(access.user.id, dayNumber)
 
-      const unlocked = Boolean(progress?.scenario_completed)
-      setIsUnlocked(unlocked)
-      setProgressState({
-        recapCompleted: Boolean(progress?.recap_completed),
-        interviewCompleted: Boolean(progress?.interview_completed),
-        scenarioCompleted: Boolean(progress?.scenario_completed),
-        quizCompleted: Boolean(progress?.quiz_completed),
-      })
-      if (!unlocked) { if (active) setLoading(false); return }
+        const { data: progress, error: progressError } = await supabase
+          .from('student_day_progress')
+          .select('recap_completed,interview_completed,scenario_completed,quiz_completed')
+          .eq('student_id', access.user.id).eq('day_number', dayNumber).maybeSingle()
+        if (progressError) console.error('Failed to load progress', progressError)
+
+        const unlocked = Boolean(progress?.scenario_completed)
+        setIsUnlocked(unlocked)
+        setProgressState({
+          recapCompleted: Boolean(progress?.recap_completed),
+          interviewCompleted: Boolean(progress?.interview_completed),
+          scenarioCompleted: Boolean(progress?.scenario_completed),
+          quizCompleted: Boolean(progress?.quiz_completed),
+        })
+        if (!unlocked) { if (active) setLoading(false); return }
+      }
 
       const { data, error } = await supabase
         .from('questions').select('id,prompt,options,correct_answer')
@@ -177,7 +190,8 @@ export default function QuizPage() {
   const goNext = () => { if (isCurrentAttempted && currentIndex < questions.length - 1) navigateTo(currentIndex + 1) }
 
   const handleSubmit = async () => {
-    if (!userId || dayNumber === null || !allAttempted) return
+    if (dayNumber === null || !allAttempted) return
+    if (!isAdminView && !userId) return
     let totalScore = 0
     const rows: AttemptReview[] = questions.map(q => {
       const firstAns = firstAttemptAnswers[q.id] ?? null
@@ -188,6 +202,12 @@ export default function QuizPage() {
     })
     setReviewRows(rows); setScore(totalScore); setSubmitted(true)
     clearProgress(dayNumber)
+
+    if (isAdminView) {
+      setProgressState(prev => ({ ...prev, quizCompleted: true }))
+      return
+    }
+
     const { error } = await supabase.from('student_day_progress')
       .upsert({ student_id: userId, day_number: dayNumber, quiz_completed: true, quiz_score: totalScore },
         { onConflict: 'student_id,day_number' })
@@ -196,7 +216,7 @@ export default function QuizPage() {
       setProgressState(prev => ({ ...prev, quizCompleted: true }))
       // ── Permanent unlock: pre-create next day's row so it can never be re-locked ──
       // nextDayNumber is the day immediately after this one in the ordered list
-      if (nextDayNumber !== null) {
+      if (nextDayNumber !== null && userId) {
         await ensureDayProgressRow(userId, nextDayNumber)
       }
     }
@@ -225,11 +245,6 @@ export default function QuizPage() {
   if (!quizStarted && !submitted) {
     return (
       <div className="space-y-6">
-        {/* Floating back button */}
-        <button onClick={() => router.back()}
-          className="fixed top-20 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-lg transition-all hover:scale-110"
-          title="Go back">←</button>
-
         <LearningPathNav dayNumber={dayNumber} currentSection="quiz" progress={progressState} />
 
         <div className="surface-card p-6 md:p-8 space-y-6 border-2 border-[var(--primary)]/30">
@@ -237,6 +252,11 @@ export default function QuizPage() {
             <p className="text-4xl">🧠</p>
             <h1 className="text-2xl font-bold md:text-3xl">Quiz — Day {dayNumber}</h1>
             <p className="text-sm muted-text">Read the instructions carefully before starting.</p>
+            {isAdminView && (
+              <p className="text-xs font-semibold text-[var(--primary)]">
+                Admin preview mode: progress is not written to student rows.
+              </p>
+            )}
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -270,15 +290,9 @@ export default function QuizPage() {
           <div className="flex flex-wrap gap-3 pt-2">
             <button
               onClick={() => setQuizStarted(true)}
-              className="quick-btn success flex-1 text-center"
+              className="quick-btn success text-center"
             >
               ✅ Start Quiz
-            </button>
-            <button
-              onClick={() => router.back()}
-              className="rounded-xl border-2 border-[var(--border)] px-6 py-2 font-semibold flex-1"
-            >
-              🔙 Back
             </button>
           </div>
         </div>
@@ -291,11 +305,6 @@ export default function QuizPage() {
     const mistakes = reviewRows.filter(r => !r.isCorrect)
     return (
       <div className="space-y-8">
-        {/* Floating back button */}
-        <button onClick={() => router.back()}
-          className="fixed top-20 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-lg transition-all hover:scale-110"
-          title="Go back">←</button>
-
         <LearningPathNav dayNumber={dayNumber} currentSection="quiz"
           progress={{ ...progressState, quizCompleted: true }} />
 
@@ -370,14 +379,14 @@ export default function QuizPage() {
   // ── Quiz in progress ──────────────────────────────────────────────────────────
   return (
     <div className="space-y-6">
-      {/* Floating back button */}
-      <button onClick={() => router.back()}
-        className="fixed bottom-6 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-lg transition-all hover:scale-110"
-        title="Go back">←</button>
-
       <div className="surface-card p-5 md:p-6">
         <h1 className="text-2xl font-bold md:text-3xl">Quiz — Day {dayNumber}</h1>
         <p className="mt-1 text-sm muted-text">Score is based on first-attempt accuracy.</p>
+        {isAdminView && (
+          <p className="mt-2 rounded-xl bg-[var(--bg-soft)] px-3 py-2 text-xs font-semibold text-[var(--primary)]">
+            Admin preview mode: section unlocked and progress writes disabled.
+          </p>
+        )}
       </div>
 
       <LearningPathNav dayNumber={dayNumber} currentSection="quiz" progress={progressState} />
@@ -461,3 +470,6 @@ export default function QuizPage() {
     </div>
   )
 }
+
+
+

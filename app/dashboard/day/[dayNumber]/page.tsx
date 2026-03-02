@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import LearningPathNav from '@/components/learning-path-nav'
-import { ensureDayProgressRow } from '@/lib/auth'
+import { ensureDayProgressRow, getAccessContext } from '@/lib/auth'
 import { parseDayNumber } from '@/lib/helpers'
 import { supabase } from '@/lib/supabase'
 
@@ -24,6 +24,7 @@ export default function DayPage() {
 
   const [progress, setProgress] = useState<DayProgress | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isAdminView, setIsAdminView] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -36,20 +37,33 @@ export default function DayPage() {
       }
 
       setLoading(true)
-      const { data: userData } = await supabase.auth.getUser()
-      if (!userData.user) {
+      const access = await getAccessContext()
+      if (!access.user) {
         if (active) setLoading(false)
         return
       }
 
-      await ensureDayProgressRow(userData.user.id, dayNumber)
+      if (access.role === 'admin') {
+        if (!active) return
+        setIsAdminView(true)
+        setProgress({
+          recap_completed: true,
+          interview_completed: true,
+          scenario_completed: true,
+          quiz_completed: true,
+        })
+        setLoading(false)
+        return
+      }
+
+      await ensureDayProgressRow(access.user.id, dayNumber)
 
       const { data, error } = await supabase
         .from('student_day_progress')
         .select(
           'recap_completed,interview_completed,scenario_completed,quiz_completed'
         )
-        .eq('student_id', userData.user.id)
+        .eq('student_id', access.user.id)
         .eq('day_number', dayNumber)
         .maybeSingle()
 
@@ -111,6 +125,11 @@ export default function DayPage() {
         <p className="mt-2 text-sm muted-text">
           Complete each section in order to unlock the next one.
         </p>
+        {isAdminView && (
+          <p className="mt-2 rounded-xl bg-[var(--bg-soft)] px-3 py-2 text-xs font-semibold text-[var(--primary)]">
+            Admin preview mode: all sections unlocked.
+          </p>
+        )}
       </div>
 
       {!loading && (

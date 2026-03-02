@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation'
 import { getAccessContext, normalizeEmail } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 
-const DEFAULT_STUDENT_PASSWORD = '1234567890'
-
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -61,46 +59,11 @@ export default function LoginPage() {
 
     setLoading(true)
 
-    let { data: signInData, error: signInError } =
+    const { data: signInData, error: signInError } =
       await supabase.auth.signInWithPassword({
         email: normalizedEmail,
         password,
       })
-
-    if ((signInError || !signInData.user) && password === DEFAULT_STUDENT_PASSWORD) {
-      try {
-        const response = await fetch('/api/auth/student-password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: normalizedEmail }),
-        })
-
-        const responseBody = (await response.json().catch(() => null)) as
-          | { error?: string }
-          | null
-
-        if (!response.ok) {
-          setLoading(false)
-          setErrorMessage(
-            responseBody?.error ??
-              'Unable to reset default password. Please contact admin.'
-          )
-          return
-        }
-
-        const retry = await supabase.auth.signInWithPassword({
-          email: normalizedEmail,
-          password: DEFAULT_STUDENT_PASSWORD,
-        })
-        signInData = retry.data
-        signInError = retry.error
-      } catch (error) {
-        console.error('Default password login failed', error)
-        setLoading(false)
-        setErrorMessage('Unable to process default password login.')
-        return
-      }
-    }
 
     if (signInError || !signInData.user) {
       setLoading(false)
@@ -140,8 +103,7 @@ export default function LoginPage() {
       >
         <h1 className="text-3xl font-bold">Student Login</h1>
         <p className="text-sm muted-text">
-          Login with your allowed email. Forgot password? use{' '}
-          <span className="font-semibold">{DEFAULT_STUDENT_PASSWORD}</span>.
+          Login with your allowed email and password.
         </p>
 
         <input
@@ -177,6 +139,9 @@ export default function LoginPage() {
           <span>New student?</span>
           <Link href="/register" className="nav-btn">
             Register
+          </Link>
+          <Link href="/change-password" className="nav-btn">
+            Change Password
           </Link>
           <Link href="/" className="nav-btn">
             Home

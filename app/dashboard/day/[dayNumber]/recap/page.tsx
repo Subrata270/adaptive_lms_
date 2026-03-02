@@ -2,9 +2,9 @@
 
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import LearningPathNav from '@/components/learning-path-nav'
-import { ensureDayProgressRow } from '@/lib/auth'
+import { ensureDayProgressRow, getAccessContext } from '@/lib/auth'
 import { recapContent } from '@/lib/recapContent'
 import { normalizeStringArray, parseDayNumber } from '@/lib/helpers'
 import { supabase } from '@/lib/supabase'
@@ -40,7 +40,6 @@ const parseMultiline = (value: string | null | undefined): string[] => {
 
 export default function RecapPage() {
   const params = useParams<{ dayNumber: string }>()
-  const router = useRouter()
   const recapByDay = useMemo(
     () => recapContent as Record<number, RecapSection[]>,
     []
@@ -63,6 +62,7 @@ export default function RecapPage() {
   const [checked, setChecked] = useState<string[]>([])
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isAdminView, setIsAdminView] = useState(false)
   const [downstreamProgress, setDownstreamProgress] = useState({
     interviewCompleted: false,
     scenarioCompleted: false,
@@ -79,18 +79,32 @@ export default function RecapPage() {
       }
 
       setLoading(true)
-      const { data } = await supabase.auth.getUser()
-      if (!data.user) {
+      const access = await getAccessContext()
+      if (!access.user) {
         if (active) setLoading(false)
         return
       }
 
-      await ensureDayProgressRow(data.user.id, dayNumber)
+      if (access.role === 'admin') {
+        if (!active) return
+        setIsAdminView(true)
+        setUserId(null)
+        setChecked([])
+        setDownstreamProgress({
+          interviewCompleted: true,
+          scenarioCompleted: true,
+          quizCompleted: true,
+        })
+        setLoading(false)
+        return
+      }
+
+      await ensureDayProgressRow(access.user.id, dayNumber)
 
       const { data: progress, error } = await supabase
         .from('student_day_progress')
         .select('recap_checked,interview_completed,scenario_completed,quiz_completed')
-        .eq('student_id', data.user.id)
+        .eq('student_id', access.user.id)
         .eq('day_number', dayNumber)
         .maybeSingle()
 
@@ -99,7 +113,7 @@ export default function RecapPage() {
         console.error('Failed to load recap progress', error)
       }
 
-      setUserId(data.user.id)
+      setUserId(access.user.id)
       setChecked(normalizeStringArray(progress?.recap_checked))
       setDownstreamProgress({
         interviewCompleted: Boolean(progress?.interview_completed),
@@ -116,7 +130,7 @@ export default function RecapPage() {
   }, [dayNumber])
 
   const toggle = async (topicId: string) => {
-    if (!userId || dayNumber === null) return
+    if (isAdminView || !userId || dayNumber === null) return
 
     const updated = checked.includes(topicId)
       ? checked.filter((id) => id !== topicId)
@@ -142,7 +156,7 @@ export default function RecapPage() {
     }
   }
 
-  const recapCompleted = totalTopics > 0 && checked.length >= totalTopics
+  const recapCompleted = isAdminView || (totalTopics > 0 && checked.length >= totalTopics)
 
   if (dayNumber === null) {
     return <p>Invalid day number.</p>
@@ -158,16 +172,16 @@ export default function RecapPage() {
 
   return (
     <div className="space-y-6">
-      {/* Floating back button */}
-      <button onClick={() => router.back()}
-        className="fixed top-20 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-lg transition-all hover:scale-110"
-        title="Go back">←</button>
-
       <div className="surface-card p-5 md:p-6">
         <h1 className="text-2xl font-bold md:text-3xl">Recap - Day {dayNumber}</h1>
         <p className="mt-2 text-sm muted-text">
           Mark all topics complete to unlock interview.
         </p>
+        {isAdminView && (
+          <p className="mt-2 rounded-xl bg-[var(--bg-soft)] px-3 py-2 text-xs font-semibold text-[var(--primary)]">
+            Admin preview mode: content unlocked and progress editing disabled.
+          </p>
+        )}
       </div>
 
       <LearningPathNav
@@ -262,6 +276,7 @@ export default function RecapPage() {
                   type="checkbox"
                   checked={checked.includes(topic.id)}
                   onChange={() => toggle(topic.id)}
+                  disabled={isAdminView}
                 />
                 <span className="group-hover:text-[var(--primary)] transition-colors">Mark as completed</span>
               </label>
