@@ -288,11 +288,12 @@ export default function RecapPage() {
               <label className="mt-3 inline-flex items-center gap-2 cursor-pointer group">
                 <input
                   type="checkbox"
+                  className="hover-checkbox"
                   checked={checked.includes(topic.id)}
                   onChange={() => toggle(topic.id)}
                   disabled={isAdminView}
                 />
-                <span className="group-hover:text-[var(--primary)] transition-colors">Mark as completed</span>
+                <span className="group-hover:text-[var(--primary)] transition-colors duration-150">Topic Nailed</span>
               </label>
             </div>
           ))}

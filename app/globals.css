@@ -265,6 +265,7 @@ html.dark .theme-toggle__thumb {
 .theme-toggle[aria-checked='false'] .theme-toggle__thumb {
   transform: translateX(0);
 }
+
 .quick-btn {
   display: inline-flex;
   align-items: center;
@@ -445,4 +446,55 @@ html:not(.dark) .text-purple-400 {
 /* Practice Box – subtitle text: black in light mode only */
 html:not(.dark) .pb-subtitle-black {
   color: #000000 !important;
+}
+
+/* ── Custom interactive checkbox (Recap / Interview / Scenario) ───────────────
+   Native checkboxes ignore outline/box-shadow/transform.
+   appearance:none lets us draw and style it fully ourselves.               */
+.hover-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--bg-soft);
+  transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+  vertical-align: middle;
+}
+
+/* Hover: border turns primary colour + soft glow ring */
+.hover-checkbox:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 20%, transparent);
+}
+
+/* Checked: solid primary fill */
+.hover-checkbox:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Checked: white tick mark drawn via rotated border */
+.hover-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 8px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+/* Focus ring for keyboard navigation */
+.hover-checkbox:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 20%, transparent);
 }

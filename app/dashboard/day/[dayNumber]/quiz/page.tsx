@@ -145,9 +145,9 @@ export default function QuizPage() {
       if (!active) return
       if (error) console.error('Failed to load quiz questions', error)
 
-      // ── Filter: keep only fully valid questions ───────────────────────────────
+      // ── Filter: keep only fully valid questions, cap at 10 ───────────────────
       const raw = (data as QuizQuestion[] | null) ?? []
-      const loaded = raw.filter(isValidQuestion)
+      const loaded = raw.filter(isValidQuestion).slice(0, 10)
       setQuestions(loaded)
 
       // Restore saved progress (reload persistence)

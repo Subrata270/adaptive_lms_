@@ -299,10 +299,11 @@ export default function InterviewPage() {
             <label className="mt-3 inline-flex items-center gap-2 cursor-pointer group">
               <input
                 type="checkbox"
+                className="hover-checkbox"
                 checked={checked.includes(q.id)}
                 onChange={() => toggle(q.id)}
               />
-              <span className="group-hover:text-[var(--primary)] transition-colors">Mark as completed</span>
+              <span className="group-hover:text-[var(--primary)] transition-colors duration-150">Got It</span>
             </label>
           </div>
         )
