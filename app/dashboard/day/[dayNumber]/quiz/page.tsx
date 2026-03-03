@@ -30,11 +30,31 @@ type AttemptReview = {
 // ── Validation helpers ────────────────────────────────────────────────────────
 // Normalise options: only keep non-empty strings
 const normalise = (options: unknown): string[] => {
-  if (!Array.isArray(options)) return []
-  return options
-    .filter((o): o is string => typeof o === 'string')
-    .map((o) => o.trim())
-    .filter((o) => o.length > 0)
+  // If options is already an array, use it directly
+  if (Array.isArray(options)) {
+    return options
+      .filter((o): o is string => typeof o === 'string')
+      .map((o) => o.trim())
+      .filter((o) => o.length > 0)
+  }
+  // If options is a JSON-encoded string (e.g. "[\"opt1\",\"opt2\"]"), parse it first
+  if (typeof options === 'string') {
+    const trimmed = options.trim()
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed)
+        if (Array.isArray(parsed)) {
+          return parsed
+            .filter((o): o is string => typeof o === 'string')
+            .map((o) => o.trim())
+            .filter((o) => o.length > 0)
+        }
+      } catch {
+        // fall through — return []
+      }
+    }
+  }
+  return []
 }
 
 // Handle multiline text coming from DB where newlines can be stored
@@ -54,7 +74,8 @@ const isValidQuestion = (q: QuizQuestion): boolean => {
   if (!q.prompt || q.prompt.trim().length === 0) return false
   const opts = normalise(q.options)
   if (opts.length < 2) return false
-  const correctAnswers = parseCorrectAnswers(q.correct_answer)
+  // Pass opts so answers containing commas are not incorrectly split
+  const correctAnswers = parseCorrectAnswers(q.correct_answer, opts)
   if (correctAnswers.length === 0) return false
   if (!correctAnswers.some(ans => opts.includes(ans))) return false
   return true
@@ -62,15 +83,25 @@ const isValidQuestion = (q: QuizQuestion): boolean => {
 
 // Parse correct_answer which may contain one or more correct options.
 // Supports:
-//  - single plain string
-//  - comma / pipe / semicolon separated list
+//  - single plain string that exactly matches an option (including ones with commas)
+//  - pipe / semicolon separated list
 //  - JSON array of strings
-function parseCorrectAnswers(raw: string | null): string[] {
+//
+// IMPORTANT: Pass `opts` (the normalised options array) so that answers which
+// contain commas as part of their text (e.g. "Frontend, Backend, and AI/ML")
+// are returned as-is instead of being incorrectly split on those commas.
+function parseCorrectAnswers(raw: string | null, opts?: string[]): string[] {
   if (!raw) return []
   const trimmed = raw.trim()
   if (!trimmed) return []
 
-  // JSON array support: '["opt A","opt B"]'
+  // ── Priority 1: exact match against available options ─────────────────────
+  // If the whole string is itself one of the options, return it unchanged.
+  // This handles answers like "Frontend, Backend, and AI/ML" that contain
+  // commas which are part of the answer text, not delimiters.
+  if (opts && opts.includes(trimmed)) return [trimmed]
+
+  // ── Priority 2: JSON array  '["opt A","opt B"]' ───────────────────────────
   if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
     try {
       const parsed = JSON.parse(trimmed)
@@ -85,8 +116,11 @@ function parseCorrectAnswers(raw: string | null): string[] {
     }
   }
 
+  // ── Priority 3: pipe / semicolon delimited list ───────────────────────────
+  // Note: comma intentionally removed from delimiters because commas commonly
+  // appear inside option text (e.g. "Frontend, Backend, and AI/ML").
   return trimmed
-    .split(/[|,;]+/)
+    .split(/[|;]+/)
     .map(v => v.trim())
     .filter(v => v.length > 0)
 }
@@ -245,6 +279,7 @@ export default function QuizPage() {
       // ── Filter: keep only fully valid questions, cap at 10, randomised ────────
       const valid = raw.filter(isValidQuestion)
 
+
       const saved = loadProgress(dayNumber)
       let loaded: QuizQuestion[] = []
       if (saved?.questionIds && saved.questionIds.length > 0) {
@@ -311,7 +346,7 @@ export default function QuizPage() {
   // ── Handlers ─────────────────────────────────────────────────────────────────
   const handleSelect = (option: string) => {
     if (!currentQuestion || attempted.has(currentQuestion.id)) return
-    const correctAnswers = parseCorrectAnswers(currentQuestion.correct_answer)
+    const correctAnswers = parseCorrectAnswers(currentQuestion.correct_answer, currentOptions)
     const chosen = option.trim()
     setSelectedOption(chosen)
     if (!firstAttemptAnswers[currentQuestion.id]) {
@@ -333,7 +368,7 @@ export default function QuizPage() {
     if (attempted.has(targetQ.id)) {
       const prevSel = firstAttemptAnswers[targetQ.id] ?? null
       setSelectedOption(prevSel)
-      const correctAnswers = parseCorrectAnswers(targetQ.correct_answer)
+      const correctAnswers = parseCorrectAnswers(targetQ.correct_answer, normalise(targetQ.options))
       if (prevSel !== null && correctAnswers.includes(prevSel)) {
         setFeedback('correct')
       } else {
@@ -355,7 +390,7 @@ export default function QuizPage() {
     const rows: AttemptReview[] = questions.map(q => {
       const firstAns = firstAttemptAnswers[q.id] ?? null
       const correct = q.correct_answer ?? null
-      const correctAnswers = parseCorrectAnswers(q.correct_answer)
+      const correctAnswers = parseCorrectAnswers(q.correct_answer, normalise(q.options))
       const isCorrect = firstAns !== null && correctAnswers.includes(firstAns)
       if (isCorrect) totalScore++
       return {
@@ -679,18 +714,18 @@ export default function QuizPage() {
 
       {/* Question card */}
       <div
-        className={`surface-card p-5 border-l-4 transition-colors duration-200 ${
-          feedback === 'correct'
-            ? 'border-green-500'
-            : feedback === 'wrong'
-              ? 'border-red-500'
-              : 'border-transparent'
-        }`}
+        className={`surface-card p-5 border-l-4 transition-colors duration-200 ${feedback === 'correct'
+          ? 'border-green-500'
+          : feedback === 'wrong'
+            ? 'border-red-500'
+            : 'border-transparent'
+          }`}
       >
         <p className="font-semibold text-base mb-5 leading-snug">
           {currentIndex + 1}. {currentQuestion.prompt}
         </p>
-        {currentQuestion.explanation && (
+        {/* Show Explanation button only for CORRECT answers — user can toggle */}
+        {currentQuestion.explanation && feedback === 'correct' && isCurrentAttempted && (
           <button
             type="button"
             onClick={() => {
@@ -702,7 +737,6 @@ export default function QuizPage() {
               })
             }}
             className="mb-4 text-xs font-semibold text-[var(--primary)] underline"
-            disabled={!isCurrentAttempted}
           >
             {visibleExplanations.has(currentQuestion.id) ? 'Hide explanation' : 'Show explanation'}
           </button>
@@ -710,7 +744,7 @@ export default function QuizPage() {
         <div className="space-y-3">
           {currentOptions.map(option => {
             const isSel = selectedOption === option
-            const correctAnswers = parseCorrectAnswers(currentQuestion.correct_answer)
+            const correctAnswers = parseCorrectAnswers(currentQuestion.correct_answer, currentOptions)
             const isCorrect = correctAnswers.includes(option)
             let s = 'border-2 border-[var(--border)] bg-[var(--bg-soft)]'
             if (isSel) {
@@ -733,11 +767,26 @@ export default function QuizPage() {
             )
           })}
         </div>
-        {currentQuestion.explanation && visibleExplanations.has(currentQuestion.id) && (
+        {/* AUTO-SHOW explanation when wrong answer selected */}
+        {currentQuestion.explanation && feedback === 'wrong' && isCurrentAttempted && (
+          <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 p-3">
+            <p className="text-xs font-semibold text-amber-700 mb-1">💡 Explanation</p>
+            <p className="text-sm text-amber-900">
+              {parseMultiline(currentQuestion.explanation).map((line, idx, lines) => (
+                <span key={`${currentQuestion.id}-wrong-exp-${idx}`}>
+                  {line}
+                  {idx < lines.length - 1 && <br />}
+                </span>
+              ))}
+            </p>
+          </div>
+        )}
+        {/* Toggle explanation when correct answer selected */}
+        {currentQuestion.explanation && feedback === 'correct' && visibleExplanations.has(currentQuestion.id) && (
           <div className="mt-4 rounded-xl bg-[var(--bg-soft)] p-3">
             <p className="text-sm">
               {parseMultiline(currentQuestion.explanation).map((line, idx, lines) => (
-                <span key={`${currentQuestion.id}-inline-exp-${idx}`}>
+                <span key={`${currentQuestion.id}-correct-exp-${idx}`}>
                   {line}
                   {idx < lines.length - 1 && <br />}
                 </span>

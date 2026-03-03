@@ -238,9 +238,8 @@ export default function DashboardLayout({
                       <button
                         type="button"
                         onClick={handleLogout}
-                        className={`w-full rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-sm font-semibold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] ${
-                          isAdminView ? 'mt-3' : 'mt-2'
-                        }`}
+                        className={`w-full rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-sm font-semibold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] ${isAdminView ? 'mt-3' : 'mt-2'
+                          }`}
                       >
                         Logout
                       </button>
