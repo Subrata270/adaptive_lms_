@@ -9,32 +9,106 @@ import { getOrderedDayNumbers, parseDayNumber } from '@/lib/helpers'
 import { recapContent } from '@/lib/recapContent'
 import { supabase } from '@/lib/supabase'
 
-type QuizQuestion = { id: string; prompt: string; options: unknown; correct_answer: string | null }
-type AttemptReview = { questionId: string; prompt: string; selected: string | null; correct: string | null; isCorrect: boolean }
+type QuizQuestion = {
+  id: string
+  prompt: string
+  options: unknown
+  correct_answer: string | null
+  explanation?: string | null
+}
+
+type AttemptReview = {
+  questionId: string
+  prompt: string
+  selected: string | null
+  correct: string | null
+  correctAnswers: string[]
+  isCorrect: boolean
+  explanation?: string | null
+}
 
 // ── Validation helpers ────────────────────────────────────────────────────────
 // Normalise options: only keep non-empty strings
 const normalise = (options: unknown): string[] => {
   if (!Array.isArray(options)) return []
-  return options.filter((o): o is string => typeof o === 'string' && o.trim().length > 0)
+  return options
+    .filter((o): o is string => typeof o === 'string')
+    .map((o) => o.trim())
+    .filter((o) => o.length > 0)
 }
+
+// Handle multiline text coming from DB where newlines can be stored
+// as actual \n, \r\n, or escaped "\\n" / "\\r\\n"
+const parseMultiline = (value: string): string[] =>
+  value
+    .replace(/\\r\\n/g, '\n')
+    .replace(/\\n/g, '\n')
+    .replace(/\r\n|\r/g, '\n')
+    .split('\n')
 
 // A question is only shown if:
 //  1. It has a non-empty prompt
 //  2. It has at least 2 answer options
-//  3. It has a correct_answer that actually appears in the options
+//  3. It has at least one correct answer that actually appears in the options
 const isValidQuestion = (q: QuizQuestion): boolean => {
   if (!q.prompt || q.prompt.trim().length === 0) return false
   const opts = normalise(q.options)
   if (opts.length < 2) return false
-  if (!q.correct_answer || q.correct_answer.trim().length === 0) return false
-  if (!opts.includes(q.correct_answer)) return false
+  const correctAnswers = parseCorrectAnswers(q.correct_answer)
+  if (correctAnswers.length === 0) return false
+  if (!correctAnswers.some(ans => opts.includes(ans))) return false
   return true
+}
+
+// Parse correct_answer which may contain one or more correct options.
+// Supports:
+//  - single plain string
+//  - comma / pipe / semicolon separated list
+//  - JSON array of strings
+function parseCorrectAnswers(raw: string | null): string[] {
+  if (!raw) return []
+  const trimmed = raw.trim()
+  if (!trimmed) return []
+
+  // JSON array support: '["opt A","opt B"]'
+  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+    try {
+      const parsed = JSON.parse(trimmed)
+      if (Array.isArray(parsed)) {
+        return parsed
+          .filter((v): v is string => typeof v === 'string')
+          .map(v => v.trim())
+          .filter(v => v.length > 0)
+      }
+    } catch {
+      // fall through to delimiter parsing
+    }
+  }
+
+  return trimmed
+    .split(/[|,;]+/)
+    .map(v => v.trim())
+    .filter(v => v.length > 0)
+}
+
+// Simple in-place shuffle to pick a random subset of questions
+function shuffleInPlace<T>(arr: T[]): void {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const tmp = arr[i]
+    arr[i] = arr[j]
+    arr[j] = tmp
+  }
 }
 
 // ── localStorage ──────────────────────────────────────────────────────────────
 function storageKey(day: number) { return `quiz_progress_day${day}` }
-type SavedProgress = { currentIndex: number; firstAttemptAnswers: Record<string, string>; correctlyAnswered: string[] }
+type SavedProgress = {
+  currentIndex: number
+  firstAttemptAnswers: Record<string, string>
+  correctlyAnswered: string[]
+  questionIds?: string[]
+}
 function loadProgress(day: number): SavedProgress | null {
   try { const r = localStorage.getItem(storageKey(day)); return r ? JSON.parse(r) : null } catch { return null }
 }
@@ -72,6 +146,7 @@ export default function QuizPage() {
   const [progressState, setProgressState] = useState({
     recapCompleted: false, interviewCompleted: false, scenarioCompleted: false, quizCompleted: false,
   })
+  const [bestScore, setBestScore] = useState<number | null>(null)
 
   // Quiz state
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -92,6 +167,8 @@ export default function QuizPage() {
 
   // Pre-quiz screen state
   const [quizStarted, setQuizStarted] = useState(false)
+  const [hasSavedProgress, setHasSavedProgress] = useState(false)
+  const [visibleExplanations, setVisibleExplanations] = useState<Set<string>>(new Set())
 
   // ── Fetch + restore ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -118,7 +195,7 @@ export default function QuizPage() {
 
         const { data: progress, error: progressError } = await supabase
           .from('student_day_progress')
-          .select('recap_completed,interview_completed,scenario_completed,quiz_completed')
+          .select('recap_completed,interview_completed,scenario_completed,quiz_completed,quiz_score')
           .eq('student_id', access.user.id).eq('day_number', dayNumber).maybeSingle()
         if (progressError) console.error('Failed to load progress', progressError)
 
@@ -134,29 +211,67 @@ export default function QuizPage() {
           scenarioCompleted: Boolean(progress?.scenario_completed),
           quizCompleted: Boolean(progress?.quiz_completed),
         })
+        setBestScore(typeof progress?.quiz_score === 'number' ? progress.quiz_score : null)
         if (!unlocked) { if (active) setLoading(false); return }
       }
 
       // ── Fetch ALL questions — no hardcoded limit ──────────────────────────────
       const { data, error } = await supabase
-        .from('questions').select('id,prompt,options,correct_answer')
-        .eq('type', 'quiz').eq('day_number', dayNumber).eq('active', true)
-        .order('created_at', { ascending: true }).order('id', { ascending: true })
+        .from('questions')
+        .select('id,prompt,options,correct_answer,"Quiz Explanation"')
+        .eq('type', 'quiz')
+        .eq('day_number', dayNumber)
+        .eq('active', true)
+        .order('created_at', { ascending: true })
+        .order('id', { ascending: true })
       if (!active) return
-      if (error) console.error('Failed to load quiz questions', error)
+      if (error) {
+        console.error('Failed to load quiz questions', error)
+        setQuestions([])
+        setLoading(false)
+        return
+      }
 
-      // ── Filter: keep only fully valid questions, cap at 10 ───────────────────
-      const raw = (data as QuizQuestion[] | null) ?? []
-      const loaded = raw.filter(isValidQuestion).slice(0, 10)
+      type QuizRow = QuizQuestion & { 'Quiz Explanation'?: string | null }
+      const rows = (data as QuizRow[] | null) ?? []
+      const raw: QuizQuestion[] = rows.map(row => ({
+        id: row.id,
+        prompt: row.prompt,
+        options: row.options,
+        correct_answer: row.correct_answer,
+        explanation: row['Quiz Explanation'] ?? null,
+      }))
+
+      // ── Filter: keep only fully valid questions, cap at 10, randomised ────────
+      const valid = raw.filter(isValidQuestion)
+
+      const saved = loadProgress(dayNumber)
+      let loaded: QuizQuestion[] = []
+      if (saved?.questionIds && saved.questionIds.length > 0) {
+        const byId = new Map(valid.map(q => [q.id, q]))
+        const reordered: QuizQuestion[] = []
+        for (const id of saved.questionIds) {
+          const q = byId.get(id)
+          if (q) reordered.push(q)
+        }
+        for (const q of valid) {
+          if (!saved.questionIds.includes(q.id)) reordered.push(q)
+        }
+        loaded = reordered.slice(0, 10)
+      } else {
+        const clone = [...valid]
+        shuffleInPlace(clone)
+        loaded = clone.slice(0, 10)
+      }
+
       setQuestions(loaded)
 
       // Restore saved progress (reload persistence)
-      const saved = loadProgress(dayNumber)
       if (saved && loaded.length > 0) {
         const validIds = new Set(loaded.map(q => q.id))
         const validFirst: Record<string, string> = {}
         for (const [id, ans] of Object.entries(saved.firstAttemptAnswers)) {
-          if (validIds.has(id)) validFirst[id] = ans
+          if (validIds.has(id)) validFirst[id] = typeof ans === 'string' ? ans.trim() : String(ans)
         }
         const validCorrect = new Set(saved.correctlyAnswered.filter((id: string) => validIds.has(id)))
         setFirstAttemptAnswers(validFirst); setCorrectlyAnswered(validCorrect)
@@ -164,8 +279,17 @@ export default function QuizPage() {
         const idx = Math.max(0, Math.min(saved.currentIndex, loaded.length - 1))
         setCurrentIndex(idx)
         const rq = loaded[idx]
-        if (rq && validCorrect.has(rq.id)) { setSelectedOption(rq.correct_answer ?? null); setFeedback('correct') }
-        else if (rq && validFirst[rq.id]) { setSelectedOption(validFirst[rq.id]); setFeedback('wrong') }
+        if (rq && validCorrect.has(rq.id)) {
+          const sel = validFirst[rq.id] ?? null
+          setSelectedOption(sel)
+          setFeedback('correct')
+        } else if (rq && validFirst[rq.id]) {
+          setSelectedOption(validFirst[rq.id]); setFeedback('wrong')
+        }
+        setHasSavedProgress(true)
+        setQuizStarted(true)
+      } else {
+        setHasSavedProgress(false)
       }
       if (active) setLoading(false)
     }
@@ -180,18 +304,21 @@ export default function QuizPage() {
       currentIndex,
       firstAttemptAnswers,
       correctlyAnswered: Array.from(correctlyAnswered),
+      questionIds: questions.map(q => q.id),
     })
-  }, [currentIndex, firstAttemptAnswers, correctlyAnswered, dayNumber, questions.length, submitted])
+  }, [currentIndex, firstAttemptAnswers, correctlyAnswered, dayNumber, questions, questions.length, submitted])
 
   // ── Handlers ─────────────────────────────────────────────────────────────────
   const handleSelect = (option: string) => {
     if (!currentQuestion || attempted.has(currentQuestion.id)) return
-    setSelectedOption(option)
+    const correctAnswers = parseCorrectAnswers(currentQuestion.correct_answer)
+    const chosen = option.trim()
+    setSelectedOption(chosen)
     if (!firstAttemptAnswers[currentQuestion.id]) {
-      setFirstAttemptAnswers(prev => ({ ...prev, [currentQuestion.id]: option }))
+      setFirstAttemptAnswers(prev => ({ ...prev, [currentQuestion.id]: chosen }))
     }
     setAttempted(prev => { const s = new Set(prev); s.add(currentQuestion.id); return s })
-    if (option === currentQuestion.correct_answer) {
+    if (correctAnswers.includes(chosen)) {
       setFeedback('correct')
       setCorrectlyAnswered(prev => { const s = new Set(prev); s.add(currentQuestion.id); return s })
     } else {
@@ -203,9 +330,19 @@ export default function QuizPage() {
     const targetQ = questions[newIndex]
     if (!targetQ) return
     setCurrentIndex(newIndex)
-    if (correctlyAnswered.has(targetQ.id)) { setSelectedOption(targetQ.correct_answer ?? null); setFeedback('correct') }
-    else if (attempted.has(targetQ.id)) { setSelectedOption(firstAttemptAnswers[targetQ.id] ?? null); setFeedback('wrong') }
-    else { setSelectedOption(null); setFeedback(null) }
+    if (attempted.has(targetQ.id)) {
+      const prevSel = firstAttemptAnswers[targetQ.id] ?? null
+      setSelectedOption(prevSel)
+      const correctAnswers = parseCorrectAnswers(targetQ.correct_answer)
+      if (prevSel !== null && correctAnswers.includes(prevSel)) {
+        setFeedback('correct')
+      } else {
+        setFeedback('wrong')
+      }
+    } else {
+      setSelectedOption(null)
+      setFeedback(null)
+    }
   }
 
   const goPrev = () => { if (currentIndex > 0) navigateTo(currentIndex - 1) }
@@ -218,9 +355,18 @@ export default function QuizPage() {
     const rows: AttemptReview[] = questions.map(q => {
       const firstAns = firstAttemptAnswers[q.id] ?? null
       const correct = q.correct_answer ?? null
-      const isCorrect = firstAns !== null && firstAns === correct
+      const correctAnswers = parseCorrectAnswers(q.correct_answer)
+      const isCorrect = firstAns !== null && correctAnswers.includes(firstAns)
       if (isCorrect) totalScore++
-      return { questionId: q.id, prompt: q.prompt, selected: firstAns, correct, isCorrect }
+      return {
+        questionId: q.id,
+        prompt: q.prompt,
+        selected: firstAns,
+        correct,
+        correctAnswers,
+        isCorrect,
+        explanation: q.explanation ?? undefined,
+      }
     })
     setReviewRows(rows); setScore(totalScore); setSubmitted(true)
     clearProgress(dayNumber)
@@ -231,11 +377,19 @@ export default function QuizPage() {
     }
 
     const { error } = await supabase.from('student_day_progress')
-      .upsert({ student_id: userId, day_number: dayNumber, quiz_completed: true, quiz_score: totalScore },
-        { onConflict: 'student_id,day_number' })
+      .upsert({
+        student_id: userId,
+        day_number: dayNumber,
+        quiz_completed: true,
+        quiz_score: Math.max(bestScore ?? 0, totalScore),
+      }, { onConflict: 'student_id,day_number' })
     if (error) console.error('Failed to save quiz score', error)
     else {
       setProgressState(prev => ({ ...prev, quizCompleted: true }))
+      setBestScore(prev => {
+        const previous = typeof prev === 'number' ? prev : 0
+        return Math.max(previous, totalScore)
+      })
       // ── Permanent unlock: pre-create next day's row so it can never be re-locked ──
       if (nextDayNumber !== null && userId) {
         await ensureDayProgressRow(userId, nextDayNumber)
@@ -321,6 +475,18 @@ export default function QuizPage() {
             </div>
           </div>
 
+          {typeof bestScore === 'number' && (
+            <div className="rounded-xl bg-[var(--bg-soft)] p-4 flex items-start gap-3">
+              <span className="text-2xl">🏆</span>
+              <div>
+                <p className="font-semibold text-sm">Best Score</p>
+                <p className="text-lg font-bold text-[var(--primary)]">
+                  {bestScore}/{questions.length}
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] p-4 space-y-3">
             <p className="font-semibold text-sm flex items-center gap-2"><span>📌</span> Instructions</p>
             <ul className="space-y-2 text-sm muted-text list-none">
@@ -337,8 +503,31 @@ export default function QuizPage() {
               onClick={() => setQuizStarted(true)}
               className="quick-btn success text-center"
             >
-              ✅ Start Quiz
+              {hasSavedProgress ? '✅ Resume Quiz' : '✅ Start Quiz'}
             </button>
+            {hasSavedProgress && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (dayNumber === null) return
+                  clearProgress(dayNumber)
+                  setHasSavedProgress(false)
+                  setQuizStarted(true)
+                  setFirstAttemptAnswers({})
+                  setCorrectlyAnswered(new Set())
+                  setAttempted(new Set())
+                  setCurrentIndex(0)
+                  setSelectedOption(null)
+                  setFeedback(null)
+                  setSubmitted(false)
+                  setScore(null)
+                  setReviewRows([])
+                }}
+                className="rounded-xl border-2 border-[var(--border)] px-4 py-2 font-semibold"
+              >
+                Start New Quiz
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -361,6 +550,14 @@ export default function QuizPage() {
               {score}/{questions.length}
             </span>
           </p>
+          {typeof bestScore === 'number' && (
+            <p className="text-sm muted-text mt-1">
+              Best score for this quiz:{' '}
+              <span className="font-semibold">
+                {bestScore}/{questions.length}
+              </span>
+            </p>
+          )}
           <p className="text-sm muted-text mt-1">Based on first-attempt accuracy.</p>
 
           {/* Post-quiz navigation */}
@@ -392,7 +589,22 @@ export default function QuizPage() {
               <div key={row.questionId} className="surface-card p-4 border-l-4 border-red-400">
                 <p className="font-medium">{idx + 1}. {row.prompt}</p>
                 <p className="text-red-600 mt-2 text-sm">Your answer: {row.selected ?? 'Not attempted'}</p>
-                <p className="text-green-700 text-sm">Correct: {row.correct ?? '—'}</p>
+                <p className="text-green-700 text-sm">
+                  Correct: {row.correctAnswers.length > 0 ? row.correctAnswers.join(', ') : (row.correct ?? '—')}
+                </p>
+                {row.explanation && (
+                  <details className="mt-2 rounded-md bg-[var(--bg-soft)] p-3 text-sm">
+                    <summary className="cursor-pointer font-semibold">View explanation</summary>
+                    <p className="mt-1">
+                      {parseMultiline(row.explanation).map((line, idx, lines) => (
+                        <span key={`${row.questionId}-missed-exp-${idx}`}>
+                          {line}
+                          {idx < lines.length - 1 && <br />}
+                        </span>
+                      ))}
+                    </p>
+                  </details>
+                )}
               </div>
             ))}
           </div>
@@ -406,14 +618,31 @@ export default function QuizPage() {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">All Questions</h2>
           {reviewRows.map((row, idx) => (
-            <div key={row.questionId}
-              className={`surface-card p-4 border-l-4 ${row.isCorrect ? 'border-green-400' : 'border-red-400'}`}>
+            <div
+              key={row.questionId}
+              className={`surface-card p-4 border-l-4 ${row.isCorrect ? 'border-green-400' : 'border-red-400'}`}
+            >
               <p className="font-medium">{idx + 1}. {row.prompt}</p>
               <p className="mt-2 text-sm">Your answer: {row.selected ?? '—'}</p>
-              <p className="text-sm">Correct: {row.correct ?? '—'}</p>
+              <p className="text-sm">
+                Correct: {row.correctAnswers.length > 0 ? row.correctAnswers.join(', ') : (row.correct ?? '—')}
+              </p>
               <p className={`text-sm font-semibold mt-1 ${row.isCorrect ? 'text-green-700' : 'text-red-600'}`}>
                 {row.isCorrect ? '✓ Correct' : '✗ Incorrect'}
               </p>
+              {row.explanation && (
+                <details className="mt-2 rounded-md bg-[var(--bg-soft)] p-3 text-sm">
+                  <summary className="cursor-pointer font-semibold">View explanation</summary>
+                  <p className="mt-1">
+                    {parseMultiline(row.explanation).map((line, idx, lines) => (
+                      <span key={`${row.questionId}-all-exp-${idx}`}>
+                        {line}
+                        {idx < lines.length - 1 && <br />}
+                      </span>
+                    ))}
+                  </p>
+                </details>
+              )}
             </div>
           ))}
         </div>
@@ -449,16 +678,40 @@ export default function QuizPage() {
       </div>
 
       {/* Question card */}
-      <div className={`surface-card p-5 border-l-4 transition-colors duration-200 ${feedback === 'correct' ? 'border-green-500' :
-        feedback === 'wrong' ? 'border-red-500' : 'border-transparent'
-        }`}>
+      <div
+        className={`surface-card p-5 border-l-4 transition-colors duration-200 ${
+          feedback === 'correct'
+            ? 'border-green-500'
+            : feedback === 'wrong'
+              ? 'border-red-500'
+              : 'border-transparent'
+        }`}
+      >
         <p className="font-semibold text-base mb-5 leading-snug">
           {currentIndex + 1}. {currentQuestion.prompt}
         </p>
+        {currentQuestion.explanation && (
+          <button
+            type="button"
+            onClick={() => {
+              setVisibleExplanations(prev => {
+                const next = new Set(prev)
+                if (next.has(currentQuestion.id)) next.delete(currentQuestion.id)
+                else next.add(currentQuestion.id)
+                return next
+              })
+            }}
+            className="mb-4 text-xs font-semibold text-[var(--primary)] underline"
+            disabled={!isCurrentAttempted}
+          >
+            {visibleExplanations.has(currentQuestion.id) ? 'Hide explanation' : 'Show explanation'}
+          </button>
+        )}
         <div className="space-y-3">
           {currentOptions.map(option => {
             const isSel = selectedOption === option
-            const isCorrect = option === currentQuestion.correct_answer
+            const correctAnswers = parseCorrectAnswers(currentQuestion.correct_answer)
+            const isCorrect = correctAnswers.includes(option)
             let s = 'border-2 border-[var(--border)] bg-[var(--bg-soft)]'
             if (isSel) {
               if (feedback === 'correct') s = 'border-2 border-green-500 bg-green-50 text-green-800'
@@ -469,14 +722,29 @@ export default function QuizPage() {
               s = 'border-2 border-green-500 bg-green-50 text-green-800'
             }
             return (
-              <button key={option} onClick={() => handleSelect(option)}
+              <button
+                key={option}
+                onClick={() => handleSelect(option)}
                 disabled={isCurrentAttempted}
-                className={`w-full text-left px-4 py-3 rounded-xl font-medium cursor-pointer transition-all duration-150 disabled:cursor-default ${s}`}>
+                className={`w-full text-left px-4 py-3 rounded-xl font-medium cursor-pointer transition-all duration-150 disabled:cursor-default ${s}`}
+              >
                 {option}
               </button>
             )
           })}
         </div>
+        {currentQuestion.explanation && visibleExplanations.has(currentQuestion.id) && (
+          <div className="mt-4 rounded-xl bg-[var(--bg-soft)] p-3">
+            <p className="text-sm">
+              {parseMultiline(currentQuestion.explanation).map((line, idx, lines) => (
+                <span key={`${currentQuestion.id}-inline-exp-${idx}`}>
+                  {line}
+                  {idx < lines.length - 1 && <br />}
+                </span>
+              ))}
+            </p>
+          </div>
+        )}
         {feedback === 'correct' && (
           <div className="mt-4 flex items-center gap-2 text-green-700 font-semibold">
             <span className="text-xl">✅</span><span>Correct! Proceed to the next question.</span>
