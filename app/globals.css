@@ -472,10 +472,11 @@ html:not(.dark) .pb-subtitle-black {
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 20%, transparent);
 }
 
-/* Checked: solid primary fill */
+/* Checked: solid GREEN fill — marks this item as done */
 .hover-checkbox:checked {
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background-color: var(--success);
+  border-color: var(--success);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--success) 22%, transparent);
 }
 
 /* Checked: white tick mark drawn via rotated border */

@@ -64,7 +64,13 @@ export const getAccessContext = async (): Promise<AccessContext> => {
       | null
 
     if (!response.ok) {
-      console.error('Access context API failed', body?.error ?? response.statusText)
+      const errMsg = body?.error ?? response.statusText
+      // "Auth session missing!" is a harmless race-condition on unauthenticated pages
+      // (session expired between client-side check and server-side validation).
+      // Suppress it to avoid noisy red console errors.
+      if (errMsg !== 'Auth session missing!') {
+        console.error('Access context API failed', errMsg)
+      }
       return {
         user: session.user,
         role: null,

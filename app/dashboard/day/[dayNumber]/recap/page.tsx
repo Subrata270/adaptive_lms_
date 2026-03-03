@@ -145,87 +145,108 @@ export default function RecapPage() {
         <div key={section.id} className="space-y-4">
           <h2 className="text-xl font-semibold">{section.title}</h2>
 
-          {section.topics.map((topic) => (
-            <div key={topic.id} className="surface-card p-4">
-              <h3 className="font-medium">{topic.title}</h3>
-              <p className="mt-2 muted-text">
-                {parseMultiline(topic.explanation).map((line, index, lines) => (
-                  <Fragment key={`${topic.id}-line-${index}`}>
-                    {line}
-                    {index < lines.length - 1 && <br />}
-                  </Fragment>
-                ))}
-              </p>
+          {section.topics.map((topic) => {
+            const isChecked = checked.includes(topic.id)
+            return (
+              <div
+                key={topic.id}
+                className={`surface-card p-4 relative overflow-hidden transition-all duration-200 ${isChecked
+                  ? 'border-green-500 shadow-[0_0_0_1.5px_rgba(16,185,129,0.35),var(--shadow-soft)]'
+                  : ''
+                  }`}
+              >
+                {/* Left green accent bar — visible only when checked */}
+                <span
+                  className={`absolute left-0 top-0 h-full w-1 rounded-l-xl transition-all duration-200 ${isChecked ? 'bg-green-500' : 'bg-transparent'
+                    }`}
+                />
 
-              {Array.isArray(topic.examples) && topic.examples.length > 0 && (
-                <div className="mt-4 space-y-4">
-                  {topic.examples.map((example, exampleIndex) => {
-                    const language =
-                      typeof example.language === 'string' ? example.language.trim() : ''
-                    const code =
-                      typeof example.code === 'string'
-                        ? parseMultiline(example.code).join('\n')
-                        : ''
-                    const exampleExplanation =
-                      typeof example.explanation === 'string' ? example.explanation : ''
+                <h3 className="font-medium pl-1">{topic.title}</h3>
+                <p className="mt-2 muted-text pl-1">
+                  {parseMultiline(topic.explanation).map((line, index, lines) => (
+                    <Fragment key={`${topic.id}-line-${index}`}>
+                      {line}
+                      {index < lines.length - 1 && <br />}
+                    </Fragment>
+                  ))}
+                </p>
 
-                    if (!code && !exampleExplanation) return null
+                {Array.isArray(topic.examples) && topic.examples.length > 0 && (
+                  <div className="mt-4 space-y-4">
+                    {topic.examples.map((example, exampleIndex) => {
+                      const language =
+                        typeof example.language === 'string' ? example.language.trim() : ''
+                      const code =
+                        typeof example.code === 'string'
+                          ? parseMultiline(example.code).join('\n')
+                          : ''
+                      const exampleExplanation =
+                        typeof example.explanation === 'string' ? example.explanation : ''
 
-                    return (
-                      <div
-                        key={`${topic.id}-example-${exampleIndex}`}
-                        className="rounded-xl border border-[var(--border)] bg-[var(--card-strong)] p-3"
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-semibold">Example {exampleIndex + 1}</p>
-                          {language && (
-                            <span className="rounded-full bg-[var(--bg-soft)] px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
-                              {language}
-                            </span>
+                      if (!code && !exampleExplanation) return null
+
+                      return (
+                        <div
+                          key={`${topic.id}-example-${exampleIndex}`}
+                          className="rounded-xl border border-[var(--border)] bg-[var(--card-strong)] p-3"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="text-sm font-semibold">Example {exampleIndex + 1}</p>
+                            {language && (
+                              <span className="rounded-full bg-[var(--bg-soft)] px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
+                                {language}
+                              </span>
+                            )}
+                          </div>
+
+                          {code && (
+                            <pre className="mt-2 overflow-x-auto rounded-lg bg-gray-900 p-3 text-xs text-white md:text-sm">
+                              <code>{code}</code>
+                            </pre>
+                          )}
+
+                          {exampleExplanation && (
+                            <p className="mt-2 text-sm font-semibold">
+                              {parseMultiline(
+                                exampleExplanation
+                                  .replace(/^"|"$/g, '')
+                                  .replace(/^'|'$/g, '')
+                                  .trim()
+                              ).map((line, index, lines) => (
+                                <Fragment key={`${topic.id}-example-${exampleIndex}-line-${index}`}>
+                                  {line}
+                                  {index < lines.length - 1 && <br />}
+                                </Fragment>
+                              ))}
+                            </p>
                           )}
                         </div>
+                      )
+                    })}
+                  </div>
+                )}
 
-                        {code && (
-                          <pre className="mt-2 overflow-x-auto rounded-lg bg-gray-900 p-3 text-xs text-white md:text-sm">
-                            <code>{code}</code>
-                          </pre>
-                        )}
-
-                        {exampleExplanation && (
-                          <p className="mt-2 text-sm font-semibold">
-                            {parseMultiline(
-                              exampleExplanation
-                                .replace(/^"|"$/g, '')
-                                .replace(/^'|'$/g, '')
-                                .trim()
-                            ).map((line, index, lines) => (
-                              <Fragment key={`${topic.id}-example-${exampleIndex}-line-${index}`}>
-                                {line}
-                                {index < lines.length - 1 && <br />}
-                              </Fragment>
-                            ))}
-                          </p>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-
-              <label className="mt-3 inline-flex items-center gap-2 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  className="hover-checkbox"
-                  checked={checked.includes(topic.id)}
-                  onChange={() => toggle(topic.id)}
-                  disabled={access.isAdmin}
-                />
-                <span className="group-hover:text-[var(--primary)] transition-colors duration-150">
-                  Topic Nailed
-                </span>
-              </label>
-            </div>
-          ))}
+                <label className="mt-3 inline-flex items-center gap-2 cursor-pointer group pl-1">
+                  <input
+                    type="checkbox"
+                    className="hover-checkbox"
+                    checked={isChecked}
+                    onChange={() => toggle(topic.id)}
+                    disabled={access.isAdmin}
+                  />
+                  <span className="group-hover:text-[var(--primary)] transition-colors duration-150 flex items-center gap-1">
+                    Topic Nailed
+                    {/* Tick appears only when THIS container is checked */}
+                    {isChecked && (
+                      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 text-green-600 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="2.5,8.5 6,12 13.5,4" />
+                      </svg>
+                    )}
+                  </span>
+                </label>
+              </div>
+            )
+          })}
         </div>
       ))}
 

@@ -176,10 +176,23 @@ export default function ScenarioPage() {
       {scenarioQuestions.length === 0 && <p>No scenario questions available.</p>}
 
       {scenarioQuestions.map((q, index) => {
+        const isItemChecked = checked.includes(q.id)
         const answer = (q.correct_answer ?? '').trim()
         return (
-          <div key={q.id} className="surface-card p-5">
-            <h3 className="font-semibold mb-2">
+          <div
+            key={q.id}
+            className={`surface-card p-5 relative overflow-hidden transition-all duration-200 ${isItemChecked
+              ? 'border-green-500 shadow-[0_0_0_1.5px_rgba(16,185,129,0.35),var(--shadow-soft)]'
+              : ''
+              }`}
+          >
+            {/* Left green accent bar */}
+            <span
+              className={`absolute left-0 top-0 h-full w-1 rounded-l-xl transition-all duration-200 ${isItemChecked ? 'bg-green-500' : 'bg-transparent'
+                }`}
+            />
+
+            <h3 className="font-semibold mb-2 pl-1">
               {index + 1}. {q.prompt}
             </h3>
 
@@ -196,16 +209,22 @@ export default function ScenarioPage() {
               </div>
             )}
 
-            <label className="inline-flex items-center gap-2 cursor-pointer group">
+            <label className="inline-flex items-center gap-2 cursor-pointer group pl-1">
               <input
                 type="checkbox"
                 className="hover-checkbox"
-                checked={checked.includes(q.id)}
+                checked={isItemChecked}
                 onChange={() => toggle(q.id)}
                 disabled={access.isAdmin}
               />
-              <span className="group-hover:text-[var(--primary)] transition-colors duration-150">
+              <span className="group-hover:text-[var(--primary)] transition-colors duration-150 flex items-center gap-1">
                 Got It
+                {/* Tick appears only when THIS container is checked */}
+                {isItemChecked && (
+                  <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 text-green-600 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="2.5,8.5 6,12 13.5,4" />
+                  </svg>
+                )}
               </span>
             </label>
           </div>
