@@ -1,13 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import LearningPathNav from '@/components/learning-path-nav'
-import { ensureDayProgressRow, getAccessContext } from '@/lib/auth'
+import { ensureDayProgressRow } from '@/lib/auth'
 import { getOrderedDayNumbers, parseDayNumber } from '@/lib/helpers'
 import { recapContent } from '@/lib/recapContent'
 import { supabase } from '@/lib/supabase'
+import { useDayCache } from '@/lib/dayCache'
 
 type QuizQuestion = {
   id: string
@@ -171,16 +172,29 @@ export default function QuizPage() {
   // Which batch/sprint number is this? (1-based)
   const batchNumber = dayIndex !== -1 ? Math.ceil((dayIndex + 1) / BATCH_SIZE) : null
 
-  // Data
+  // ── Shared cache (auth + progress — no extra API call) ───────────────────────
+  const { access, progress, patchProgress } = useDayCache()
+
+  // Derived from cache
+  const isAdminView = access.isAdmin
+  const userId = access.userId
+  const isUnlocked =
+    access.isAdmin ||
+    Boolean(progress?.scenario_completed) ||
+    Boolean(progress?.quiz_completed)
+  const progressState = {
+    recapCompleted: Boolean(progress?.recap_completed),
+    interviewCompleted: Boolean(progress?.interview_completed),
+    scenarioCompleted: Boolean(progress?.scenario_completed),
+    quizCompleted: Boolean(progress?.quiz_completed),
+  }
+  const bestScore = typeof progress?.quiz_score === 'number' ? progress.quiz_score : null
+
+  // Quiz-only local state
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
-  const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  const [isUnlocked, setIsUnlocked] = useState(false)
-  const [isAdminView, setIsAdminView] = useState(false)
-  const [progressState, setProgressState] = useState({
-    recapCompleted: false, interviewCompleted: false, scenarioCompleted: false, quizCompleted: false,
-  })
-  const [bestScore, setBestScore] = useState<number | null>(null)
+  // Track which day's questions we've already loaded
+  const loadedQuestionsDayRef = useRef<number | null>(null)
 
   // Quiz state
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -204,52 +218,31 @@ export default function QuizPage() {
   const [hasSavedProgress, setHasSavedProgress] = useState(false)
   const [visibleExplanations, setVisibleExplanations] = useState<Set<string>>(new Set())
 
-  // ── Fetch + restore ──────────────────────────────────────────────────────────
+  // ── Fetch quiz questions (local — needs shuffle + localStorage restore) ──────
+  // Wait until the shared cache has resolved auth (access.loading === false).
+  // Only fetch once per dayNumber; guard with loadedQuestionsDayRef.
   useEffect(() => {
+    if (access.loading) return                        // wait for cache
+    if (dayNumber === null) { setLoading(false); return }
+    if (loadedQuestionsDayRef.current === dayNumber) return  // already loaded
+
     let active = true
-    const fetchQuiz = async () => {
-      if (dayNumber === null) { setLoading(false); return }
+    const fetchQuizQuestions = async () => {
       setLoading(true)
-      const access = await getAccessContext()
-      if (!access.user) { if (active) setLoading(false); return }
 
-      if (access.role === 'admin') {
-        setIsAdminView(true)
-        setUserId(null)
-        setIsUnlocked(true)
-        setProgressState({
-          recapCompleted: true,
-          interviewCompleted: true,
-          scenarioCompleted: true,
-          quizCompleted: true,
-        })
-      } else {
-        setUserId(access.user.id)
-        await ensureDayProgressRow(access.user.id, dayNumber)
-
-        const { data: progress, error: progressError } = await supabase
-          .from('student_day_progress')
-          .select('recap_completed,interview_completed,scenario_completed,quiz_completed,quiz_score')
-          .eq('student_id', access.user.id).eq('day_number', dayNumber).maybeSingle()
-        if (progressError) console.error('Failed to load progress', progressError)
-
-        // ── Permanent unlock: Quiz stays accessible if scenario was ever completed
-        // OR if quiz itself was already completed (revision-safe). ────────────────
-        const unlocked =
-          Boolean(progress?.scenario_completed) ||
-          Boolean(progress?.quiz_completed)
-        setIsUnlocked(unlocked)
-        setProgressState({
-          recapCompleted: Boolean(progress?.recap_completed),
-          interviewCompleted: Boolean(progress?.interview_completed),
-          scenarioCompleted: Boolean(progress?.scenario_completed),
-          quizCompleted: Boolean(progress?.quiz_completed),
-        })
-        setBestScore(typeof progress?.quiz_score === 'number' ? progress.quiz_score : null)
-        if (!unlocked) { if (active) setLoading(false); return }
+      if (!isUnlocked) {
+        // Not unlocked — nothing to fetch
+        if (active) setLoading(false)
+        return
       }
 
-      // ── Fetch ALL questions — no hardcoded limit ──────────────────────────────
+      // For non-admin students, ensure the progress row exists
+      if (!isAdminView && userId) {
+        await ensureDayProgressRow(userId, dayNumber)
+        if (!active) return
+      }
+
+      // ── Fetch ALL quiz questions ────────────────────────────────────────────
       const { data, error } = await supabase
         .from('questions')
         .select('id,prompt,options,correct_answer,"Quiz Explanation"')
@@ -262,7 +255,7 @@ export default function QuizPage() {
       if (error) {
         console.error('Failed to load quiz questions', error)
         setQuestions([])
-        setLoading(false)
+        if (active) setLoading(false)
         return
       }
 
@@ -276,9 +269,8 @@ export default function QuizPage() {
         explanation: row['Quiz Explanation'] ?? null,
       }))
 
-      // ── Filter: keep only fully valid questions, cap at 10, randomised ────────
+      // ── Filter valid, restore from localStorage or shuffle ──────────────────
       const valid = raw.filter(isValidQuestion)
-
 
       const saved = loadProgress(dayNumber)
       let loaded: QuizQuestion[] = []
@@ -300,8 +292,9 @@ export default function QuizPage() {
       }
 
       setQuestions(loaded)
+      loadedQuestionsDayRef.current = dayNumber
 
-      // Restore saved progress (reload persistence)
+      // ── Restore saved quiz progress ─────────────────────────────────────────
       if (saved && loaded.length > 0) {
         const validIds = new Set(loaded.map(q => q.id))
         const validFirst: Record<string, string> = {}
@@ -328,9 +321,9 @@ export default function QuizPage() {
       }
       if (active) setLoading(false)
     }
-    fetchQuiz()
+    fetchQuizQuestions()
     return () => { active = false }
-  }, [dayNumber])
+  }, [dayNumber, access.loading, isUnlocked, isAdminView, userId])
 
   // Auto-save progress
   useEffect(() => {
@@ -407,7 +400,7 @@ export default function QuizPage() {
     clearProgress(dayNumber)
 
     if (isAdminView) {
-      setProgressState(prev => ({ ...prev, quizCompleted: true }))
+      patchProgress({ quiz_completed: true })
       return
     }
 
@@ -420,11 +413,8 @@ export default function QuizPage() {
       }, { onConflict: 'student_id,day_number' })
     if (error) console.error('Failed to save quiz score', error)
     else {
-      setProgressState(prev => ({ ...prev, quizCompleted: true }))
-      setBestScore(prev => {
-        const previous = typeof prev === 'number' ? prev : 0
-        return Math.max(previous, totalScore)
-      })
+      const newBest = Math.max(bestScore ?? 0, totalScore)
+      patchProgress({ quiz_completed: true, quiz_score: newBest })
       // ── Permanent unlock: pre-create next day's row so it can never be re-locked ──
       if (nextDayNumber !== null && userId) {
         await ensureDayProgressRow(userId, nextDayNumber)

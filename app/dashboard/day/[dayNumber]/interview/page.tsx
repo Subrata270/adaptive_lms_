@@ -1,25 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
 import LearningPathNav from '@/components/learning-path-nav'
-import { ensureDayProgressRow, getAccessContext } from '@/lib/auth'
 import {
   INTERVIEW_REQUIRED_COUNT,
-  mergeUniqueById,
   normalizeStringArray,
   parseDayNumber,
 } from '@/lib/helpers'
 import { supabase } from '@/lib/supabase'
-
-const PAGE_SIZE = 5
-
-type Question = {
-  id: string
-  prompt: string
-  correct_answer: string | null
-}
+import { useDayCache } from '@/lib/dayCache'
 
 const parseMultiline = (value: string): string[] =>
   value
@@ -30,189 +21,110 @@ const parseMultiline = (value: string): string[] =>
 
 export default function InterviewPage() {
   const params = useParams<{ dayNumber: string }>()
-  const dayNumber = useMemo(
-    () => parseDayNumber(params.dayNumber),
-    [params.dayNumber]
+  const dayNumber = useMemo(() => parseDayNumber(params.dayNumber), [params.dayNumber])
+
+  // ── Shared cache — no extra API call ────────────────────────────────────────
+  const {
+    access,
+    progress,
+    patchProgress,
+    interviewQuestions,
+    interviewTotalCount,
+    appendInterviewQuestions,
+  } = useDayCache()
+
+  const [loadingMore, setLoadingMore] = useState(false)
+
+  // Parse checked state from cache
+  const checked = useMemo(
+    () => normalizeStringArray(progress?.interview_checked),
+    [progress?.interview_checked]
   )
 
-  const [questions, setQuestions] = useState<Question[]>([])
-  const [checked, setChecked] = useState<string[]>([])
-  const [userId, setUserId] = useState<string | null>(null)
-  const [totalCount, setTotalCount] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [isUnlocked, setIsUnlocked] = useState(false)
-  const [isAdminView, setIsAdminView] = useState(false)
-  const [progressState, setProgressState] = useState({
-    recapCompleted: false,
-    interviewCompleted: false,
-    scenarioCompleted: false,
-    quizCompleted: false,
-  })
-
-  const targetCount = Math.min(INTERVIEW_REQUIRED_COUNT, totalCount)
-  const hasMore = questions.length < totalCount
+  const targetCount = Math.min(INTERVIEW_REQUIRED_COUNT, interviewTotalCount)
+  const hasMore = interviewQuestions.length < interviewTotalCount
   const isComplete = targetCount > 0 && checked.length >= targetCount
 
-  const loadQuestions = useCallback(
-    async (offset: number, append: boolean) => {
-      if (dayNumber === null) return
+  // ── Unlock logic (mirrors what DayCacheProvider already computed) ───────────
+  const isUnlocked =
+    access.isAdmin ||
+    Boolean(progress?.recap_completed) ||
+    Boolean(progress?.interview_completed) ||
+    Boolean(progress?.scenario_completed) ||
+    Boolean(progress?.quiz_completed)
 
-      const { data, error, count } = await supabase
-        .from('questions')
-        .select('*', { count: 'exact' })
-        .eq('type', 'interview')
-        .eq('day_number', dayNumber)
-        .eq('active', true)
-        .order('created_at', { ascending: true })
-        .order('id', { ascending: true })
-        .range(offset, offset + PAGE_SIZE - 1)
+  // ── Handlers ─────────────────────────────────────────────────────────────────
+  const toggle = async (questionId: string) => {
+    if (access.isAdmin || !access.userId || dayNumber === null) return
 
-      if (error) {
-        console.error('Failed to load interview questions', error)
-        return
-      }
+    const updated = checked.includes(questionId)
+      ? checked.filter((id) => id !== questionId)
+      : [...checked, questionId]
 
-      const incoming = (data as Question[] | null) ?? []
-      setTotalCount(count ?? 0)
-      setQuestions((prev) =>
-        append ? mergeUniqueById(prev, incoming) : incoming
+    const allDone = Math.min(INTERVIEW_REQUIRED_COUNT, interviewTotalCount) > 0 &&
+      updated.length >= Math.min(INTERVIEW_REQUIRED_COUNT, interviewTotalCount)
+
+    // Optimistic update
+    patchProgress({
+      interview_checked: updated,
+      ...(allDone ? { interview_completed: true } : {}),
+    })
+
+    const { error } = await supabase
+      .from('student_day_progress')
+      .upsert(
+        {
+          student_id: access.userId,
+          day_number: dayNumber,
+          interview_checked: updated,
+          ...(allDone ? { interview_completed: true } : {}),
+        },
+        { onConflict: 'student_id,day_number' }
       )
-    },
-    [dayNumber]
-  )
 
-  useEffect(() => {
-    let active = true
-
-    const load = async () => {
-      if (dayNumber === null) {
-        setLoading(false)
-        return
-      }
-
-      setLoading(true)
-      const access = await getAccessContext()
-      if (!access.user) {
-        if (active) setLoading(false)
-        return
-      }
-
-      if (access.role === 'admin') {
-        setIsAdminView(true)
-        setIsUnlocked(true)
-        setUserId(null)
-        setChecked([])
-        setProgressState({
-          recapCompleted: true,
-          interviewCompleted: true,
-          scenarioCompleted: true,
-          quizCompleted: true,
-        })
-        await loadQuestions(0, false)
-        if (active) setLoading(false)
-        return
-      }
-
-      await ensureDayProgressRow(access.user.id, dayNumber)
-
-      const { data: progress, error } = await supabase
-        .from('student_day_progress')
-        .select(
-          'recap_completed,interview_checked,interview_completed,scenario_completed,quiz_completed'
-        )
-        .eq('student_id', access.user.id)
-        .eq('day_number', dayNumber)
-        .maybeSingle()
-
-      if (!active) return
-      if (error) {
-        console.error('Failed to load interview progress', error)
-      }
-
-      // ── Permanent unlock: Interview stays accessible if recap was ever completed
-      // OR if any downstream section was ever unlocked (revision-safe). ────────────
-      const unlocked =
-        Boolean(progress?.recap_completed) ||
-        Boolean(progress?.interview_completed) ||
-        Boolean(progress?.scenario_completed) ||
-        Boolean(progress?.quiz_completed)
-      setIsUnlocked(unlocked)
-      setUserId(access.user.id)
-      setChecked(normalizeStringArray(progress?.interview_checked))
-      setProgressState({
-        recapCompleted: Boolean(progress?.recap_completed),
-        interviewCompleted: Boolean(progress?.interview_completed),
-        scenarioCompleted: Boolean(progress?.scenario_completed),
-        quizCompleted: Boolean(progress?.quiz_completed),
-      })
-
-      if (unlocked) {
-        await loadQuestions(0, false)
-      }
-
-      if (active) setLoading(false)
+    if (error) {
+      console.error('Failed to sync interview completion', error)
+      // Rollback
+      patchProgress({ interview_checked: checked })
     }
-
-    load()
-    return () => {
-      active = false
-    }
-  }, [dayNumber, loadQuestions])
-
-  useEffect(() => {
-    const syncCompletion = async () => {
-      if (isAdminView || !userId || dayNumber === null || !isUnlocked) return
-      // ── Permanent unlock: only ever write true, never revert to false ────────────
-      if (!isComplete) return
-
-      const { error } = await supabase
-        .from('student_day_progress')
-        .upsert(
-          {
-            student_id: userId,
-            day_number: dayNumber,
-            interview_checked: checked,
-            interview_completed: true,
-          },
-          { onConflict: 'student_id,day_number' }
-        )
-
-      if (error) {
-        console.error('Failed to sync interview completion', error)
-        return
-      }
-
-      setProgressState((prev) => ({
-        ...prev,
-        interviewCompleted: true,
-      }))
-    }
-
-    syncCompletion()
-  }, [checked, dayNumber, isAdminView, isComplete, isUnlocked, userId])
-
-  const toggle = (questionId: string) => {
-    setChecked((prev) =>
-      prev.includes(questionId)
-        ? prev.filter((id) => id !== questionId)
-        : [...prev, questionId]
-    )
   }
 
   const loadMore = async () => {
-    if (!hasMore || loadingMore) return
+    if (!hasMore || loadingMore || dayNumber === null) return
     setLoadingMore(true)
-    await loadQuestions(questions.length, true)
+
+    const offset = interviewQuestions.length
+    const { data, error, count } = await supabase
+      .from('questions')
+      .select('id,prompt,correct_answer', { count: 'exact' })
+      .eq('type', 'interview')
+      .eq('day_number', dayNumber)
+      .eq('active', true)
+      .order('created_at', { ascending: true })
+      .order('id', { ascending: true })
+      .range(offset, offset + 4)
+
+    if (error) {
+      console.error('Failed to load more interview questions', error)
+    } else {
+      appendInterviewQuestions(
+        (data as { id: string; prompt: string; correct_answer: string | null }[] | null) ?? [],
+        count ?? interviewTotalCount
+      )
+    }
     setLoadingMore(false)
   }
 
-  if (dayNumber === null) {
-    return <p>Invalid day number.</p>
-  }
+  // ── Early returns ─────────────────────────────────────────────────────────────
+  if (dayNumber === null) return <p>Invalid day number.</p>
 
-  if (loading) {
-    return <p>Loading interview questions...</p>
+  if (access.loading) return <p>Loading interview questions...</p>
+
+  const progressState = {
+    recapCompleted: Boolean(progress?.recap_completed),
+    interviewCompleted: Boolean(progress?.interview_completed) || isComplete,
+    scenarioCompleted: Boolean(progress?.scenario_completed),
+    quizCompleted: Boolean(progress?.quiz_completed),
   }
 
   if (!isUnlocked) {
@@ -221,12 +133,7 @@ export default function InterviewPage() {
         <LearningPathNav
           dayNumber={dayNumber}
           currentSection="interview"
-          progress={{
-            recapCompleted: progressState.recapCompleted,
-            interviewCompleted: progressState.interviewCompleted,
-            scenarioCompleted: progressState.scenarioCompleted,
-            quizCompleted: progressState.quizCompleted,
-          }}
+          progress={progressState}
         />
         <div className="surface-card p-5">
           <h1 className="text-2xl font-bold">Interview - Day {dayNumber}</h1>
@@ -251,7 +158,7 @@ export default function InterviewPage() {
         <p className="mt-2 text-sm muted-text">
           Check completed questions to unlock scenario.
         </p>
-        {isAdminView && (
+        {access.isAdmin && (
           <p className="mt-2 rounded-xl bg-[var(--bg-soft)] px-3 py-2 text-xs font-semibold text-[var(--primary)]">
             Admin preview mode: all sections unlocked and progress writes disabled.
           </p>
@@ -261,21 +168,16 @@ export default function InterviewPage() {
       <LearningPathNav
         dayNumber={dayNumber}
         currentSection="interview"
-        progress={{
-          recapCompleted: progressState.recapCompleted,
-          interviewCompleted: progressState.interviewCompleted || isComplete,
-          scenarioCompleted: progressState.scenarioCompleted,
-          quizCompleted: progressState.quizCompleted,
-        }}
+        progress={progressState}
       />
 
       <p className="text-sm muted-text">
         Completed {checked.length} of {targetCount || 0}
       </p>
 
-      {questions.length === 0 && <p>No interview questions available.</p>}
+      {interviewQuestions.length === 0 && <p>No interview questions available.</p>}
 
-      {questions.map((q, index) => {
+      {interviewQuestions.map((q, index) => {
         const answer = (q.correct_answer ?? '').trim()
         return (
           <div key={q.id} className="surface-card p-4">
@@ -302,8 +204,11 @@ export default function InterviewPage() {
                 className="hover-checkbox"
                 checked={checked.includes(q.id)}
                 onChange={() => toggle(q.id)}
+                disabled={access.isAdmin}
               />
-              <span className="group-hover:text-[var(--primary)] transition-colors duration-150">Got It</span>
+              <span className="group-hover:text-[var(--primary)] transition-colors duration-150">
+                Got It
+              </span>
             </label>
           </div>
         )
@@ -329,8 +234,10 @@ export default function InterviewPage() {
           </Link>
         )}
 
-        {!hasMore && !isComplete && questions.length > 0 && (
-          <p className="text-sm muted-text italic">Mark all questions as completed to continue.</p>
+        {!hasMore && !isComplete && interviewQuestions.length > 0 && (
+          <p className="text-sm muted-text italic">
+            Mark all questions as completed to continue.
+          </p>
         )}
       </div>
     </div>

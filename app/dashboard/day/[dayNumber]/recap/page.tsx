@@ -1,13 +1,13 @@
 'use client'
 
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, useMemo } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import LearningPathNav from '@/components/learning-path-nav'
-import { ensureDayProgressRow, getAccessContext } from '@/lib/auth'
-import { recapContent } from '@/lib/recapContent'
 import { normalizeStringArray, parseDayNumber } from '@/lib/helpers'
+import { recapContent } from '@/lib/recapContent'
 import { supabase } from '@/lib/supabase'
+import { useDayCache } from '@/lib/dayCache'
 
 type RecapTopic = {
   id: string
@@ -40,18 +40,14 @@ const parseMultiline = (value: string | null | undefined): string[] => {
 
 export default function RecapPage() {
   const params = useParams<{ dayNumber: string }>()
-  const recapByDay = useMemo(
-    () => recapContent as Record<number, RecapSection[]>,
-    []
-  )
-  const dayNumber = useMemo(
-    () => parseDayNumber(params.dayNumber),
-    [params.dayNumber]
-  )
+  const dayNumber = useMemo(() => parseDayNumber(params.dayNumber), [params.dayNumber])
+
+  // ── Shared cache (no additional API call) ────────────────────────────────────
+  const { access, progress, patchProgress } = useDayCache()
+
+  const recapByDay = useMemo(() => recapContent as Record<number, RecapSection[]>, [])
   const sections = useMemo(
-    () =>
-      ((dayNumber === null ? [] : recapByDay[dayNumber]) ||
-        []) as RecapSection[],
+    () => ((dayNumber === null ? [] : recapByDay[dayNumber]) || []) as RecapSection[],
     [dayNumber, recapByDay]
   )
   const totalTopics = useMemo(
@@ -59,94 +55,27 @@ export default function RecapPage() {
     [sections]
   )
 
-  const [checked, setChecked] = useState<string[]>([])
-  const [userId, setUserId] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [isAdminView, setIsAdminView] = useState(false)
-  const [downstreamProgress, setDownstreamProgress] = useState({
-    interviewCompleted: false,
-    scenarioCompleted: false,
-    quizCompleted: false,
-  })
+  // Parse checked topics from cached progress
+  const checked = useMemo(
+    () => normalizeStringArray(progress?.recap_checked),
+    [progress?.recap_checked]
+  )
 
-  useEffect(() => {
-    let active = true
-
-    const load = async () => {
-      if (dayNumber === null) {
-        setLoading(false)
-        return
-      }
-
-      setLoading(true)
-      const access = await getAccessContext()
-      if (!access.user) {
-        if (active) setLoading(false)
-        return
-      }
-
-      if (access.role === 'admin') {
-        if (!active) return
-        setIsAdminView(true)
-        setUserId(null)
-        setChecked([])
-        setDownstreamProgress({
-          interviewCompleted: true,
-          scenarioCompleted: true,
-          quizCompleted: true,
-        })
-        setLoading(false)
-        return
-      }
-
-      await ensureDayProgressRow(access.user.id, dayNumber)
-
-      const { data: progress, error } = await supabase
-        .from('student_day_progress')
-        .select('recap_checked,recap_completed,interview_completed,scenario_completed,quiz_completed')
-        .eq('student_id', access.user.id)
-        .eq('day_number', dayNumber)
-        .maybeSingle()
-
-      if (!active) return
-      if (error) {
-        console.error('Failed to load recap progress', error)
-      }
-
-      setUserId(access.user.id)
-      setChecked(normalizeStringArray(progress?.recap_checked))
-      // Preserve any already-unlocked downstream state from DB
-      setDownstreamProgress({
-        interviewCompleted: Boolean(progress?.interview_completed),
-        scenarioCompleted: Boolean(progress?.scenario_completed),
-        quizCompleted: Boolean(progress?.quiz_completed),
-      })
-      // recap_completed already loaded via select above; downstream sections are set
-      setLoading(false)
-    }
-
-    load()
-    return () => {
-      active = false
-    }
-  }, [dayNumber])
-
+  // ── Handlers ─────────────────────────────────────────────────────────────────
   const toggle = async (topicId: string) => {
-    if (isAdminView || !userId || dayNumber === null) return
+    if (access.isAdmin || !access.userId || dayNumber === null) return
 
     const updated = checked.includes(topicId)
       ? checked.filter((id) => id !== topicId)
       : [...checked, topicId]
 
-    setChecked(updated)
-
     const allDone = totalTopics > 0 && updated.length === totalTopics
 
-    // ── Permanent unlock: ONLY ever set recap_completed=true, never false ────────
-    // If not all topics done yet, omit recap_completed from the upsert so the
-    // existing DB value (which may already be true) is not overwritten.
+    // Optimistic update — instant UI, no loading state needed
+    patchProgress({ recap_checked: updated, ...(allDone ? { recap_completed: true } : {}) })
+
     const upsertPayload: Record<string, unknown> = {
-      student_id: userId,
+      student_id: access.userId,
       day_number: dayNumber,
       recap_checked: updated,
     }
@@ -160,25 +89,24 @@ export default function RecapPage() {
 
     if (error) {
       console.error('Failed to save recap progress', error)
+      // Rollback on error
+      patchProgress({ recap_checked: checked })
     }
   }
 
-  // recapCompleted drives the UI nav; also show as complete if downstreamProgress
-  // shows any section was already unlocked (meaning recap was done before).
+  // ── Derived state for nav ─────────────────────────────────────────────────────
   const recapCompletedByCheckbox = totalTopics > 0 && checked.length >= totalTopics
   const recapCompletedByDownstream =
-    downstreamProgress.interviewCompleted ||
-    downstreamProgress.scenarioCompleted ||
-    downstreamProgress.quizCompleted
-  const recapCompleted = isAdminView || recapCompletedByCheckbox || recapCompletedByDownstream
+    Boolean(progress?.interview_completed) ||
+    Boolean(progress?.scenario_completed) ||
+    Boolean(progress?.quiz_completed)
+  const recapCompleted =
+    access.isAdmin || recapCompletedByCheckbox || recapCompletedByDownstream || Boolean(progress?.recap_completed)
 
-  if (dayNumber === null) {
-    return <p>Invalid day number.</p>
-  }
+  // ── Early returns ─────────────────────────────────────────────────────────────
+  if (dayNumber === null) return <p>Invalid day number.</p>
 
-  if (loading) {
-    return <p>Loading recap...</p>
-  }
+  if (access.loading) return <p>Loading recap...</p>
 
   if (sections.length === 0) {
     return <p>No recap content available for Day {dayNumber}.</p>
@@ -191,7 +119,7 @@ export default function RecapPage() {
         <p className="mt-2 text-sm muted-text">
           Mark all topics complete to unlock interview.
         </p>
-        {isAdminView && (
+        {access.isAdmin && (
           <p className="mt-2 rounded-xl bg-[var(--bg-soft)] px-3 py-2 text-xs font-semibold text-[var(--primary)]">
             Admin preview mode: content unlocked and progress editing disabled.
           </p>
@@ -203,9 +131,9 @@ export default function RecapPage() {
         currentSection="recap"
         progress={{
           recapCompleted,
-          interviewCompleted: downstreamProgress.interviewCompleted,
-          scenarioCompleted: downstreamProgress.scenarioCompleted,
-          quizCompleted: downstreamProgress.quizCompleted,
+          interviewCompleted: Boolean(progress?.interview_completed),
+          scenarioCompleted: Boolean(progress?.scenario_completed),
+          quizCompleted: Boolean(progress?.quiz_completed),
         }}
       />
 
@@ -233,17 +161,13 @@ export default function RecapPage() {
                 <div className="mt-4 space-y-4">
                   {topic.examples.map((example, exampleIndex) => {
                     const language =
-                      typeof example.language === 'string'
-                        ? example.language.trim()
-                        : ''
+                      typeof example.language === 'string' ? example.language.trim() : ''
                     const code =
                       typeof example.code === 'string'
                         ? parseMultiline(example.code).join('\n')
                         : ''
                     const exampleExplanation =
-                      typeof example.explanation === 'string'
-                        ? example.explanation
-                        : ''
+                      typeof example.explanation === 'string' ? example.explanation : ''
 
                     if (!code && !exampleExplanation) return null
 
@@ -253,9 +177,7 @@ export default function RecapPage() {
                         className="rounded-xl border border-[var(--border)] bg-[var(--card-strong)] p-3"
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-semibold">
-                            Example {exampleIndex + 1}
-                          </p>
+                          <p className="text-sm font-semibold">Example {exampleIndex + 1}</p>
                           {language && (
                             <span className="rounded-full bg-[var(--bg-soft)] px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
                               {language}
@@ -271,7 +193,12 @@ export default function RecapPage() {
 
                         {exampleExplanation && (
                           <p className="mt-2 text-sm font-semibold">
-                            {parseMultiline(exampleExplanation.replace(/^"|"$/g, '').replace(/^‘|’$/g, '').trim()).map((line, index, lines) => (
+                            {parseMultiline(
+                              exampleExplanation
+                                .replace(/^"|"$/g, '')
+                                .replace(/^'|'$/g, '')
+                                .trim()
+                            ).map((line, index, lines) => (
                               <Fragment key={`${topic.id}-example-${exampleIndex}-line-${index}`}>
                                 {line}
                                 {index < lines.length - 1 && <br />}
@@ -291,9 +218,11 @@ export default function RecapPage() {
                   className="hover-checkbox"
                   checked={checked.includes(topic.id)}
                   onChange={() => toggle(topic.id)}
-                  disabled={isAdminView}
+                  disabled={access.isAdmin}
                 />
-                <span className="group-hover:text-[var(--primary)] transition-colors duration-150">Topic Nailed</span>
+                <span className="group-hover:text-[var(--primary)] transition-colors duration-150">
+                  Topic Nailed
+                </span>
               </label>
             </div>
           ))}
