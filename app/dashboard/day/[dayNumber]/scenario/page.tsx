@@ -36,14 +36,21 @@ export default function ScenarioPage() {
   const [loadingMore, setLoadingMore] = useState(false)
 
   // Parse checked state from cache
+  const visibleIds = useMemo(
+    () => new Set(scenarioQuestions.map((q) => q.id)),
+    [scenarioQuestions]
+  )
   const checked = useMemo(
-    () => normalizeStringArray(progress?.scenario_checked),
-    [progress?.scenario_checked]
+    () =>
+      normalizeStringArray(progress?.scenario_checked).filter((id) =>
+        visibleIds.has(id)
+      ),
+    [progress?.scenario_checked, visibleIds]
   )
 
   const targetCount = Math.min(SCENARIO_REQUIRED_COUNT, scenarioTotalCount)
   const hasMore = scenarioQuestions.length < scenarioTotalCount
-  const isComplete = targetCount > 0 && checked.length >= targetCount
+  const isComplete = targetCount === 0 ? true : checked.length >= targetCount
 
   // ── Unlock logic ─────────────────────────────────────────────────────────────
   const isUnlocked =

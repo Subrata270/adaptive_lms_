@@ -36,14 +36,21 @@ export default function InterviewPage() {
   const [loadingMore, setLoadingMore] = useState(false)
 
   // Parse checked state from cache
+  const visibleIds = useMemo(
+    () => new Set(interviewQuestions.map((q) => q.id)),
+    [interviewQuestions]
+  )
   const checked = useMemo(
-    () => normalizeStringArray(progress?.interview_checked),
-    [progress?.interview_checked]
+    () =>
+      normalizeStringArray(progress?.interview_checked).filter((id) =>
+        visibleIds.has(id)
+      ),
+    [progress?.interview_checked, visibleIds]
   )
 
   const targetCount = Math.min(INTERVIEW_REQUIRED_COUNT, interviewTotalCount)
   const hasMore = interviewQuestions.length < interviewTotalCount
-  const isComplete = targetCount > 0 && checked.length >= targetCount
+  const isComplete = targetCount === 0 ? true : checked.length >= targetCount
 
   // ── Unlock logic (mirrors what DayCacheProvider already computed) ───────────
   const isUnlocked =

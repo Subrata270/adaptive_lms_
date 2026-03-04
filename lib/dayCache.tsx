@@ -30,7 +30,11 @@ import React, {
     useState,
 } from 'react'
 import { getAccessContext } from '@/lib/auth'
-import { mergeUniqueById } from '@/lib/helpers'
+import {
+    INTERVIEW_REQUIRED_COUNT,
+    SCENARIO_REQUIRED_COUNT,
+    mergeUniqueById,
+} from '@/lib/helpers'
 import { supabase } from '@/lib/supabase'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -94,6 +98,43 @@ export function useDayCache(): DayCacheState {
 // ── Provider ──────────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 5
+const RANDOM_SEED_PREFIX = 'day-questions'
+
+const hashStringToUint32 = (value: string): number => {
+    let hash = 2166136261
+    for (let i = 0; i < value.length; i += 1) {
+        hash ^= value.charCodeAt(i)
+        hash = Math.imul(hash, 16777619)
+    }
+    return hash >>> 0
+}
+
+const makeSeededRng = (seed: string) => {
+    let state = hashStringToUint32(seed)
+    return () => {
+        state = (state + 0x6D2B79F5) | 0
+        let t = Math.imul(state ^ (state >>> 15), 1 | state)
+        t ^= t + Math.imul(t ^ (t >>> 7), 61 | t)
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+    }
+}
+
+const shuffleWithSeed = <T,>(items: T[], seed: string): T[] => {
+    const rng = makeSeededRng(seed)
+    const copy = [...items]
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(rng() * (i + 1))
+        const tmp = copy[i]
+        copy[i] = copy[j]
+        copy[j] = tmp
+    }
+    return copy
+}
+
+const pickRandomSubset = <T,>(items: T[], size: number, seed: string): T[] => {
+    if (items.length <= size) return items
+    return shuffleWithSeed(items, seed).slice(0, size)
+}
 
 type Props = {
     dayNumber: number
@@ -229,23 +270,46 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
                 quiz_score: typeof row?.quiz_score === 'number' ? row.quiz_score : null,
             }
 
-            setProgress(prog)
             setAccess({ userId, isAdmin: false, loading: false, unauthenticated: false })
 
             // ── 4. Fetch questions if sections are unlocked ───────────────────────
+            const selectionSeed = `${RANDOM_SEED_PREFIX}:${userId}:${dayNumber}`
             const interviewUnlocked =
                 prog.recap_completed ||
                 prog.interview_completed ||
                 prog.scenario_completed ||
                 prog.quiz_completed
 
+            if (interviewUnlocked) {
+                const interviewTotal = await fetchInterviewQuestions(dayNumber, active, {
+                    limit: INTERVIEW_REQUIRED_COUNT,
+                    seed: `${selectionSeed}:interview`,
+                })
+                if (!active) return
+                if (interviewTotal === 0 && !prog.interview_completed) {
+                    await markSectionComplete('interview', userId, dayNumber)
+                    prog.interview_completed = true
+                    prog.interview_checked = []
+                }
+            }
+
             const scenarioUnlocked =
                 prog.interview_completed || prog.scenario_completed || prog.quiz_completed
 
-            const fetches: Promise<void>[] = []
-            if (interviewUnlocked) fetches.push(fetchInterviewQuestions(dayNumber, active))
-            if (scenarioUnlocked) fetches.push(fetchScenarioQuestions(dayNumber, active))
-            await Promise.all(fetches)
+            if (scenarioUnlocked) {
+                const scenarioTotal = await fetchScenarioQuestions(dayNumber, active, {
+                    limit: SCENARIO_REQUIRED_COUNT,
+                    seed: `${selectionSeed}:scenario`,
+                })
+                if (!active) return
+                if (scenarioTotal === 0 && !prog.scenario_completed) {
+                    await markSectionComplete('scenario', userId, dayNumber)
+                    prog.scenario_completed = true
+                    prog.scenario_checked = []
+                }
+            }
+
+            setProgress(prog)
 
             if (active) {
                 loadedDayRef.current = dayNumber
@@ -261,10 +325,15 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
 
     // ── Helpers to fetch questions pages ────────────────────────────────────────
 
-    async function fetchInterviewQuestions(day: number, active: boolean) {
+    async function fetchInterviewQuestions(
+        day: number,
+        active: boolean,
+        options?: { limit?: number; seed?: string }
+    ) {
         let offset = 0
         let fetched = 0
         let total = 0
+        const all: SimpleQuestion[] = []
 
         do {
             const { data, error, count } = await supabase
@@ -277,28 +346,44 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
                 .order('id', { ascending: true })
                 .range(offset, offset + PAGE_SIZE - 1)
 
-            if (!active) return
+            if (!active) return 0
             if (error) {
                 console.error('[DayCache] Failed to fetch interview questions:', error)
-                return
+                return 0
             }
 
             const incoming = (data as SimpleQuestion[] | null) ?? []
             total = count ?? 0
             fetched += incoming.length
             offset += incoming.length
-
-            setInterviewTotalCount(total)
-            setInterviewQuestions((prev) => mergeUniqueById(prev, incoming))
+            all.push(...incoming)
 
             if (incoming.length === 0) break
         } while (fetched < total)
+
+        let finalList = all
+        let finalTotal = total
+
+        if (options?.limit && total > options.limit) {
+            const seed = options.seed ?? `${RANDOM_SEED_PREFIX}:interview:${day}`
+            finalList = pickRandomSubset(all, options.limit, seed)
+            finalTotal = options.limit
+        }
+
+        setInterviewQuestions(finalList)
+        setInterviewTotalCount(finalTotal)
+        return total
     }
 
-    async function fetchScenarioQuestions(day: number, active: boolean) {
+    async function fetchScenarioQuestions(
+        day: number,
+        active: boolean,
+        options?: { limit?: number; seed?: string }
+    ) {
         let offset = 0
         let fetched = 0
         let total = 0
+        const all: SimpleQuestion[] = []
 
         do {
             const { data, error, count } = await supabase
@@ -311,22 +396,61 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
                 .order('id', { ascending: true })
                 .range(offset, offset + PAGE_SIZE - 1)
 
-            if (!active) return
+            if (!active) return 0
             if (error) {
                 console.error('[DayCache] Failed to fetch scenario questions:', error)
-                return
+                return 0
             }
 
             const incoming = (data as SimpleQuestion[] | null) ?? []
             total = count ?? 0
             fetched += incoming.length
             offset += incoming.length
-
-            setScenarioTotalCount(total)
-            setScenarioQuestions((prev) => mergeUniqueById(prev, incoming))
+            all.push(...incoming)
 
             if (incoming.length === 0) break
         } while (fetched < total)
+
+        let finalList = all
+        let finalTotal = total
+
+        if (options?.limit && total > options.limit) {
+            const seed = options.seed ?? `${RANDOM_SEED_PREFIX}:scenario:${day}`
+            finalList = pickRandomSubset(all, options.limit, seed)
+            finalTotal = options.limit
+        }
+
+        setScenarioQuestions(finalList)
+        setScenarioTotalCount(finalTotal)
+        return total
+    }
+
+    async function markSectionComplete(
+        section: 'interview' | 'scenario',
+        userId: string,
+        day: number
+    ) {
+        const patch =
+            section === 'interview'
+                ? { interview_completed: true, interview_checked: [] }
+                : { scenario_completed: true, scenario_checked: [] }
+
+        setProgress((prev) => (prev ? { ...prev, ...patch } : prev))
+
+        const { error } = await supabase
+            .from('student_day_progress')
+            .upsert(
+                {
+                    student_id: userId,
+                    day_number: day,
+                    ...patch,
+                },
+                { onConflict: 'student_id,day_number' }
+            )
+
+        if (error) {
+            console.error(`[DayCache] Failed to auto-complete ${section} section:`, error)
+        }
     }
 
     // ── Render ──────────────────────────────────────────────────────────────────
