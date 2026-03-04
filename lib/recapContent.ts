@@ -2,7 +2,7 @@ export const recapContent = {
   1: [
     {
       "id": "sc_day_1",
-      "title": "Introduction to Tech: Finding and Solving Problems with Technology",
+      "title": "Introduction to Tech",
       "topics": [
         {
           "id": "sc_day_1_t1",
@@ -746,2023 +746,1130 @@ export const recapContent = {
           "id": "sc_day_15_t6",
           "title": "Truthy and Falsy Values",
           "explanation": "• Every value in JavaScript is treated as either truthy or falsy in conditions.\n\n• Falsy values (only 6):\n\t- false\n\t- 0 and -0\n\t- \"\" (empty string)\n\t- null\n\t- undefined\n\t- NaN\n\n• Truthy values (infinite), examples:\n\t- true, 1, -1\n\t- \"hello\", \"0\", \"false\"\n\t- [] (empty array)\n\t- {} (empty object)"
-        }
+        },
       ]
     }
   ],
 
   16: [
     {
-      id: "sc_day_16",
-      title: "Introduction to CSS | Part 3",
-      topics: [
+      "id": "sc_day_16",
+      "title": "CSS Typography: Mastering Text Styles",
+      "topics": [
         {
-          id: "sc_day_16_t1",
-          title: "Concept Overview",
-          explanation:
-            "• In this section, you will learn about important CSS text styling properties including font-family, font-size, font-style, font-weight, and text-decoration. These properties help control how text appears on a webpage. You will understand how to import fonts using Google Fonts and apply them using the font-family property. You will also learn how font-size controls text size using pixel (px) units, how font-style changes text appearance (normal, italic, oblique), how font-weight adjusts text thickness using keywords or numeric values from 100 to 900, and how text-decoration adds effects like underline, overline, or line-through. Understanding these properties is essential for creating visually appealing and readable web pages.",
+          "id": "sc_day_16_t1",
+          "title": "Font Family and Google Fonts",
+          "explanation": "• The `font-family` property defines which font is used for the text.\n• To use modern fonts, you must import them using the `@import` rule at the top of your CSS.\n• Rules to follow:\n  - Font names must be enclosed in quotation marks (e.g., \"Roboto\").\n  - Spelling must be 100% accurate to match the imported font.",
+          "examples": [
+            {
+              "language": "css",
+              "code": "@import url(\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\");\n\n.main-heading {\n  font-family: \"Roboto\";\n}",
+              "explanation": "• The font is imported first, then applied to the class using quotes to ensure the browser recognizes the custom typeface."
+            }
+          ]
         },
         {
-          id: "sc_day_16_t2",
-          title: "Hands-on Practice",
-          explanation:
-            "• In this section, you will practice applying different font and text styling properties to HTML elements. You will import fonts from Google Fonts using the @import rule and apply them using the font-family property. You will experiment with font-size using pixel values such as 28px and 36px. Then, you will modify font-style to make text italic or normal, and use font-weight values like bold, 200, or 700 to change thickness. You will also apply text-decoration values like underline, overline, and line-through to observe how text appearance changes. Try combining multiple properties together on headings and paragraphs to see how they affect readability and design.",
+          "id": "sc_day_16_t2",
+          "title": "Font Size and Units",
+          "explanation": "• The `font-size` property controls the scale of your text content.\n• Syntax Requirements:\n  - You must use `px` (pixels) as the measurement unit.\n  - Do not leave a space between the number and `px`.\n  - Never use quotation marks for size values.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".paragraph {\n  font-size: 18px;\n}",
+              "explanation": "• Sets the text size to 18 pixels. Following the rule: no space and no quotes."
+            }
+          ]
         },
         {
-          id: "sc_day_16_t3",
-          title: "Mini Assignment / Implementation",
-          explanation:
-            "• In this mini assignment, you will create a simple webpage containing a heading and a paragraph. Import a Google Font and apply it using the font-family property. Set different font sizes for the heading and paragraph using px units. Apply font-style and font-weight variations to make the heading bold and italic while keeping the paragraph normal. Add text-decoration effects such as underline or overline to observe their impact. Ensure there are no spelling mistakes in property values, no unnecessary quotations (except for font-family values), and correct usage of px units. This assignment will reinforce your understanding of CSS font and text styling properties.",
+          "id": "sc_day_16_t3",
+          "title": "Font Style and Weight",
+          "explanation": "• `font-style`: Used to change the posture of the text (e.g., `italic`).\n• `font-weight`: Determines the thickness of the characters.\n• Weight Guidelines:\n  - Keywords include `normal` or `bold`.\n  - Numbers must be multiples of 100 (range `100` - `900`).\n  - These values do not require quotation marks.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".sub-heading {\n  font-style: italic;\n  font-weight: 700;\n}",
+              "explanation": "• Combines a slanted style with a bold numeric weight of 700."
+            }
+          ]
         },
-      ],
-    },
+        {
+          "id": "sc_day_16_t4",
+          "title": "Text Decoration",
+          "explanation": "• The `text-decoration` property adds lines to text for visual emphasis.\n• Common Values:\n  - `underline`: Line below the text.\n  - `line-through`: A strike-through effect.\n  - `overline`: Line above the text.\n• Note: Always use a hyphen for the `line-through` value.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".price-old {\n  text-decoration: line-through;\n}",
+              "explanation": "• Displays a horizontal line through the text, commonly used for showing original prices or completed items."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   17: [
     {
-      id: "sc_day_17",
-      title: "Sequence of Instructions, Variables & Operators",
-      topics: [
+      "id": "sc_day_17",
+      "title": "Sequence of Instructions",
+      "topics": [
         {
-          id: "sc_day_17_t1",
-          title: "Program & Sequence of Instructions",
-          explanation:
-            "• A program is a sequence of instructions given to a computer.\n• JavaScript executes instructions line by line from top to bottom.\n• Each line runs only after the previous line finishes execution.\n• This is called sequential execution.",
+          "id": "sc_day_17_t1",
+          "title": "Variables: Lifecycle and Errors",
+          "explanation": "• Variables go through three main stages:\n  - Declaration: Creating the variable name using `let`.\n  - Definition: Assigning a value to a declared variable.\n  - Initialization: Performing declaration and definition in one step.\n• Critical Errors to Avoid:\n  - Logging a variable name inside quotes results in a String literal, not the value.\n  - Attempting to use a variable before it is declared causes a Reference Error.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "let age = 10; // Initialization\nconsole.log(\"age\"); // Prints: age\nconsole.log(age); // Prints: 10",
+              "explanation": "• Using quotes tells JavaScript to treat the text as data, while omitting quotes tells it to look for a variable's value."
+            }
+          ]
         },
-
         {
-          id: "sc_day_17_t2",
-          title: "Variables (Declaration, Definition, Initialization)",
-          explanation:
-            "• A variable is a container used to store data.\n\n• Declaration: Creating a variable using let.\n• Example: let age;\n• The variable exists but has no value.\n\n• Definition: Assigning a value after declaration.\n• Example: let age; age = 10;\n\n• Initialization: Declaring and assigning value at the same time.\n• Example: let age = 10;",
+          "id": "sc_day_17_t2",
+          "title": "Variable Reassignment and Expressions",
+          "explanation": "• Reassignment: The value of a variable created with `let` can be updated at any time.\n• Expression Handling:\n  - An expression (like `b + 1`) is always evaluated first before the result is stored in a variable.\n  - When assigning one variable to another (`a = b`), the value is copied from the right to the left.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "let b = 2;\nlet a = b + 5;\nconsole.log(a); // Prints: 7",
+              "explanation": "• JavaScript calculates `2 + 5` first, then stores the resulting `7` into the variable `a`."
+            }
+          ]
         },
-
         {
-          id: "sc_day_17_t3",
-          title: "Common Mistakes with Variables",
-          explanation:
-            '• Mistake 1: Printing variable name inside quotes.\n• Example: console.log("age");\n• Output: age\n• Reason: Quotes make it a string literal.\n\n• Mistake 2: Using variable before declaration.\n• Example: console.log(age); let age = 10;\n• Output: Error\n• Reason: JavaScript executes code line by line, and the variable is not initialized yet.',
+          "id": "sc_day_17_t3",
+          "title": "Order of Operations (BODMAS)",
+          "explanation": "• JavaScript follows a strict hierarchy when solving math expressions:\n  - **B**rackets: Always calculated first.\n  - **O**rders: Exponents and roots.\n  - **D**ivision and **M**ultiplication: Processed before addition/subtraction.\n  - **A**ddition and **S**ubtraction: Calculated last.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "console.log(10 / (2 + 3)); // Output: 2\nconsole.log(10 / 2 + 3);   // Output: 8",
+              "explanation": "• In the first line, brackets force addition first. In the second, division takes priority."
+            }
+          ]
         },
-
         {
-          id: "sc_day_17_t4",
-          title: "Variable Assignment & Reassignment",
-          explanation:
-            "• Variables can store values and those values can be changed.\n\n• Reassignment Example:\n• let a = 1; a = 2;\n• The old value is replaced with the new value.\n\n• Assigning one variable to another copies the value.\n• Example: a = b;\n\n• Assigning expression result:\n• let a = b + 1;\n• The expression is evaluated first, then assigned.",
+          "id": "sc_day_17_t4",
+          "title": "Advanced Arithmetic Operators",
+          "explanation": "• Modulus (%): Returns the remainder of a division.\n• Exponentiation (**): Calculates the power of a number.\n• Key Symbols:\n  - `10 % 3` results in `1` (the remainder).\n  - `2 ** 3` results in `8` (2 raised to the power of 3).",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "console.log(7 % 2); \nconsole.log(5 ** 2);",
+              "explanation": "• Modulus is useful for checking even/odd numbers, while exponentiation handles powers."
+            }
+          ]
         },
-
         {
-          id: "sc_day_17_t5",
-          title: "Expressions",
-          explanation:
-            "• An expression is a combination of values, variables, and operators that produces a result.\n• Examples:\n• 5 * 2 + 3 * 4\n•  a + 2\n•  a * b\n• Expressions are evaluated and the result can be stored in variables.",
-        },
-
-        {
-          id: "sc_day_17_t6",
-          title: "Order of Operations (BODMAS)",
-          explanation:
-            "• JavaScript follows BODMAS rule while evaluating expressions.\n\n• B: Brackets\n• O: Orders (Exponents)\n• D: Division\n• M: Multiplication\n• A: Addition\n• S: Subtraction\n\n• Example:\n• 5 * 2 + 3 * 4 = 22\n• Multiplication happens before addition.\n\n• Best Practice: Use brackets for clarity even if not required.",
-        },
-
-        {
-          id: "sc_day_17_t7",
-          title: "Modulus Operator (%)",
-          explanation:
-            "• The modulus operator returns the remainder after division.\n• Example:\n• 8 % 2 = 0\n• 10 % 3 = 1\n• Useful for checking even/odd numbers.",
-        },
-
-        {
-          id: "sc_day_17_t8",
-          title: "Exponentiation Operator (**)",
-          explanation:
-            "• The exponentiation operator calculates power.\n• Example:\n• 2 ** 3 = 8\n• 5 ** 2 = 25\n• It means base raised to the power of exponent.",
-        },
-
-        {
-          id: "sc_day_17_t9",
-          title: "Increment Operator (++)",
-          explanation:
-            "• The increment operator increases a value by 1.\n\n• Prefix (++x): Value increases before usage.\n• Example:\n• let y = ++x;\n\n• Postfix (x++): Value increases after usage.\n• Example:\n• let y = x++;\n\n• Prefix modifies first, Postfix modifies later.",
-        },
-
-        {
-          id: "sc_day_17_t10",
-          title: "Decrement Operator (--)",
-          explanation:
-            "• The decrement operator decreases a value by 1.\n\n• Prefix (--x): Decreases before usage.\n• Postfix (x--): Decreases after usage.\n\n• Understanding prefix and postfix behavior is important for interviews.",
-        },
-
-        {
-          id: "sc_day_17_t11",
-          title: "Interview Quick Points",
-          explanation:
-            "• JavaScript executes code line by line.\n• Printing variable inside quotes treats it as a string.\n• Variables can be reassigned.\n• Expressions follow BODMAS rule.\n• Prefix operators modify first, postfix modify later.\n• Understanding operator behavior prevents logical errors.",
-        },
-      ],
-    },
+          "id": "sc_day_17_t5",
+          "title": "Increment and Decrement",
+          "explanation": "• Increment (++) adds 1; Decrement (--) subtracts 1.\n• Prefix vs Postfix:\n  - Prefix (++x): Changes the value **before** it is used in the expression.\n  - Postfix (x++): Uses the current value first, then changes it **after**.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "let x = 5;\nlet y = x++; // y is 5, x becomes 6\n\nlet a = 5;\nlet b = ++a; // a is 6, b is 6",
+              "explanation": "• In postfix, the original value is captured before the update happens."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   18: [
     {
-      id: "sc_day_18",
-      title: "Relational Operators",
-      topics: [
+      "id": "sc_day_18",
+      "title": "Relational Operators",
+      "topics": [
         {
-          id: "sc_day_18_t1",
-          title: "Introduction to Relational Operators",
-          explanation:
-            "• Relational operators are used to compare two values in JavaScript.\n• They evaluate a condition and always return a boolean value: true or false.\n\n• These operators are commonly used inside conditions like if statements.\n\n• Operators:\n• >  Greater than\n• <  Less than\n• >= Greater than or equal to\n• <= Less than or equal to\n• == Equal to (loose equality)\n• != Not equal to\n\n• The result of any relational comparison is always either true or false.",
+          "id": "sc_day_18_t1",
+          "title": "Introduction to Relational Operators",
+          "explanation": "• Relational operators are used to compare two values and always return a Boolean result (`true` or `false`).\n• Common Operators:\n  - `>` (Greater than) and `<` (Less than).\n  - `>=` (Greater than or equal to) and `<=` (Less than or equal to).\n  - `==` (Equality) and `!=` (Not equal to).\n• Note: These operators work consistently across integers and decimal numbers (floats).",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "console.log(10 > 5);  // true\nconsole.log(2.5 <= 2); // false",
+              "explanation": "• The first expression checks if 10 is more than 5, while the second compares a float to an integer."
+            }
+          ]
         },
-
         {
-          id: "sc_day_18_t2",
-          title: "Comparing Numbers",
-          explanation:
-            "• Relational operators compare numeric values based on their mathematical order.\n\n• Examples:\n• 5 < 10 → true (because 5 is smaller than 10)\n• 5 > 10 → false\n• 2 <= 2 → true (equal values satisfy <=)\n• 4 != 1 → true (values are not equal)\n\n• These operators work with both integers and floating point numbers.\n• They follow normal mathematical comparison rules.",
+          "id": "sc_day_18_t2",
+          "title": "String Comparison and Case Sensitivity",
+          "explanation": "• Strings can be compared to check if they are identical.\n• Key Rules to Remember:\n  - Comparison is case-sensitive: \"ABC\" is NOT the same as \"abc\".\n  - Every character, including casing, must match exactly for the equality to return `true`.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "console.log(\"Hello\" == \"Hello\"); // true\nconsole.log(\"JS\" == \"js\");      // false",
+              "explanation": "• Uppercase and lowercase letters have different internal values in JavaScript, making them unequal."
+            }
+          ]
         },
-
         {
-          id: "sc_day_18_t3",
-          title: "Common Mistake: Assignment vs Comparison",
-          explanation:
-            "• Mistake: Using single = instead of == or ===.\n\n• Example:\n• console.log(3 = 3);\n\n• This causes a SyntaxError because = is used for assigning values to variables, not for comparison.\n\n• Correct usage:\n• 3 == 3 → true\n• 3 === 3 → true\n\n• Always remember:\n• =  → Assignment\n• == → Loose comparison\n• === → Strict comparison",
+          "id": "sc_day_18_t3",
+          "title": "Loose vs. Strict Equality",
+          "explanation": "• JavaScript provides two ways to check for equality:\n  - Loose Equality (`==`): Performs type conversion (coercion) before comparing. It checks only the value.\n  - Strict Equality (`===`): Does NOT perform type conversion. It checks both the value and the data type.\n• Comparison Logic:\n  - `5 == \"5\"` is `true` because the string is converted to a number.\n  - `5 === \"5\"` is `false` because a Number type is not a String type.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "console.log(1 == true);   // true (coerced)\nconsole.log(1 === true);  // false (different types)",
+              "explanation": "• Loose equality sees '1' as 'truthy', but strict equality sees that a Number is not a Boolean."
+            }
+          ]
         },
-
         {
-          id: "sc_day_18_t4",
-          title: "Common Mistake: Missing Parenthesis",
-          explanation:
-            "• Every opening parenthesis '(' must have a matching closing parenthesis ')'.\n\n• Example:\n• console.log(2 <= 3\n• This results in SyntaxError.\n\n• Correct:\n• console.log(2 <= 3);\n\n• Proper syntax is essential because JavaScript parses code strictly.",
+          "id": "sc_day_18_t4",
+          "title": "Common Syntax Mistakes",
+          "explanation": "• Assignment vs. Comparison:\n  - Using a single `=` inside a `console.log` or condition will cause an error because it's for assigning values, not comparing them.\n• Parenthesis Matching:\n  - Every `(` must have a corresponding `)`. Missing one will result in a Syntax Error.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "// Error: console.log(3 = 3);\n// Correct:\nconsole.log(3 == 3); ",
+              "explanation": "• Always use `==` or `===` when you want to ask 'is this equal to that?'."
+            }
+          ]
         },
-
         {
-          id: "sc_day_18_t5",
-          title: "Comparing Floating Point Numbers",
-          explanation:
-            "• Relational operators work the same way with decimal (floating point) numbers.\n\n• Examples:\n• 2.5 <= 3.2 → true\n• 0.1 != 0.1 → false\n\n• JavaScript treats floating numbers just like normal numbers for comparison.\n• However, due to floating-point precision issues, sometimes decimal comparisons may behave unexpectedly in complex calculations.",
-        },
-
-        {
-          id: "sc_day_18_t6",
-          title: "Comparing Strings",
-          explanation:
-            '• Strings can be compared using relational operators.\n• When using == or ===, JavaScript checks if both strings are exactly identical.\n\n• Examples:\n• "ABC" == "ABC" → true\n• "CBA" == "ABC" → false\n• "CBA" != "ABC" → true\n\n• JavaScript is case sensitive.\n• "ABC" == "abc" → false\n\n• Uppercase and lowercase letters are treated as completely different characters.\n\n• Important: String comparison checks character by character.',
-        },
-
-        {
-          id: "sc_day_18_t7",
-          title: "Loose Equality (==)",
-          explanation:
-            "• Loose equality (==) compares two values after performing type coercion.\n• Type coercion means JavaScript automatically converts values to a common type before comparison.\n\n• Example:\n• 2 == '2' → true\n• JavaScript converts '2' (string) into 2 (number) before comparing.\n\n• 5 == \"5\" → true\n\n• Because of automatic conversion, loose equality can sometimes give unexpected results.\n• This is why it should be used carefully.",
-        },
-
-        {
-          id: "sc_day_18_t8",
-          title: "Strict Equality (===)",
-          explanation:
-            "• Strict equality (===) compares both value and data type.\n• No type conversion happens.\n\n• Example:\n• 2 === '2' → false\n• Because 2 is a number and '2' is a string.\n\n• Strict equality ensures safer and more predictable comparisons.\n• It prevents accidental matches caused by type coercion.",
-        },
-
-        {
-          id: "sc_day_18_t9",
-          title: "Comparing with Boolean Values",
-          explanation:
-            "• When using loose equality:\n• 1 == true → true\n• 0 == false → true\n\n• This happens because JavaScript converts true to 1 and false to 0 during comparison.\n\n• With strict equality:\n• 1 === true → false\n• 0 === false → false\n\n• Because number and boolean are different data types.\n\n• Strict comparison avoids confusion caused by implicit conversion.",
-        },
-
-        {
-          id: "sc_day_18_t10",
-          title: "Strict Inequality (!==)",
-          explanation:
-            "• Strict inequality checks both value and type and returns true if they are different.\n\n• Example:\n• 2 !== '2' → true\n• Because number and string are different types.\n\n• This operator is safer than != because it avoids type coercion.",
-        },
-
-        {
-          id: "sc_day_18_t11",
-          title: "Best Practices",
-          explanation:
-            '• Always prefer strict equality (===) and strict inequality (!==).\n\n• Reasons:\n• Loose equality performs automatic type conversion.\n• Type coercion can lead to unexpected or confusing results.\n• Strict equality makes your code predictable and easier to debug.\n\n• Recommended:\n• 5 === 5 → true\n• 5 === "5" → false\n\n• Not Recommended:\n• 5 == "5" → true\n\n• Using strict comparison is considered professional and clean coding practice.',
-        },
-
-        {
-          id: "sc_day_18_t12",
-          title: "Interview Quick Points",
-          explanation:
-            "• Relational operators always return boolean values.\n• Single = is assignment, not comparison.\n• JavaScript is case sensitive when comparing strings.\n• == performs type coercion.\n• === compares both value and type.\n• Always use strict comparison in real-world applications to avoid logical bugs.",
-        },
-      ],
-    },
+          "id": "sc_day_18_t5",
+          "title": "Best Practices for Comparison",
+          "explanation": "• Industry Standard:\n  - Always use Strict Equality (`===`) and Strict Inequality (`!==`).\n• Why?:\n  - Avoids unexpected bugs caused by automatic type conversion.\n  - Makes code predictable and easier to read for other developers.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "let input = \"10\";\nif (input === 10) {\n  // This won't run, which is safer\n}",
+              "explanation": "• By using `===`, we ensure that the data we are comparing is exactly the type we expect."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   19: [
     {
-      id: "sc_day_19",
-      title: "CSS Box Model | Part 1",
-      topics: [
+      "id": "sc_day_19",
+      "title": "Introduction to CSS Box Model | Part 1",
+      "topics": [
         {
-          id: "sc_day_19_t1",
-          title: "Height Property",
-          explanation:
-            "• The CSS height property defines the vertical size of an HTML element.\n• Example:\n• .card { height: 200px; }\n\n• The value can be given in different units like px, %, vh, etc.\n• If height is not specified, the element adjusts automatically based on its content.\n• Setting height helps control layout and design structure.",
+          "id": "sc_day_19_t1",
+          "title": "Box Dimensions: Height and Width",
+          "explanation": "• The `height` and `width` properties define the physical boundaries of an HTML element.\n• Rules for sizing:\n  - Use `px` for fixed sizes that don't change based on the screen.\n  - If no height is specified, the element will only be as tall as the content inside it.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".card {\n  height: 200px;\n  width: 250px;\n}",
+              "explanation": "• This creates a fixed-size rectangular box regardless of the content inside."
+            }
+          ]
         },
-
         {
-          id: "sc_day_19_t2",
-          title: "Width Property",
-          explanation:
-            "• The CSS width property defines the horizontal size of an HTML element.\n• Example:\n• .card { width: 250px; }\n\n• Like height, width can be defined in px, %, vw, etc.\n• If width is not specified, block elements usually take full available width.\n• Controlling width is important for responsive layouts.",
+          "id": "sc_day_19_t2",
+          "title": "CSS Background Image",
+          "explanation": "• The `background-image` property places an image behind the text and content of an element.\n• Key Requirements:\n  - The image source must be wrapped in `url(\" \")`.\n  - The URL must be valid and accessible for the image to render.\n  - Note: By default, the image might repeat if it is smaller than the box.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".card {\n  background-image: url(\"https://example.com/image.jpg\");\n}",
+              "explanation": "• The image will appear as the background of the .card element."
+            }
+          ]
         },
-
         {
-          id: "sc_day_19_t3",
-          title: "Background Image",
-          explanation:
-            '• The background-image property sets an image as the background of an HTML element.\n• Example:\n• .card { background-image: url("image.jpg"); }\n\n• The URL must be valid.\n• If height is not specified, the background image will only cover the content height.\n• Background images do not automatically resize unless background-size is specified.',
+          "id": "sc_day_19_t3",
+          "title": "Background Size and Aspect Ratio",
+          "explanation": "• The `background-size` property controls how the image fits into the box.\n• Using the `cover` value:\n  - Scales the image to fill the entire container.\n  - Maintains the aspect ratio (width/height) so the image doesn't look stretched.\n  - Parts of the image might be cropped to ensure no empty space is left.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".card {\n  background-size: cover;\n}",
+              "explanation": "• This ensures the background image always fills the box beautifully, even if the box resized."
+            }
+          ]
         },
-
         {
-          id: "sc_day_19_t4",
-          title: "Background Size",
-          explanation:
-            "• The background-size property controls how the background image is scaled.\n• Example:\n• .card { background-size: cover; }\n\n• Common values:\n• cover → Scales the image to fully cover the element while maintaining aspect ratio. Some parts may be cropped.\n• contain → Scales image to fit inside element without cropping.\n\n• Aspect ratio means the ratio of width to height of an image.",
-        },
-
-        {
-          id: "sc_day_19_t5",
-          title: "Viewport",
-          explanation:
-            "• The viewport is the visible area of a web page inside the browser window.\n• It changes depending on screen size and device.\n• Responsive design often uses viewport units to adjust layouts dynamically.",
-        },
-
-        {
-          id: "sc_day_19_t6",
-          title: "Viewport Height (vh)",
-          explanation:
-            "• The vh unit stands for viewport height.\n• 1vh equals 1% of the browser window height.\n\n• Example:\n• .card { height: 50vh; }\n• This sets the element height to 50% of the viewport height.\n\n• 100vh makes the element take the full height of the browser window.",
-        },
-
-        {
-          id: "sc_day_19_t7",
-          title: "Viewport Width (vw)",
-          explanation:
-            "• The vw unit stands for viewport width.\n• 1vw equals 1% of the browser window width.\n\n• Example:\n• .card { width: 100vw; }\n• This makes the element take full width of the viewport.\n\n• Viewport units are very useful in responsive web design.",
-        },
-
-        {
-          id: "sc_day_19_t8",
-          title: "Practical Example: Card Layout",
-          explanation:
-            "• Example HTML structure:\n• A div with class 'card' contains heading, paragraph, and button.\n\n• By combining height, width, background-image, background-size, vh, and vw units, we can create a full-screen hero section.\n\n• Example:\n• .card {\n•   height: 100vh;\n•   width: 100vw;\n•   background-image: url(\"image.jpg\");\n•   background-size: cover;\n• }\n\n• This creates a full-screen background section with content centered inside.",
-        },
-
-        {
-          id: "sc_day_19_t9",
-          title: "Best Practices",
-          explanation:
-            "• Always specify height when using background-image if you want full visibility.\n• Use background-size: cover for hero sections.\n• Use vh and vw units for responsive layouts.\n• Be careful with 100vw as it may sometimes include scrollbar width.\n• Maintain aspect ratio to avoid distorted images.",
-        },
-
-        {
-          id: "sc_day_19_t10",
-          title: "Interview Quick Points",
-          explanation:
-            "• Height and width control element dimensions.\n• Background-image requires valid URL.\n• background-size: cover maintains aspect ratio and may crop image.\n• 1vh = 1% of viewport height.\n• 1vw = 1% of viewport width.\n• 100vh and 100vw create full-screen layouts.\n• Viewport units are essential for responsive design.",
-        },
-      ],
-    },
+          "id": "sc_day_19_t4",
+          "title": "Viewport Units (vh and vw)",
+          "explanation": "• Viewport units are relative to the browser window size rather than fixed pixels.\n• Unit Definitions:\n  - `vh` (Viewport Height): 1vh is equal to 1% of the window's height.\n  - `vw` (Viewport Width): 1vw is equal to 1% of the window's width.\n• Usage:\n  - Setting `height: 100vh` makes an element exactly as tall as the screen.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".full-screen-section {\n  width: 100vw;\n  height: 100vh;\n}",
+              "explanation": "• This forces the element to cover the entire visible area of the browser."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   20: [
     {
-      id: "sc_day_20",
-      title: "CSS Box Model | part 2",
-      topics: [
+      "id": "sc_day_20",
+      "title": "Introduction to CSS Box Model | Part 2",
+      "topics": [
         {
-          id: "sc_day_20_t1",
-          title: "Border Properties",
-          explanation:
-            "• CSS border properties define how the border of an HTML element appears. The border-width property specifies how thick the border should be. The border-style property defines the appearance of the border such as solid, dashed, dotted, or none. The border-color property sets the color of the border. It is important to note that border-style must be defined; otherwise, border-width and border-color will not be visible in the browser. The border-radius property controls the roundness of the element’s corners. You can also target specific corners using border-top-left-radius, border-top-right-radius, border-bottom-left-radius, and border-bottom-right-radius. Adding a background color makes the rounded corners more visible.",
+          "id": "sc_day_20_t1",
+          "title": "Border Styles and Width",
+          "explanation": "• The border of an element is controlled by width, color, and style.\n• Key Rules:\n  - `border-style` is mandatory (e.g., `solid`, `dotted`, `dashed`). Without it, width and color won't show.\n  - `border-width` sets the thickness (e.g., `2px`). Use `0px` to remove default borders.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".button {\n  border-style: solid;\n  border-width: 2px;\n  border-color: #ff0000;\n}",
+              "explanation": "• This defines a solid red border. Note that the button element is an exception and has a default border style already applied."
+            }
+          ]
         },
         {
-          id: "sc_day_20_t2",
-          title: "Padding",
-          explanation:
-            "• The padding property defines the space between the content of an element and its border. It creates inner spacing and improves readability and layout structure. Padding can be applied to all four sides at once or individually using padding-top, padding-right, padding-bottom, and padding-left. Increasing padding increases the overall size of the element unless box-sizing is adjusted. Padding is part of the CSS box model and plays a crucial role in UI spacing and alignment.",
+          "id": "sc_day_20_t2",
+          "title": "Border Radius and Corner Rounding",
+          "explanation": "• The `border-radius` property defines how rounded the corners of an element appear.\n• Specific Corner Properties:\n  - `border-top-left-radius` / `border-top-right-radius` \n  - `border-bottom-left-radius` / `border-bottom-right-radius` \n• Tip: Adding a background color makes the rounded effect much more visible.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".card {\n  border-radius: 20px;\n  background-color: lightgrey;\n}",
+              "explanation": "• This rounds all four corners equally. Higher pixel values create more circular corners."
+            }
+          ]
         },
         {
-          id: "sc_day_20_t3",
-          title: "CSS Colors & Hex Codes",
-          explanation:
-            "• CSS allows multiple ways to define colors including color names, Hex codes, RGB, and HSL values. Hex codes are one of the most commonly used formats and start with a # symbol followed by six characters. They allow selection from over 16 million color combinations. For example, red is #ff0000, blue is #0000ff, green is #008000, and orange is #ffa500. Hex codes provide flexibility beyond predefined color names. Developers often use online color pickers to choose custom colors visually. The background-color property is commonly used to apply colors to elements.",
+          "id": "sc_day_20_t3",
+          "title": "Padding and Internal Spacing",
+          "explanation": "• `padding` creates space between the content (text/images) and the border of an element.\n• Usage:\n  - It pushes the content inward, making the element look less crowded.\n  - Unlike height/width, padding increases the clickable area of elements like buttons.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".container {\n  padding: 15px;\n}",
+              "explanation": "• This adds a 15-pixel gap on all four sides inside the container."
+            }
+          ]
         },
         {
-          id: "sc_day_20_t4",
-          title: "Practical Application Example",
-          explanation:
-            "• When styling a card or button, border properties, padding, and colors work together. For example, a button may have border-width: 2px, border-style: solid, border-color: orange, border-radius: 20px, padding: 10px, and background-color: #25b1cc. These properties improve visual appearance and user experience. Remember that some HTML elements like button have default borders in the browser. Inspecting elements helps understand default styling behavior.",
-        },
-      ],
-    },
+          "id": "sc_day_20_t4",
+          "title": "Hex Codes for Advanced Colors",
+          "explanation": "• Hex codes allow access to millions of colors beyond basic color names.\n• Syntax and Features:\n  - Starts with a `#` followed by 6 characters (e.g., `#ffa500` for orange).\n  - You can use a 'Color Picker' tool to find specific codes for your design.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".custom-bg {\n  background-color: #25b1cc;\n}",
+              "explanation": "• Applies a specific shade of blue that doesn't have a standard simple name like 'blue'."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   21: [
     {
-      id: "sc_day_21",
-      title: "Logical Operators",
-      topics: [
+      "id": "sc_day_21",
+      "title": "Logical Operators",
+      "topics": [
         {
-          id: "sc_day_21_t1",
-          title: "Introduction to Logical Operators",
-          explanation:
-            "• Logical operators are used to perform operations on Boolean values. They always return true or false. In JavaScript, there are three logical operators: AND (&&), OR (||), and NOT (!). These operators are mainly used in conditional statements and decision-making logic.",
+          "id": "sc_day_21_t1",
+          "title": "The AND Operator (&&)",
+          "explanation": "• The `&&` operator is used to check if multiple conditions are all true.\n• Behavior:\n  - Returns `true` only if every single part of the expression is `true`.\n  - If even one part is `false`, the entire result becomes `false`.\n• Logic Rule: `true && true` is `true`; everything else is `false`.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "console.log((10 > 5) && (2 < 4)); // true\nconsole.log((10 > 5) && (2 > 4)); // false",
+              "explanation": "• In the first line, both conditions are correct.\n• In the second, the second condition is wrong, failing the AND check."
+            }
+          ]
         },
         {
-          id: "sc_day_21_t2",
-          title: "AND Operator (&&)",
-          explanation:
-            "• The AND operator returns true only if both conditions are true. If at least one condition is false, the result will be false.",
-          examples: [
+          "id": "sc_day_21_t2",
+          "title": "The OR Operator (||)",
+          "explanation": "• The `||` operator is used to check if at least one condition is satisfied.\n• Behavior:\n  - Returns `true` if any one of the values is `true`.\n  - Returns `false` only when every single part of the expression is `false`.\n• Logic Rule: `false || false` is `false`; everything else is `true`.",
+          "examples": [
             {
-              language: "javascript",
-              code: "console.log(true && true);\nconsole.log(true && false);",
-              explanation:
-                "• true && true returns true.\n• true && false returns false.",
-            },
-            {
-              language: "javascript",
-              code: "console.log((2 < 3) && (1 < 2));",
-              explanation:
-                "• 2 < 3 is true.\n• 1 < 2 is true.\n• true && true results in true.",
-            },
-            {
-              language: "javascript",
-              code: "console.log((2 < 3) && (2 < 1));",
-              explanation:
-                "• 2 < 3 is true.\n• 2 < 1 is false.\n• true && false results in false.",
-            },
-          ],
+              "language": "javascript",
+              "code": "console.log((5 > 10) || (10 > 5)); // true\nconsole.log((5 > 10) || (2 > 4));  // false",
+              "explanation": "• The first example stays true because the second half is correct.\n• The second example is false because both sides are incorrect."
+            }
+          ]
         },
         {
-          id: "sc_day_21_t3",
-          title: "OR Operator (||)",
-          explanation:
-            "• The OR operator returns true if at least one condition is true. It returns false only when both conditions are false.",
-          examples: [
+          "id": "sc_day_21_t3",
+          "title": "The NOT Operator (!)",
+          "explanation": "• The `!` operator is used to reverse or 'flip' the logical state of a value.\n• Behavior:\n  - Converts `true` to `false`.\n  - Converts `false` to `true`.\n• Logic Rule: It always gives the exact opposite of the current result.",
+          "examples": [
             {
-              language: "javascript",
-              code: "console.log(true || false);\nconsole.log(false || false);",
-              explanation:
-                "• true || false returns true.\n• false || false returns false.",
-            },
-            {
-              language: "javascript",
-              code: "console.log((2 < 3) || (2 < 1));",
-              explanation:
-                "• 2 < 3 is true.\n• 2 < 1 is false.\n• true || false results in true.",
-            },
-            {
-              language: "javascript",
-              code: "console.log((3 < 2) || (2 < 1));",
-              explanation:
-                "• 3 < 2 is false.\n• 2 < 1 is false.\n• false || false results in false.",
-            },
-          ],
+              "language": "javascript",
+              "code": "console.log(!(10 === 10)); // false\nconsole.log(!(5 > 10));   // true",
+              "explanation": "• 10 is equal to 10 (true), but the NOT operator flips it to false.\n• 5 is not greater than 10 (false), so it flips to true."
+            }
+          ]
         },
         {
-          id: "sc_day_21_t4",
-          title: "NOT Operator (!)",
-          explanation:
-            "• The NOT operator reverses the Boolean value. It converts true to false and false to true.",
-          examples: [
+          "id": "sc_day_21_t4",
+          "title": "Combining Logical Operators",
+          "explanation": "• You can build complex logic by using multiple operators in one line.\n• Evaluation Steps:\n  - JavaScript solves the math/relational parts first (like `2 < 3`).\n  - It then processes the `!` (NOT) operators.\n  - Finally, it evaluates the `&&` and `||` connections from left to right.",
+          "examples": [
             {
-              language: "javascript",
-              code: "console.log(!(false));",
-              explanation: "• false becomes true after applying NOT operator.",
-            },
-            {
-              language: "javascript",
-              code: "console.log(!(2 < 1));",
-              explanation: "• 2 < 1 is false.\n• Applying NOT makes it true.",
-            },
-            {
-              language: "javascript",
-              code: "console.log(!(2 < 3));",
-              explanation: "• 2 < 3 is true.\n• Applying NOT makes it false.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_21_t5",
-          title: "Combining Logical Operators",
-          explanation:
-            "• Multiple logical operators can be combined in one expression. JavaScript evaluates them step by step.",
-          examples: [
-            {
-              language: "javascript",
-              code: "console.log((4 < 5) && (!(1 != 1)));",
-              explanation:
-                "• 4 < 5 is true.\n• 1 != 1 is false.\n• !(false) becomes true.\n• true && true results in true.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_21_t6",
-          title: "Practical Example",
-          explanation:
-            "• Logical operators are commonly used to validate multiple conditions together.",
-          examples: [
-            {
-              language: "javascript",
-              code: "let a = 6;\nlet b = 4;\n\nlet bothPositive = (a > 0) && (b > 0);\nlet oneGreaterThanFive = (a > 5) || (b > 5);\nlet result = bothPositive && oneGreaterThanFive;\n\nconsole.log(result);",
-              explanation:
-                "• Both numbers are positive.\n• At least one number is greater than 5.\n• Final result is true.",
-            },
-            {
-              language: "javascript",
-              code: "let a = 10;\nlet b = 1;\n\nlet bothPositive = (a > 0) && (b > 0);\nlet oneGreaterThanFive = (a > 5) || (b > 5);\nlet result = bothPositive && oneGreaterThanFive;\n\nconsole.log(result);",
-              explanation:
-                "• Both numbers are positive.\n• At least one number is greater than 5.\n• Final result is true.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_21_t7",
-          title: "Summary",
-          explanation:
-            "• AND (&&) returns true only if both conditions are true. OR (||) returns true if at least one condition is true. NOT (!) reverses the Boolean value. Logical operators are essential for writing conditions, validations, and decision-making logic in JavaScript.",
-        },
-      ],
-    },
+              "language": "javascript",
+              "code": "let result = (5 > 2) && (!(1 === 2));\nconsole.log(result); // true",
+              "explanation": "• Step 1: 5 > 2 is true.\n• Step 2: 1 === 2 is false.\n• Step 3: NOT false is true.\n• Step 4: true AND true is true."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   22: [
     {
-      id: "sc_day_22",
-      title: "Conditional Statements",
-      topics: [
+      "id": "sc_day_22",
+      "title": "Conditional Statements",
+      "topics": [
         {
-          id: "sc_day_22_t1",
-          title: "Introduction: How JavaScript Executes Code",
-          explanation:
-            "• JavaScript executes code sequentially, meaning it runs one instruction after another from top to bottom. By default, every line of code executes in order. However, in real-world programs, we often need certain instructions to execute only when a specific condition is satisfied. This is where conditional statements are used. Conditional execution allows the program flow to change depending on whether a condition evaluates to true or false.",
+          "id": "sc_day_22_t1",
+          "title": "Introduction to Conditional Execution",
+          "explanation": "• Normally, JavaScript executes code sequentially (line-by-line).\n• Conditional statements allow us to skip certain instructions and only execute them if a specific condition is met.\n• Key Concept:\n  - A condition is an expression that evaluates to either `true` or `false`.\n  - This controls the flow of the program.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "console.log(\"Start\");\n// Only run certain code if needed\nconsole.log(\"End\");",
+              "explanation": "• Conditions help us move away from default sequential execution to smart, decision-based execution."
+            }
+          ]
         },
         {
-          id: "sc_day_22_t2",
-          title: "Conditions",
-          explanation:
-            "• A condition is an expression that evaluates to either true or false. Conditions control whether a block of code should execute. These expressions are usually formed using comparison operators like >, <, >=, <=, ==, or !=. If the condition evaluates to true, the associated block executes. If it evaluates to false, the block is skipped.",
+          "id": "sc_day_22_t2",
+          "title": "The If Statement",
+          "explanation": "• The `if` statement is used to execute a block of code only when the condition is `true`.\n• Logic Rules:\n  - If the condition is `true`, the code inside the curly braces `{ }` runs.\n  - If the condition is `false`, JavaScript skips the block entirely and moves to the next line after the braces.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "let a = 10;\nif (a > 5) {\n  console.log(\"A is large\");\n}",
+              "explanation": "• Since 10 > 5 is true, the message is printed. If 'a' was 2, nothing would be printed."
+            }
+          ]
         },
         {
-          id: "sc_day_22_t3",
-          title: "If Statement",
-          explanation:
-            "• The if statement allows selective execution of a block of code. The condition inside parentheses must evaluate to either true or false. The block of code inside curly braces {} executes only when the condition is true. If the condition is false, the block is skipped completely.",
-          examples: [
+          "id": "sc_day_22_t3",
+          "title": "The If-Else Statement",
+          "explanation": "• The `if-else` statement provides two paths: one for `true` and one for `false`.\n• Structure:\n  - `if` block: Runs only if the condition is `true`.\n  - `else` block: Runs only if the condition is `false`.\n• Benefit: It ensures that exactly one of the two blocks will always execute.",
+          "examples": [
             {
-              language: "javascript",
-              code: "let a = 1;\nlet b = 2;\n\nif (a > b) {\n  console.log(a - b);\n}\n\nconsole.log(a + b);",
-              explanation:
-                "• Condition a > b evaluates to false.\n• The if block is skipped.\n• Only console.log(a + b) executes.\n• Output: 3",
-            },
-            {
-              language: "javascript",
-              code: "let a = 2;\nlet b = 1;\n\nif (a > b) {\n  console.log(a - b);\n}\n\nconsole.log(a + b);",
-              explanation:
-                "• Condition a > b evaluates to true.\n• The if block executes and prints 1.\n• Then console.log(a + b) prints 3.\n• Output: 1 3",
-            },
-          ],
+              "language": "javascript",
+              "code": "let temperature = 20;\nif (temperature > 30) {\n  console.log(\"Hot Day\");\n} else {\n  console.log(\"Pleasant Day\");\n}",
+              "explanation": "• If the condition fails, the code automatically jumps to the 'else' block."
+            }
+          ]
         },
         {
-          id: "sc_day_22_t4",
-          title: "Practice Problem: Convert to Positive Integer",
-          explanation:
-            "• Sometimes we need to modify a value based on a condition. For example, if a number is negative, we convert it into a positive number.",
-          examples: [
+          "id": "sc_day_22_t4",
+          "title": "Handling Negative Numbers",
+          "explanation": "• Conditional statements are often used to process data based on its value.\n• Real-world logic:\n  - To convert a negative number to positive, check if `a < 0`.\n  - If true, multiply the number by `-1` to flip the sign.",
+          "examples": [
             {
-              language: "javascript",
-              code: "let a = 2;\n\nif (a < 0) {\n  a = a * (-1);\n}\n\nconsole.log(a);",
-              explanation:
-                "• If a is negative, it gets multiplied by -1.\n• If a is already positive, nothing changes.\n• The final value printed is always positive.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_22_t5",
-          title: "Multiple If Statements",
-          explanation:
-            "• Using multiple if statements can work logically but may not always be the most efficient approach. If both conditions are independent, both may execute. Often, this can be simplified using an if–else structure.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'const a = 2;\n\nif (a > 0) {\n  console.log("Positive");\n}\n\nif (a <= 0) {\n  console.log("Not Positive");\n}',
-              explanation:
-                "• Only one condition prints because the other condition is false.\n• However, checking both conditions separately can be simplified.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_22_t6",
-          title: "If–Else Statement",
-          explanation:
-            "• The if–else statement allows two alternative blocks of execution. If the condition is true, the if block executes. If the condition is false, the else block executes. This structure ensures only one of the two blocks runs.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'let a = 2;\n\nif (a > 0) {\n  console.log("Positive");\n} else {\n  console.log("Not Positive");\n}\n\nconsole.log("End");',
-              explanation:
-                '• Condition is true.\n• "Positive" is printed.\n• Then "End" is printed.',
-            },
-            {
-              language: "javascript",
-              code: 'let a = -2;\n\nif (a > 0) {\n  console.log("Positive");\n} else {\n  console.log("Not Positive");\n}\n\nconsole.log("End");',
-              explanation:
-                '• Condition is false.\n• "Not Positive" is printed.\n• Then "End" is printed.',
-            },
-          ],
-        },
-      ],
-    },
+              "language": "javascript",
+              "code": "let num = -5;\nif (num < 0) {\n  num = num * -1;\n}\nconsole.log(num); // Output: 5",
+              "explanation": "• The if block only triggers for negative numbers, making the variable always positive at the end."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   23: [
     {
-      id: "sc_day_23",
-      title: "HTML Void Elements & Lists",
-      topics: [
+      "id": "sc_day_23",
+      "title": "HTML Void Elements & Lists",
+      "topics": [
         {
-          id: "sc_day_23_t1",
-          title: "HTML Void Elements",
-          explanation:
-            "• Void elements are HTML elements that do not have closing tags and do not contain content. They are self-contained elements used to embed or insert something into a webpage. Common examples include img, br, and input. These elements are called void elements because they cannot wrap content and do not require an end tag.",
+          "id": "sc_day_23_t1",
+          "title": "HTML Void Elements",
+          "explanation": "• Void elements are specific HTML tags that do not have content or a closing tag.\n• Key characteristics:\n  - They are self-closing (e.g., `<img />`, `<br />`, `<input />`).\n  - You only provide attributes (like `src`) within the opening tag.",
+          "examples": [
+            {
+              "language": "html",
+              "code": "\n<img src=\"https://assets.ccbp.in/tajmahal-img.png\" />",
+              "explanation": "• The `<img>` tag is a void element because it represents an image object rather than a container for text."
+            }
+          ]
         },
         {
-          id: "sc_day_23_t2",
-          title: "Favourite Places Section Layout",
-          explanation:
-            "• The Favourite Places section is divided into structured components such as a background container, heading, and card container. Breaking layouts into smaller parts helps in building clean and maintainable UI designs.",
-          examples: [
+          "id": "sc_day_23_t2",
+          "title": "The CSS Box Model",
+          "explanation": "• Every HTML element is treated as a rectangular box consisting of four distinct layers:\n  - Content: The text or image.\n  - Padding: The space inside the border, surrounding the content.\n  - Border: The edge surrounding the padding and content.\n  - Margin: The space outside the border that separates elements from each other.",
+          "examples": [
             {
-              language: "html",
-              code: '<div class="favourite-places-bg-container"></div>',
-            },
-            {
-              language: "css",
-              code: ".favourite-places-bg-container {\n  background-image: url('https://assets.ccbp.in/frontend/static-website/tower-bg.png');\n  height: 100vh;\n  background-size: cover;\n}",
-            },
-          ],
+              "language": "css",
+              "code": ".card-container {\n  padding: 16px; /* Inner spacing */\n  margin: 15px;  /* Outer spacing */\n  border: 1px solid #000;\n}",
+              "explanation": "• Padding pushes content away from the edges internally, while margin creates a gap between this card and other elements."
+            }
+          ]
         },
         {
-          id: "sc_day_23_t3",
-          title: "Adding Heading and Padding",
-          explanation:
-            "• Headings are added inside the background container. Styling like color, font-size, font-family, and padding improves visual appearance and spacing.",
-          examples: [
+          "id": "sc_day_23_t3",
+          "title": "HTML Unordered Lists (ul)",
+          "explanation": "• Used to group related items where the specific order is not important.\n• Features:\n  - Items are defined using the `<li>` tag inside a `<ul>` tag.\n  - Styles can be modified using `list-style-type` (e.g., `circle`, `square`, `none`).",
+          "examples": [
             {
-              language: "html",
-              code: '<div class="favourite-places-bg-container">\n  <h1 class="favourite-places-heading">Favourite Places</h1>\n</div>',
-            },
-            {
-              language: "css",
-              code: ".favourite-places-heading {\n  color: white;\n  font-size: 28px;\n  font-family: 'Roboto';\n  font-weight: bold;\n  padding: 24px;\n}",
-            },
-          ],
+              "language": "html",
+              "code": "<ul style=\"list-style-type: square;\">\n  <li>Jallianwala Bagh</li>\n  <li>Wagah Border</li>\n</ul>",
+              "explanation": "• This creates a bulleted list where the default dots are replaced with squares."
+            }
+          ]
         },
         {
-          id: "sc_day_23_t4",
-          title: "Favourite Place Card",
-          explanation:
-            "• Cards help structure content visually. The card container uses background color, border-radius, padding, and margin for spacing and design.",
-          examples: [
+          "id": "sc_day_23_t4",
+          "title": "HTML Ordered Lists (ol)",
+          "explanation": "• Used for items that follow a specific sequence or numerical rank.\n• Features:\n  - Items are marked with numbers by default.\n  - Custom styles include `upper-alpha` (A, B, C) or `lower-roman` (i, ii, iii).",
+          "examples": [
             {
-              language: "html",
-              code: '<div class="favourite-place-card-container">\n  <h1 class="favourite-place-card-heading">Taj Mahal</h1>\n  <p class="favourite-place-card-description">\n    If there was just one symbol to represent all of India, it would be the Taj Mahal.\n  </p>\n</div>',
-            },
-            {
-              language: "css",
-              code: ".favourite-place-card-container {\n  background-color: white;\n  border-radius: 8px;\n  padding: 16px;\n  margin: 15px;\n}",
-            },
-          ],
+              "language": "css",
+              "code": ".ordered-list {\n  list-style-type: upper-alpha;\n}",
+              "explanation": "• This CSS rule changes the list numbering from 1, 2, 3 to A, B, C."
+            }
+          ]
         },
         {
-          id: "sc_day_23_t5",
-          title: "Adding Image (Void Element Example)",
-          explanation:
-            "• The img element is a void element. It does not require a closing tag. It is used to display images in HTML.",
-          examples: [
+          "id": "sc_day_23_t5",
+          "title": "Inline Elements vs. Block Elements",
+          "explanation": "• Inline elements only take up as much width as their content requires and do not start a new line.\n• Key Examples:\n  - `<span>`, `<img>`, `<a>`, and `<input />`.\n  - These elements sit side-by-side unless forced otherwise.",
+          "examples": [
             {
-              language: "html",
-              code: '<img src="https://assets.ccbp.in/frontend/static-website/tajmahal-img.png" />',
-            },
-          ],
-        },
-        {
-          id: "sc_day_23_t6",
-          title: "CSS Box Model",
-          explanation:
-            "• The CSS Box Model describes how HTML elements are displayed as rectangular boxes. Each box consists of content, padding, border, and margin. These properties together control spacing, layout, and size of elements.",
-        },
-        {
-          id: "sc_day_23_t7",
-          title: "HTML Lists",
-          explanation:
-            "• HTML lists are used to group related items for better readability. There are two main types: unordered lists and ordered lists.",
-        },
-        {
-          id: "sc_day_23_t8",
-          title: "Unordered List",
-          explanation:
-            "• Unordered lists display items with bullet points by default.",
-          examples: [
-            {
-              language: "html",
-              code: "<ul>\n  <li>Jallianwala Bagh</li>\n  <li>Wagah Border</li>\n  <li>Harike Wetland</li>\n  <li>Bathinda Fort</li>\n</ul>",
-            },
-            {
-              language: "css",
-              code: ".unordered-list {\n  list-style-type: circle;\n}",
-            },
-          ],
-        },
-        {
-          id: "sc_day_23_t9",
-          title: "Ordered List",
-          explanation:
-            "• Ordered lists display items with numbers by default. The style can be customized using list-style-type.",
-          examples: [
-            {
-              language: "html",
-              code: "<ol>\n  <li>Jallianwala Bagh</li>\n  <li>Wagah Border</li>\n  <li>Harike Wetland</li>\n  <li>Bathinda Fort</li>\n</ol>",
-            },
-            {
-              language: "css",
-              code: ".ordered-list {\n  list-style-type: upper-alpha;\n}",
-            },
-          ],
-        },
-        {
-          id: "sc_day_23_t10",
-          title: "Interview Questions - CSS Box Model",
-          explanation:
-            "• The CSS Box Model includes content, padding, border, and margin. Width and height define the content size. Padding creates space inside the border. Border surrounds the padding and content. Margin creates space outside the border. Padding affects internal spacing, while margin affects spacing between elements. Inline elements occupy only the space required by their content and do not start on a new line. Examples include span, img, a, and input.",
-        },
-      ],
-    },
+              "language": "html",
+              "code": "<span>First</span><span>Second</span>",
+              "explanation": "• Because spans are inline, 'First' and 'Second' will appear on the same horizontal line."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   24: [
     {
-      id: "sc_day_24",
-      title: "Website Behind The Scenes",
-      topics: [
+      "id": "sc_day_24",
+      "title": "Website: Behind the Scenes",
+      "topics": [
         {
-          id: "sc_day_24_t1",
-          title: "What is the Internet?",
-          explanation:
-            "• The Internet is a global network of billions of computers and devices connected together. These devices communicate using standard protocols. It enables data exchange, communication, and access to websites and online services. Approximately 22 billion devices worldwide are connected to the Internet.",
-        },
-        {
-          id: "sc_day_24_t2",
-          title: "IP Address",
-          explanation:
-            "• Every device connected to the Internet is assigned a unique IP (Internet Protocol) address. An IP address identifies a device and allows it to communicate with other devices over the network. Without IP addresses, devices would not know where to send or receive data.",
-          examples: [
+          "id": "sc_day_24_t1",
+          "title": "The Internet and Device Identification",
+          "explanation": "• The Internet is a massive global network connecting billions of digital devices.\n• Device Identification:\n  - Every device on the network has a unique identifier called an IP Address.\n  - An IP address consists of a string of numbers (e.g., `191.171.48.170`) used for communication.",
+          "examples": [
             {
-              language: "text",
-              code: "191.171.48.170\n191.172.178.170\n191.174.68.103",
-              explanation:
-                "• These are examples of IPv4 addresses. Each address uniquely identifies a device on the Internet.",
-            },
-          ],
+              "language": "text",
+              "code": "Device A (IP: 192.168.1.1) <---> Internet <---> Device B (IP: 13.249.43.67)",
+              "explanation": "• Just like a home address is needed for mail, an IP address is needed for data to reach the correct computer."
+            }
+          ]
         },
         {
-          id: "sc_day_24_t3",
-          title: "What Happens When We Type a URL?",
-          explanation:
-            "• When you type a website URL like varakumar.ccbp.tech in the browser, the browser sends a request to find the server where the website is hosted. The browser first looks up the domain name using DNS, finds the corresponding IP address, and then connects to that server to fetch the website content. Common browsers include Chrome, Safari, and Firefox.",
+          "id": "sc_day_24_t2",
+          "title": "Domain Names and Structure",
+          "explanation": "• Domain names are human-readable names used to access websites instead of typing numeric IP addresses.\n• Structure of a Domain (e.g., `varakumar.ccbp.tech`):\n  - Sub Domain: `varakumar` (The specific section of the site).\n  - Domain Name: `ccbp` (The main identity).\n  - Top Level Domain (TLD): `.tech` (The category, like .com, .in, or .org)."
         },
         {
-          id: "sc_day_24_t4",
-          title: "Domain Name Structure",
-          explanation:
-            "• A domain name is the human-readable address of a website. It is easier to remember than an IP address.",
-          examples: [
+          "id": "sc_day_24_t3",
+          "title": "Domain Name System (DNS) and Route 53",
+          "explanation": "• DNS acts as the 'phonebook' of the internet, translating domain names into IP addresses.\n• Amazon Route 53:\n  - A cloud-based DNS service that handles this translation process.\n  - Example: It maps `varakumar.ccbp.tech` to its actual server location at `13.249.43.67`.",
+          "examples": [
             {
-              language: "text",
-              code: "Domain Name: varakumar.ccbp.tech\nSubdomain: varakumar\nTop Level Domain (TLD): tech\n\nOther Examples:\nwww.google.com\nwww.amazon.in\nlearning.ccbp.in",
-              explanation:
-                "• The subdomain appears before the main domain. The Top Level Domain (TLD) appears at the end such as .com, .in, .tech.",
-            },
-          ],
+              "language": "text",
+              "code": "User Types: google.com -> DNS Lookup -> Returns: 142.250.190.46",
+              "explanation": "• This lookup happens in milliseconds every time you visit a new website."
+            }
+          ]
         },
         {
-          id: "sc_day_24_t5",
-          title: "Domain Name System (DNS)",
-          explanation:
-            "• The Domain Name System (DNS) is like the phonebook of the Internet. It translates human-friendly domain names into IP addresses. When you enter a website URL, DNS finds the matching IP address so the browser can connect to the correct server.",
-        },
-        {
-          id: "sc_day_24_t6",
-          title: "Amazon Route 53",
-          explanation:
-            "• Amazon Route 53 is a cloud-based DNS web service. It is highly available and scalable. It handles DNS routing by mapping domain names to IP addresses. For example, when you enter varakumar.ccbp.tech, Route 53 maps it to an IP address like 13.249.43.67.",
-          examples: [
+          "id": "sc_day_24_t4",
+          "title": "Content Delivery and Storage (CloudFront & S3)",
+          "explanation": "• Amazon CloudFront: A Content Delivery Network (CDN) that delivers web content quickly using 'Edge Locations' (servers physically closer to the user).\n• Amazon S3: A cloud storage service where the actual website files (HTML, CSS, Images) are stored.",
+          "examples": [
             {
-              language: "text",
-              code: "varakumar.ccbp.tech  →  13.249.43.67",
-              explanation:
-                "• Route 53 resolves the domain name to the correct server IP.",
-            },
-          ],
+              "language": "text",
+              "code": "User -> CloudFront (Edge Location) -> S3 (Source Files)",
+              "explanation": "• Using CloudFront makes the website load faster because data doesn't have to travel as far from the main server."
+            }
+          ]
         },
         {
-          id: "sc_day_24_t7",
-          title: "Amazon CloudFront (CDN)",
-          explanation:
-            "• Amazon CloudFront is a Content Delivery Network (CDN). It delivers website content quickly and securely to users worldwide. It uses Edge Locations (distributed servers) to reduce latency and improve performance by serving content from the nearest location to the user.",
-        },
-        {
-          id: "sc_day_24_t8",
-          title: "Amazon S3 Storage",
-          explanation:
-            "• Amazon S3 (Simple Storage Service) is cloud storage used to store website files such as HTML, CSS, JavaScript, images, and other resources. When a user requests a website, the server fetches the required files from S3 storage and sends them back to the browser.",
-        },
-        {
-          id: "sc_day_24_t9",
-          title: "Website Behind The Scenes Flow",
-          explanation:
-            "• When a user enters a domain name in the browser, the request follows a specific flow: First, the browser queries DNS to resolve the domain name into an IP address. Amazon Route 53 handles the DNS resolution. Then Amazon CloudFront delivers content through edge servers for faster performance. Finally, the actual website resources are fetched from Amazon S3 storage and delivered to the user’s browser.",
-        },
-      ],
-    },
+          "id": "sc_day_24_t5",
+          "title": "Website: Behind the Scenes Flow",
+          "explanation": "• When you request a URL, the following sequence occurs:\n  - 1. Request: You type the URL in the browser.\n  - 2. DNS (Route 53): Translates the URL to an IP address.\n  - 3. CDN (CloudFront): Routes the request to the nearest server.\n  - 4. Storage (S3): Fetches the files and displays the website.",
+          "examples": [
+            {
+              "language": "text",
+              "code": "Browser -> Route 53 -> CloudFront -> S3",
+              "explanation": "• This entire workflow ensures that the website is accessible, secure, and fast for users worldwide."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   25: [
     {
-      id: "sc_day_25",
-      title: "Nested Conditional Statements",
-      topics: [
+      "id": "sc_day_25",
+      "title": "Nested Conditions and Switch Statement",
+      "topics": [
         {
-          id: "sc_day_25_t1",
-          title: "Introduction to Nested Conditions",
-          explanation:
-            "• A nested condition is when one conditional statement is placed inside another. The inner condition is evaluated only if the outer condition is true. This allows checking multiple conditions in a hierarchical structure.",
-          examples: [
+          "id": "sc_day_25_t1",
+          "title": "Nested Conditional Statements",
+          "explanation": "• Nesting involves placing one `if` statement inside another to handle hierarchical logic.\n• Execution Flow:\n  - The inner condition is only checked if the outer condition evaluates to `true`.\n  - If the outer condition is `false`, the entire nested block is skipped entirely.",
+          "examples": [
             {
-              language: "javascript",
-              code: "if (conditionB) {\n  if (conditionA) {\n    // Block 1\n  }\n  // Block 2\n}\n// Block 3",
-              explanation:
-                "• The inner if runs only when conditionB is true. If conditionB is false, conditionA is never checked.",
-            },
-          ],
+              "language": "javascript",
+              "code": "if (isLoggedIn) {\n  if (hasPermission) {\n    console.log(\"Access Granted\");\n  }\n}",
+              "explanation": "• Here, permission is only verified after the system confirms the user is logged in."
+            }
+          ]
         },
         {
-          id: "sc_day_25_t2",
-          title: "How Nested Conditions Work",
-          explanation:
-            "• The execution of nested conditions depends on whether the outer condition is true or false.",
-          examples: [
+          "id": "sc_day_25_t2",
+          "title": "The Else If Statement",
+          "explanation": "• `else if` provides a cleaner way to check multiple, mutually exclusive conditions compared to deep nesting.\n• Key Rules:\n  - You can have multiple `else if` blocks between an `if` and an `else`.\n  - Once a condition is found to be `true`, its block executes and the rest are skipped.\n  - You cannot place an `else if` after the final `else` block.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'if (true) {\n  if (true) {\n    console.log("Block 1");\n  }\n  console.log("Block 2");\n}\nconsole.log("Block 3");',
-              explanation:
-                "• Both conditions are true. Block 1, Block 2, and Block 3 execute.",
-            },
-            {
-              language: "javascript",
-              code: 'if (true) {\n  if (false) {\n    console.log("Block 1");\n  }\n  console.log("Block 2");\n}\nconsole.log("Block 3");',
-              explanation:
-                "• Outer is true, inner is false. Block 1 skipped. Block 2 and Block 3 execute.",
-            },
-            {
-              language: "javascript",
-              code: 'if (false) {\n  if (true) {\n    console.log("Block 1");\n  }\n  console.log("Block 2");\n}\nconsole.log("Block 3");',
-              explanation:
-                "• Outer condition is false. Inner is never checked. Only Block 3 executes.",
-            },
-          ],
+              "language": "javascript",
+              "code": "if (score >= 90) {\n  console.log(\"Grade A\");\n} else if (score >= 80) {\n  console.log(\"Grade B\");\n} else {\n  console.log(\"Grade C\");\n}",
+              "explanation": "• The program checks each condition in order and executes only the first matching one."
+            }
+          ]
         },
         {
-          id: "sc_day_25_t3",
-          title: "Nested Conditions in Else Block",
-          explanation:
-            "• Nested conditions can also be written inside an else block.",
-          examples: [
+          "id": "sc_day_25_t3",
+          "title": "The Ternary Operator",
+          "explanation": "• A shorthand way to write a simple `if-else` statement in a single line.\n• Syntax: `condition ? expressionIfTrue : expressionIfFalse`.\n• Usage: Ideal for simple variable assignments based on a condition.",
+          "examples": [
             {
-              language: "javascript",
-              code: "if (conditionA) {\n  // Block 1\n} else {\n  if (conditionB) {\n    // Block 2\n  }\n  // Block 3\n}",
-              explanation:
-                "• If conditionA is false, the else block runs and conditionB is checked.",
-            },
-          ],
+              "language": "javascript",
+              "code": "let result = age >= 18 ? \"Adult\" : \"Minor\";\nconsole.log(result);",
+              "explanation": "• If age is 18 or more, 'Adult' is stored in result; otherwise, 'Minor' is stored."
+            }
+          ]
         },
         {
-          id: "sc_day_25_t4",
-          title: "Practical Example: Greatest of Three Numbers",
-          explanation:
-            "• This example finds the greatest among three numbers using nested conditions.",
-          examples: [
+          "id": "sc_day_25_t4",
+          "title": "The Switch Statement",
+          "explanation": "• Used when comparing a single expression against multiple possible constant values (cases).\n• Critical Components:\n  - `break`: Stops execution from 'falling through' to the next case.\n  - `default`: Executes if no case matches the expression (similar to an `else`).\n  - Type Matching: Switch uses strict equality (`===`), meaning types must match exactly (e.g., `0` is not the same as `\"0\"`).",
+          "examples": [
             {
-              language: "javascript",
-              code: "let a = 8, b = 5, c = 10;\n\nlet isAGreatest = (a > b) && (a > c);\n\nif (isAGreatest) {\n  console.log(a);\n} else {\n  let isBGreatest = (b > c);\n  if (isBGreatest) {\n    console.log(b);\n  } else {\n    console.log(c);\n  }\n}",
-              explanation:
-                "• First checks if a is greatest. If not, checks if b is greater than c. Otherwise c is the greatest.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_25_t5",
-          title: "Else If Statement",
-          explanation:
-            "• The else if statement provides a cleaner way to handle multiple conditions compared to deeply nested if statements.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'let score = 75;\n\nif (score >= 90) {\n  console.log("Grade A");\n} else if (score >= 80) {\n  console.log("Grade B");\n} else if (score >= 70) {\n  console.log("Grade C");\n} else {\n  console.log("Grade D");\n}',
-              explanation:
-                "• Conditions are checked in order. First true condition executes. Output: Grade C.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_25_t6",
-          title: "Rules for Else If",
-          explanation:
-            "• The else block is optional. However, else if blocks cannot come after an else block.",
-          examples: [
-            {
-              language: "javascript",
-              code: "if (conditionA) {\n  // Block 1\n} else if (conditionB) {\n  // Block 2\n} else if (conditionC) {\n  // Block 3\n}",
-              explanation: "• Valid structure without an else block.",
-            },
-            {
-              language: "javascript",
-              code: "// WRONG STRUCTURE\nif (conditionA) {\n  // Block 1\n} else {\n  // Block 2\n} else if (conditionB) {\n  // Error!\n}",
-              explanation: "• Else if cannot come after an else block.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_25_t7",
-          title: "Practical Example: Divisibility Check",
-          explanation:
-            "• This program checks whether a number is divisible by 10, by 5, or neither.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'let a = 15;\n\nif (a % 10 === 0) {\n  console.log("Divisible by 10");\n} else if (a % 5 === 0) {\n  console.log("Divisible by 5");\n} else {\n  console.log("Not Divisible by 10 or 5");\n}',
-              explanation:
-                "• 15 is divisible by 5 but not 10. Output: Divisible by 5.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_25_t8",
-          title: "Ternary Operator",
-          explanation:
-            "• The ternary operator is a shorthand for simple if-else statements.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'const speed = 70;\nlet message = speed >= 100 ? "Too Fast" : "OK";\nconsole.log(message);',
-              explanation:
-                "• If condition is true, first value executes. Otherwise second value. Output: OK.",
-            },
-            {
-              language: "javascript",
-              code: "let a = 10;\nlet b = 20;\nlet minValue = a > b ? b : a;\nconsole.log(minValue);",
-              explanation: "• Returns smaller value. Output: 10.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_25_t9",
-          title: "Switch Statement",
-          explanation:
-            "• The switch statement compares one expression against multiple possible values. It uses strict equality (===) for comparison and requires break statements to prevent fall-through.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'let day = 1;\n\nswitch (day) {\n  case 0:\n    console.log("Sunday");\n    break;\n  case 1:\n    console.log("Monday");\n    break;\n  default:\n    console.log("Invalid");\n}',
-              explanation: "• day = 1 matches case 1. Output: Monday.",
-            },
-            {
-              language: "javascript",
-              code: 'let day = "0";\n\nswitch (day) {\n  case 0:\n    console.log("Sunday");\n    break;\n  default:\n    console.log("Invalid");\n}',
-              explanation:
-                '• Switch uses strict equality. "0" !== 0. Output: Invalid.',
-            },
-            {
-              language: "javascript",
-              code: 'let day = 4;\n\nswitch (day) {\n  case 4:\n    console.log("Thursday");\n  case 5:\n    console.log("Friday");\n  case 6:\n    console.log("Saturday");\n  default:\n    console.log("Invalid");\n}',
-              explanation:
-                "• Missing break causes fall-through. Output: Thursday, Friday, Saturday, Invalid.",
-            },
-          ],
-        },
-      ],
-    },
+              "language": "javascript",
+              "code": "switch (day) {\n  case 1:\n    console.log(\"Monday\");\n    break;\n  default:\n    console.log(\"Other Day\");\n}",
+              "explanation": "• The `break` ensures that if it is Monday, the code stops there and doesn't run the default block."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   26: [
     {
-      id: "sc_day_26",
-      title: "HTML Hyperlinks",
-      topics: [
+      "id": "sc_day_26",
+      "title": "HTML Hyperlinks",
+      "topics": [
         {
-          id: "sc_day_26_t1",
-          title: "HTML Anchor Element",
-          explanation:
-            "• The HTML anchor element <a> defines a hyperlink. Hyperlinks are used to navigate to other web pages, resources, or specific sections within the same document. Links are one of the core features of the web, allowing users to move between resources.",
-          examples: [
+          "id": "sc_day_26_t1",
+          "title": "The HTML Anchor Element (a)",
+          "explanation": "• The `<a>` tag defines a hyperlink used to navigate between web pages or resources.\n• Key Attributes:\n  - `href`: Specifies the destination URL (e.g., `https://google.com`).\n  - `target=\"_blank\"`: Opens the linked document in a new browser tab.\n• Usage: You can wrap text, headings, or even images inside an anchor tag to make them clickable.",
+          "examples": [
             {
-              language: "html",
-              code: '<a href="https://www.ccbp.in/">Explore CCBP 4.0 Certification Programs</a>',
-              explanation:
-                "• The href attribute specifies the destination URL where the link navigates.",
-            },
-          ],
+              "language": "html",
+              "code": "<a href=\"https://www.ccbp.in/\" target=\"_blank\">Visit CCBP</a>",
+              "explanation": "• This creates a link that opens the CCBP website in a new tab when clicked."
+            }
+          ]
         },
         {
-          id: "sc_day_26_t2",
-          title: "HTML href Attribute",
-          explanation:
-            "• The href attribute specifies the URL or path of the page that the hyperlink points to. It can link to external websites, internal pages, or specific sections within the same page.",
-        },
-        {
-          id: "sc_day_26_t3",
-          title: "HTML target Attribute",
-          explanation:
-            "• The target attribute specifies where to open the linked document. The most common value is _blank, which opens the link in a new browser tab.",
-          examples: [
+          "id": "sc_day_26_t2",
+          "title": "Internal Page Navigation",
+          "explanation": "• Anchor tags can also jump to specific sections within the same page.\n• Steps to implement:\n  - 1. Add a unique `id` to the target element (e.g., `<div id=\"contact\">`).\n  - 2. Use the hash symbol `#` followed by that ID in the link's `href` (e.g., `href=\"#contact\"`).",
+          "examples": [
             {
-              language: "html",
-              code: '<a href="https://www.ccbp.in/" target="_blank">Explore CCBP 4.0 Certification Programs</a>',
-              explanation:
-                "• The link opens in a new tab because target is set to _blank.",
-            },
-          ],
+              "language": "html",
+              "code": "\n<a href=\"#bioSection\">Go to Bio</a>\n\n\n<div id=\"bioSection\">\n  <h1>About Me</h1>\n</div>",
+              "explanation": "• Clicking 'Go to Bio' will instantly scroll the browser window to the 'About Me' section."
+            }
+          ]
         },
         {
-          id: "sc_day_26_t4",
-          title: "Navigate Within the Same HTML Document",
-          explanation:
-            "• You can use the anchor element to navigate to a specific section within the same page. To do this, assign an id to the target section and use #idValue in the href attribute.",
-          examples: [
+          "id": "sc_day_26_t3",
+          "title": "Common Text Separation Elements",
+          "explanation": "• These are 'Void Elements' (no closing tag needed) used for layout formatting:\n  - `<br />` (Line Break): Forces the text to start on a new line within a paragraph.\n  - `<hr />` (Horizontal Rule): Inserts a horizontal line to visually separate content sections.",
+          "examples": [
             {
-              language: "html",
-              code: '<a href="#about">Go to About Section</a>\n\n<div id="about">\n  <h2>About Section</h2>\n</div>',
-              explanation:
-                "• Clicking the link scrolls the page to the element with id='about'.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_26_t5",
-          title: "HTML Image Element as Link",
-          explanation:
-            "• An image can be wrapped inside an anchor tag to make it clickable. When clicked, it behaves like a hyperlink.",
-          examples: [
-            {
-              language: "html",
-              code: '<a href="https://www.ccbp.in/">\n  <img src="profile-avatar-img.png" alt="Profile Image" />\n</a>',
-              explanation: "• The image acts as a clickable link.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_26_t6",
-          title: "HTML Line Break Element (br)",
-          explanation:
-            "• The <br /> element is a void element used to insert a line break in text. It moves content to the next line without creating a new paragraph.",
-          examples: [
-            {
-              language: "html",
-              code: "<p>\n  Twinkle, twinkle, little star, <br />\n  How I wonder what you are! <br />\n  Up above the world so high.\n</p>",
-              explanation:
-                "• Each <br /> tag forces the text to continue on the next line.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_26_t7",
-          title: "HTML Horizontal Rule Element (hr)",
-          explanation:
-            "• The <hr /> element inserts a horizontal line to separate content. It is commonly used to divide sections of a webpage. It is also a void element and does not require a closing tag.",
-          examples: [
-            {
-              language: "html",
-              code: "<h1>Twinkle Twinkle Little Star</h1>\n<hr />\n<p>\n  Twinkle, twinkle, little star,\n</p>\n<hr />",
-              explanation:
-                "• The <hr /> element visually separates content sections.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_26_t8",
-          title: "Common HTML Void Elements",
-          explanation:
-            "• Void elements are HTML elements that do not have closing tags and cannot contain content. Common void elements include img, br, hr, and input. They are self-contained and are used to insert media, breaks, or input fields into a webpage.",
-        },
-      ],
-    },
+              "language": "html",
+              "code": "<h3>Title</h3>\n<hr />\n<p>Line 1<br />Line 2</p>",
+              "explanation": "• The `<hr />` creates a thematic break under the title, and `<br />` ensures 'Line 2' starts directly below 'Line 1'."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   27: [
     {
-      id: "sc_day_27",
-      title: "String Basic",
-      topics: [
+      "id": "sc_day_27",
+      "title": "String Basics",
+      "topics": [
         {
-          id: "sc_day_27_t1",
-          title: "String Concatenation",
-          explanation:
-            "• String concatenation means combining two or more strings using the + operator. When strings are added together, JavaScript joins them into a single string.",
-          examples: [
+          "id": "sc_day_27_t1",
+          "title": "String Concatenation",
+          "explanation": "• String Concatenation is the process of joining two or more strings together using the `+` operator.\n• When numbers are wrapped in quotes, they are treated as text, so `\"1\" + \"2\"` becomes `\"12\"` rather than `3`.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'let a = "1" + "2";\nconsole.log(a);',
-              explanation: '• "1" and "2" are combined to form "12".',
-            },
-            {
-              language: "javascript",
-              code: 'let username = "Ravi";\nconsole.log("Hi " + username);',
-              explanation:
-                '• The string "Hi " is combined with the value of username. Output: Hi Ravi.',
-            },
-          ],
+              "language": "javascript",
+              "code": "let greeting = \"Hi \" + \"there!\";\nconsole.log(greeting); // Output: Hi there!",
+              "explanation": "• The plus operator merges the strings into one continuous piece of text."
+            }
+          ]
         },
         {
-          id: "sc_day_27_t2",
-          title: "Template Literals",
-          explanation:
-            "• Template literals are a modern way to create strings in JavaScript using backticks (`). They allow variable insertion, multi-line strings, and expressions inside strings.",
-          examples: [
+          "id": "sc_day_27_t2",
+          "title": "Template Literals",
+          "explanation": "• Template literals are modern strings defined with backticks (`` ` ``).\n• Key features:\n  - String Interpolation: Insert variables or expressions directly using `${}`.\n  - Multi-line support: You can press 'Enter' to create multi-line text without special characters.\n  - Logic inside strings: Perform calculations like `${a + b}` inside the brackets.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'let username = "Ravi";\nlet age = 20;\nconst text = `My name is ${username} and I am ${age} years old`;\nconsole.log(text);',
-              explanation:
-                "• Variables are inserted using ${}. Output: My name is Ravi and I am 20 years old.",
-            },
-            {
-              language: "javascript",
-              code: "let message = `Hello,\nWelcome to JavaScript.\nHave a nice day!`;\nconsole.log(message);",
-              explanation:
-                "• Template literals allow multi-line strings without special characters.",
-            },
-            {
-              language: "javascript",
-              code: "let a = 5;\nlet b = 3;\nconsole.log(`Sum is ${a + b}`);",
-              explanation:
-                "• Expressions can be evaluated inside ${}. Output: Sum is 8.",
-            },
-          ],
+              "language": "javascript",
+              "code": "let name = \"Alice\";\nconsole.log(`Welcome, ${name}!`); // Output: Welcome, Alice!",
+              "explanation": "• Using backticks and ${} makes it much easier to build complex strings than using the + operator."
+            }
+          ]
         },
         {
-          id: "sc_day_27_t3",
-          title: "Indexing",
-          explanation:
-            "• Strings in JavaScript are indexed starting from 0. Each character can be accessed using its index position.",
-          examples: [
+          "id": "sc_day_27_t3",
+          "title": "Indexing and Length",
+          "explanation": "• Indexing: Every character in a string has a position number starting from `0`.\n• Accessing: Use square brackets `[]` to get a character at a specific index.\n• Length: The `.length` property returns the total number of characters in the string.\n• Error Handling: Accessing an index that doesn't exist returns `undefined`.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'let username = "Ravi";\nconsole.log(username[0]);\nconsole.log(username[1]);\nconsole.log(username[2]);\nconsole.log(username[3]);',
-              explanation:
-                "• Index 0 gives R, 1 gives a, 2 gives v, 3 gives i.",
-            },
-            {
-              language: "javascript",
-              code: 'let username = "Ravi";\nconsole.log(username[4]);',
-              explanation:
-                "• Accessing an index outside the string length returns undefined.",
-            },
-          ],
+              "language": "javascript",
+              "code": "let tool = \"Git\";\nconsole.log(tool[0]);      // Output: G\nconsole.log(tool.length); // Output: 3",
+              "explanation": "• The first letter is always index 0. The length tells you how many characters are present."
+            }
+          ]
         },
         {
-          id: "sc_day_27_t4",
-          title: "Accessing Characters and Negative Index",
-          explanation:
-            "• Characters can be accessed using index positions. While negative indexing is not directly supported, methods like slice() allow accessing characters from the end.",
-          examples: [
+          "id": "sc_day_27_t4",
+          "title": "JavaScript Comments",
+          "explanation": "• Comments are notes for developers that are completely ignored by the computer.\n• Types:\n  - Single-line: Created using `//`.\n  - Multi-line: Created by wrapping text in `/* ... */`.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'let word = "JavaScript";\nconsole.log(word.slice(-6));',
-              explanation:
-                "• slice(-6) extracts the last 6 characters. Output: Script.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_27_t5",
-          title: "Comments in JavaScript",
-          explanation:
-            "• Comments are ignored by JavaScript and are used to explain code for better readability.",
-          examples: [
-            {
-              language: "javascript",
-              code: "// This is a single-line comment",
-              explanation: "• Used to comment a single line.",
-            },
-            {
-              language: "javascript",
-              code: "/*\nThis is a multi-line comment\n*/",
-              explanation: "• Used to comment multiple lines of code.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_27_t6",
-          title: "Length of a String",
-          explanation:
-            "• The .length property is used to find the number of characters in a string.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'let username = "Ravi";\nlet length = username.length;\nconsole.log(length);',
-              explanation: '• The string "Ravi" has 4 characters. Output: 4.',
-            },
-          ],
-        },
-      ],
-    },
+              "language": "javascript",
+              "code": "// This is a tip for the reader\n/* This block explains \n   a complex logic */",
+              "explanation": "• Use comments to explain 'why' a piece of code exists, not just 'what' it does."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   28: [
     {
-      id: "sc_day_28",
-      title: "JavaScript String Methods",
-      topics: [
+      "id": "sc_day_28",
+      "title": "String Methods",
+      "topics": [
         {
-          id: "sc_day_28_t1",
-          title: "Introduction to String Methods",
-          explanation:
-            "• JavaScript provides built-in reusable utilities called string methods. These methods help perform common operations such as extracting, modifying, searching, and checking string content. They simplify string manipulation and improve code readability.",
+          "id": "sc_day_28_t1",
+          "title": "String Slicing and Extraction",
+          "explanation": "• `slice(startIndex, endIndex)`: Extracts a section of a string.\n  - The `startIndex` is inclusive, but the `endIndex` is exclusive (not included).\n  - If `endIndex` is omitted, it slices to the end of the string.\n• `charAt(index)`: Returns the character at the specific position.\n• Negative indexing in `slice()` counts backward from the end of the string.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "const tech = \"JavaScript\";\nconsole.log(tech.slice(0, 4)); // \"Java\"\nconsole.log(tech.slice(-6));   // \"Script\"",
+              "explanation": "• Slicing (0, 4) takes indices 0, 1, 2, and 3. Slicing with -6 starts 6 characters from the end."
+            }
+          ]
         },
         {
-          id: "sc_day_28_t2",
-          title: "slice()",
-          explanation:
-            "• The slice() method extracts a portion of a string from a starting index to an ending index. The start index is included, and the end index is excluded. It also supports negative indexing.",
-          examples: [
+          "id": "sc_day_28_t2",
+          "title": "Modifying String Content",
+          "explanation": "• `toUpperCase()`: Converts the entire string to capital letters.\n• `trim()`: Removes whitespace from both the beginning and the end of the string.\n• `replace(old, new)`: Changes only the **first** match found.\n• `replaceAll(old, new)`: Changes **every** occurrence of the match found in the string.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'const message = "Hi Ravi";\nconst part = message.slice(3, 7);\nconsole.log(part);',
-              explanation:
-                "• Extracts characters from index 3 to 6. Output: Ravi.",
-            },
-            {
-              language: "javascript",
-              code: 'const message = "HI Ravi";\nconsole.log(message.slice(3));',
-              explanation: "• Extracts from index 3 to end. Output: Ravi.",
-            },
-            {
-              language: "javascript",
-              code: 'const word = "JavaScript";\nconsole.log(word.slice(-6));',
-              explanation:
-                "• Negative index counts from the end. Output: Script.",
-            },
-          ],
+              "language": "javascript",
+              "code": "let msg = \" teh cat and teh dog \";\nmsg = msg.trim().replaceAll(\"teh\", \"the\");\nconsole.log(msg); // \"the cat and the dog\"",
+              "explanation": "• We chain methods to first clean the spaces and then fix all spelling errors at once."
+            }
+          ]
         },
         {
-          id: "sc_day_28_t3",
-          title: "toUpperCase()",
-          explanation:
-            "• The toUpperCase() method converts all characters of a string to uppercase.",
-          examples: [
+          "id": "sc_day_28_t3",
+          "title": "Searching and Validation",
+          "explanation": "• `includes(value)`: Returns `true` if the string contains the specified value.\n• `startsWith(value)` / `endsWith(value)`: Checks the beginning or end of a string (useful for URL or email validation).\n• `indexOf(value)`: Finds the first position of a character. Returns `-1` if the value is missing.\n• `lastIndexOf(value)`: Finds the very last position of a character.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'const name = "ravi";\nconsole.log(name.toUpperCase());',
-              explanation: "• Converts string to uppercase. Output: RAVI.",
-            },
-          ],
+              "language": "javascript",
+              "code": "const email = \"user@gmail.com\";\nconsole.log(email.endsWith(\"@gmail.com\")); // true\nconsole.log(email.indexOf(\"@\"));           // 4",
+              "explanation": "• These methods are perfect for verifying if input data follows a specific format."
+            }
+          ]
         },
         {
-          id: "sc_day_28_t4",
-          title: "trim()",
-          explanation:
-            "• The trim() method removes whitespace from both the beginning and end of a string.",
-          examples: [
+          "id": "sc_day_28_t4",
+          "title": "Formatting and Splitting",
+          "explanation": "• `split(separator)`: Breaks a string into an array based on a character (like a comma or space).\n• `repeat(count)`: Constructs a new string containing the original string repeated the specified number of times.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'let mobile = " 9876543210 ";\nmobile = mobile.trim();\nconsole.log(mobile);',
-              explanation:
-                "• Removes leading and trailing spaces. Output: 9876543210.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_28_t5",
-          title: "replace() and replaceAll()",
-          explanation:
-            "• replace() replaces only the first occurrence of a substring. replaceAll() replaces all occurrences.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'let sentence = "teh cat and teh dog";\nsentence = sentence.replace("teh", "the");\nconsole.log(sentence);',
-              explanation:
-                "• Replaces only the first occurrence. Output: the cat and teh dog.",
-            },
-            {
-              language: "javascript",
-              code: 'let sentence = "teh cat and teh dog";\nsentence = sentence.replaceAll("teh", "the");\nconsole.log(sentence);',
-              explanation:
-                "• Replaces all occurrences. Output: the cat and the dog.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_28_t6",
-          title: "startsWith() and endsWith()",
-          explanation:
-            "• startsWith() checks if a string begins with a specified value. endsWith() checks if it ends with a specified value. Both return true or false.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'const url = "https://onthegomodel.com";\nlet is_secure_url = url.startsWith("https://");\nconsole.log(is_secure_url);',
-              explanation:
-                "• Checks if string starts with https://. Output: true.",
-            },
-            {
-              language: "javascript",
-              code: 'const gmail_id = "rahul123@gmail.com";\nlet is_gmail = gmail_id.endsWith("@gmail.com");\nconsole.log(is_gmail);',
-              explanation:
-                "• Checks if string ends with @gmail.com. Output: true.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_28_t7",
-          title: "includes()",
-          explanation:
-            "• The includes() method checks if a string contains a specified substring and returns true or false.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'const text = "JavaScript";\nconsole.log(text.includes("Script"));',
-              explanation:
-                '• Checks if "Script" exists in the string. Output: true.',
-            },
-          ],
-        },
-        {
-          id: "sc_day_28_t8",
-          title: "split()",
-          explanation:
-            "• The split() method divides a string into an array of substrings based on a specified separator.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'const text = "apple,banana,orange";\nconsole.log(text.split(","));',
-              explanation:
-                '• Splits string by comma. Output: ["apple", "banana", "orange"].',
-            },
-          ],
-        },
-        {
-          id: "sc_day_28_t9",
-          title: "charAt()",
-          explanation:
-            "• The charAt() method returns the character at a specific index.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'const word = "JavaScript";\nconsole.log(word.charAt(4));',
-              explanation: "• Returns character at index 4. Output: S.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_28_t10",
-          title: "indexOf() and lastIndexOf()",
-          explanation:
-            "• indexOf() returns the first occurrence index of a substring. lastIndexOf() returns the last occurrence index. If not found, indexOf() returns -1.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'const text = "Hello World";\nconsole.log(text.indexOf("o"));',
-              explanation: "• Returns first index of 'o'. Output: 4.",
-            },
-            {
-              language: "javascript",
-              code: 'const text = "hello hello";\nconsole.log(text.lastIndexOf("o"));',
-              explanation: "• Returns last index of 'o'. Output: 10.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_28_t11",
-          title: "repeat()",
-          explanation:
-            "• The repeat() method repeats a string a specified number of times. The count must be greater than or equal to 0.",
-          examples: [
-            {
-              language: "javascript",
-              code: 'const text = "Hi ";\nconsole.log(text.repeat(3));',
-              explanation: "• Repeats the string 3 times. Output: Hi Hi Hi.",
-            },
-            {
-              language: "javascript",
-              code: 'console.log("* ".repeat(4));',
-              explanation: "• Repeats symbol 4 times. Output: * * * *.",
-            },
-          ],
-        },
-      ],
-    },
+              "language": "javascript",
+              "code": "const fruits = \"apple,orange\";\nconsole.log(fruits.split(\",\")); // [\"apple\", \"orange\"]\nconsole.log(\"*\".repeat(3));      // \"***\"",
+              "explanation": "• Splitting turns a single string into a list, while repeat is great for simple visual formatting."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   29: [
     {
-      id: "sc_day_29",
-      title: "Introduction to HTML5",
-      topics: [
+      "id": "sc_day_29",
+      "title": "Introduction to HTML5 and Multimedia",
+      "topics": [
         {
-          id: "sc_day_29_t1",
-          title: "Versions of HTML and Software Evolution",
-          explanation:
-            "• Versions help track improvements in software over time. Just like Android evolved from version 8.0 to 15.0, HTML has also evolved. Major HTML versions include HTML 1.0 (1993), HTML 2 (1995), HTML 3.2 (1997), HTML 4.01 (1997), and HTML5 (2014). Each version introduced improvements and new features.",
-        },
-        {
-          id: "sc_day_29_t2",
-          title: "Features of HTML5",
-          explanation:
-            "• HTML5 simplifies web development and enhances web applications. Key features include native multimedia support (audio and video), semantic elements, geolocation support, and new input types for forms. HTML5 removes dependency on third-party plugins for multimedia.",
-        },
-        {
-          id: "sc_day_29_t3",
-          title: "Multimedia Support in HTML5",
-          explanation:
-            "• HTML5 introduced native support for multimedia using <video> and <audio> elements. These allow embedding video and audio directly into web pages without using external plugins.",
-          examples: [
+          "id": "sc_day_29_t1",
+          "title": "Evolution of HTML5",
+          "explanation": "• HTML has evolved significantly from its first version in 1993 to HTML5 in 2014.\n• HTML5 was designed to simplify web development and reduce the need for third-party plugins (like Flash) for common tasks.\n• Major upgrades include native multimedia support, better form controls, and APIs for location services.",
+          "examples": [
             {
-              language: "html",
-              code: '<video src="VIDEO_URL">\n  The video element is not supported\n</video>',
-              explanation: "• The <video> element embeds video content.",
-            },
+              "language": "text",
+              "code": "HTML 4.01 (1997) -> HTML5 (2014)",
+              "explanation": "• HTML5 is not just a markup update; it's a platform that supports modern web applications."
+            }
+          ]
+        },
+        {
+          "id": "sc_day_29_t2",
+          "title": "Semantic vs. Non-Semantic Elements",
+          "explanation": "• Semantic Elements: Tags that clearly describe their meaning to both the browser and the developer (e.g., `<header>`, `<footer>`, `<article>`).\n• Non-Semantic Elements: Tags that tell us nothing about their content (e.g., `<div>`, `<span>`).\n• Benefits: Improved accessibility for screen readers and better SEO (Search Engine Optimization).",
+          "examples": [
             {
-              language: "html",
-              code: '<audio src="AUDIO_URL" controls>\n  The audio element is not supported\n</audio>',
-              explanation:
-                "• The <audio> element embeds audio content with playback controls.",
-            },
-          ],
+              "language": "html",
+              "code": "\n<nav>Menu Items</nav>\n\n\n<div class=\"nav\">Menu Items</div>",
+              "explanation": "• Using <nav> explicitly tells the browser 'this is the navigation section,' whereas <div> is just a generic container."
+            }
+          ]
         },
         {
-          id: "sc_day_29_t4",
-          title: "Video and Audio Attributes",
-          explanation:
-            "• HTML5 provides attributes to control multimedia playback.",
-          examples: [
+          "id": "sc_day_29_t3",
+          "title": "HTML5 Multimedia (Audio & Video)",
+          "explanation": "• HTML5 introduced the `<video>` and `<audio>` tags to embed media directly.\n• Key Attributes:\n  - `controls`: Adds the play, pause, and volume interface.\n  - `autoplay`: Starts the media as soon as the page loads.\n  - `muted`: Starts the media without sound.\n  - `loop`: Restarts the media automatically when it ends.\n• Best Practice: Use the `<source>` tag inside media elements to provide multiple file formats for better browser compatibility.",
+          "examples": [
             {
-              language: "html",
-              code: '<video src="VIDEO_URL" controls autoplay muted width="400" height="300"></video>',
-              explanation:
-                "• controls adds playback buttons, autoplay starts automatically, muted disables sound, width and height set size.",
-            },
+              "language": "html",
+              "code": "<video width=\"320\" height=\"240\" controls>\n  <source src=\"movie.mp4\" type=\"video/mp4\">\n  Your browser does not support the video tag.\n</video>",
+              "explanation": "• This code provides a video player with controls. The text inside is only shown if the user's browser is outdated."
+            }
+          ]
+        },
+        {
+          "id": "sc_day_29_t4",
+          "title": "Advanced Forms and Geolocation",
+          "explanation": "• New Input Types: HTML5 added specialized inputs like `date`, `color`, `range`, `email`, and `url` to provide better mobile keyboards and automatic validation.\n• Geolocation API: Allows users to share their physical location with the website to receive localized content like weather or maps.",
+          "examples": [
             {
-              language: "html",
-              code: '<audio src="AUDIO_URL" controls loop preload="auto"></audio>',
-              explanation:
-                "• loop repeats audio, preload loads audio when page loads.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_29_t5",
-          title: "Handling Unsupported Formats",
-          explanation:
-            "• To support multiple browser formats, multiple <source> elements can be used inside video or audio tags.",
-          examples: [
-            {
-              language: "html",
-              code: '<video controls>\n  <source src="video1.mp4" />\n  <source src="video2.ogg" />\n</video>',
-              explanation: "• Browser plays the first supported format.",
-            },
-            {
-              language: "html",
-              code: '<audio controls>\n  <source src="audio1.mp3" />\n  <source src="audio2.ogg" />\n</audio>',
-              explanation: "• Ensures compatibility across different browsers.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_29_t6",
-          title: "Semantic Elements",
-          explanation:
-            "• HTML5 introduced semantic elements that clearly describe their meaning and role in the webpage structure. Examples include <header>, <footer>, <nav>, <section>, <article>, and <aside>. These improve accessibility, readability, and SEO.",
-        },
-        {
-          id: "sc_day_29_t7",
-          title: "Semantic vs Non-Semantic Elements",
-          explanation:
-            "• Semantic elements describe the meaning of content and improve document structure. Examples include <header>, <nav>, <footer>, <section>, and <article>. Non-semantic elements like <div> and <span> do not describe content meaning and are mainly used for layout and styling.",
-        },
-        {
-          id: "sc_day_29_t8",
-          title: "Location Support (Geolocation API)",
-          explanation:
-            "• HTML5 provides access to the user's geographical location through the Geolocation API. This enables location-based services like weather apps, maps, and local search results.",
-        },
-        {
-          id: "sc_day_29_t9",
-          title: "New Input Types in HTML5",
-          explanation:
-            "• HTML5 introduced new input types that enhance form validation and user experience. These include date, week, month, time, range, file, password, URL, email, and search.",
-          examples: [
-            {
-              language: "html",
-              code: '<input type="date" />\n<input type="email" />\n<input type="range" />',
-              explanation:
-                "• These input types provide built-in validation and better UI controls.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_29_t10",
-          title: "Interview Questions",
-          explanation:
-            "• HTML is used to structure web pages. HTML5 is the latest version with enhanced features like multimedia support, semantic elements, geolocation, and advanced form inputs. Semantic elements describe content meaning and improve accessibility. Non-semantic elements like <div> and <span> are mainly used for layout and styling without conveying meaning.",
-        },
-      ],
-    },
+              "language": "html",
+              "code": "<input type=\"date\">\n<input type=\"range\" min=\"0\" max=\"100\">",
+              "explanation": "• Using type='date' automatically opens a calendar picker on most modern browsers and mobile devices."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   30: [
     {
-      id: "sc_day_30",
-      title: "HTML Semantic Elements",
-      topics: [
+      "id": "sc_day_30",
+      "title": "HTML Semantic Elements",
+      "topics": [
         {
-          id: "sc_day_30_t1",
-          title: "Introduction to Semantic Elements",
-          explanation:
-            "• Semantic elements are HTML tags that clearly describe the meaning of their content to both the browser and the developer. Semantics means the meaning of a piece of code. These elements improve readability, accessibility, and help search engines understand the structure of the webpage.",
+          "id": "sc_day_30_t1",
+          "title": "What are Semantic Elements?",
+          "explanation": "• Semantic elements are tags that carry **meaning** about the content they contain.\n• Unlike a generic `<div>`, a semantic tag like `<header>` tells the browser and search engines exactly what the content's role is.\n• Benefits include:\n  - **Accessibility**: Screen readers can navigate the page more easily.\n  - **SEO**: Search engines can index the most important parts of your page (like articles) better.\n  - **Maintainability**: The code is much easier for developers to read and understand.",
+          "examples": [
+            {
+              "language": "html",
+              "code": "\n<article>\n  <h1>The Future of AI</h1>\n</article>\n\n\n<div class=\"blog-post\">\n  <div>The Future of AI</div>\n</div>",
+              "explanation": "• Using `<article>` is better because it signals that the content is a self-contained, independent piece of information."
+            }
+          ]
         },
         {
-          id: "sc_day_30_t2",
-          title: "Semantic vs Non-Semantic Elements",
-          explanation:
-            "• Semantic elements describe the meaning of the content they enclose, while non-semantic elements are used mainly for layout and styling without conveying meaning.",
-          examples: [
+          "id": "sc_day_30_t2",
+          "title": "Core Sectioning Elements",
+          "explanation": "• These elements define the major layout parts of a website:\n  - `<header>`: The top branding or navigation area.\n  - `<nav>`: The container for navigation links.\n  - `<main>`: The unique primary content of the document.\n  - `<section>`: A thematic grouping of content (e.g., 'Features' or 'Contact Us').\n  - `<article>`: Independent content like blog posts or news stories.\n  - `<aside>`: Content indirectly related to the main text (e.g., ads or sidebars).\n  - `<footer>`: The bottom section containing copyright or contact info.",
+          "examples": [
             {
-              language: "html",
-              code: "<h1>Artificial Intelligence</h1>",
-              explanation: "• <h1> clearly represents a top-level heading.",
-            },
-            {
-              language: "html",
-              code: "<div>Artificial Intelligence</div>",
-              explanation:
-                "• <div> does not describe the purpose of the content without additional context.",
-            },
-          ],
+              "language": "html",
+              "code": "<header>\n  <nav>\n    <a href=\"#\">Home</a>\n  </nav>\n</header>",
+              "explanation": "• This structure creates a clear hierarchy that browsers can interpret as a navigation bar within a header."
+            }
+          ]
         },
         {
-          id: "sc_day_30_t3",
-          title: "Common Sectioning Semantic Elements",
-          explanation:
-            "• Sectioning elements define the structure of a webpage and divide it into meaningful parts.",
-          examples: [
+          "id": "sc_day_30_t3",
+          "title": "Interactive and Descriptive Elements",
+          "explanation": "• HTML5 introduced elements for specific content types:\n  - `<details>` & `<summary>`: Creates a native 'accordion' or collapsible section without needing JavaScript.\n  - `<figure>` & `<figcaption>`: Pairs an image, diagram, or code block with a descriptive caption.\n  - `<mark>`: Highlights specific text for reference.",
+          "examples": [
             {
-              language: "html",
-              code: "<header>Content</header>\n<nav>Content</nav>\n<article>Content</article>\n<section>Content</section>\n<aside>Content</aside>\n<footer>Content</footer>",
-              explanation:
-                "• These elements structure the webpage into logical sections.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_30_t4",
-          title: "Purpose of Sectioning Elements",
-          explanation:
-            "• Each sectioning element has a specific role in structuring a webpage.",
-          examples: [
-            {
-              language: "html",
-              code: "<header>Top section with branding or navigation</header>",
-              explanation: "• Represents the top portion of the webpage.",
-            },
-            {
-              language: "html",
-              code: "<nav>Navigation Links</nav>",
-              explanation: "• Represents navigation links.",
-            },
-            {
-              language: "html",
-              code: "<article>Blog Post Content</article>",
-              explanation:
-                "• Represents independent content like a blog or news article.",
-            },
-            {
-              language: "html",
-              code: "<section>Grouped Thematic Content</section>",
-              explanation:
-                "• Represents a thematic grouping of related content.",
-            },
-            {
-              language: "html",
-              code: "<aside>Sidebar Content</aside>",
-              explanation: "• Represents related or sidebar content.",
-            },
-            {
-              language: "html",
-              code: "<footer>Footer Information</footer>",
-              explanation:
-                "• Represents bottom content like copyright or contact details.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_30_t5",
-          title: "New HTML5 Semantic Elements",
-          explanation:
-            "• HTML5 introduced additional semantic elements for better structure and meaning.",
-          examples: [
-            {
-              language: "html",
-              code: "<p>This is an <mark>important</mark> note.</p>",
-              explanation: "• <mark> highlights important text.",
-            },
-            {
-              language: "html",
-              code: '<figure>\n  <img src="image.jpg" alt="Sample Image" />\n  <figcaption>Caption for the image.</figcaption>\n</figure>',
-              explanation:
-                "• <figure> represents self-contained content and <figcaption> adds a caption.",
-            },
-            {
-              language: "html",
-              code: "<details>\n  <summary>Click to see more details</summary>\n  <p>This is hidden content.</p>\n</details>",
-              explanation:
-                "• <details> creates expandable content and <summary> acts as its heading.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_30_t6",
-          title: "Using Semantic Elements in a Blog Layout",
-          explanation:
-            "• Replacing non-semantic elements with semantic elements improves clarity and structure.",
-          examples: [
-            {
-              language: "html",
-              code: '<div class="nav-bar">...</div>\n<div class="blog-content-container">...</div>\n<div class="ads-container">...</div>\n<div class="footer">...</div>',
-              explanation: "• Using non-semantic elements for layout.",
-            },
-            {
-              language: "html",
-              code: '<header class="nav-bar">...</header>\n<article class="blog-content-container">...</article>\n<aside class="ads-container">...</aside>\n<footer class="footer">...</footer>',
-              explanation:
-                "• Using semantic elements improves readability and structure.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_30_t7",
-          title: "Advantages of Semantic Elements",
-          explanation:
-            "• Semantic elements provide structured code, improve SEO ranking, enhance accessibility for screen readers, and improve user navigation, especially for keyboard users.",
-        },
-        {
-          id: "sc_day_30_t8",
-          title: "Interview Questions",
-          explanation:
-            "• HTML semantic elements are tags that clearly describe the meaning and role of content. Examples include <header>, <section>, <article>, and <footer>. The <section> tag groups related content into meaningful parts, improving readability and helping search engines and assistive technologies understand the page structure.",
-        },
-      ],
-    },
+              "language": "html",
+              "code": "<details>\n  <summary>Click for More</summary>\n  <p>Here is the hidden information!</p>\n</details>",
+              "explanation": "• The `<summary>` is what the user sees; the `<p>` tag content is revealed only when clicked."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   31: [
     {
-      id: "sc_day_31",
-      title: "Introduction to Loops",
-      topics: [
+      "id": "sc_day_31",
+      "title": "Introduction to Loops",
+      "topics": [
         {
-          id: "sc_day_31_t1",
-          title: "Introduction to Loops",
-          explanation:
-            "• Loops are used to execute a block of code multiple times as long as a specified condition is true. Normally, JavaScript executes code sequentially, meaning each line runs once. Loops allow us to control the flow of execution and repeat certain instructions automatically, which helps in handling repetitive tasks efficiently.",
+          "id": "sc_day_31_t1",
+          "title": "Understanding Loops",
+          "explanation": "• Loops are programming structures used to repeat a block of code multiple times.\n• They automate repetitive tasks, saving time and reducing code length.\n• A loop continues to run as long as its 'test condition' remains `true`.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "// Without loops\nconsole.log(1); console.log(2); console.log(3);\n\n// With loops\nlet i = 1;\nwhile(i <= 3) {\n  console.log(i);\n  i++;\n}",
+              "explanation": "• Instead of writing individual log statements, the loop handles the counting automatically."
+            }
+          ]
         },
         {
-          id: "sc_day_31_t2",
-          title: "While Loop",
-          explanation:
-            "• The while loop repeatedly executes a block of code as long as the given condition evaluates to true. The condition is checked before each iteration.",
-          examples: [
+          "id": "sc_day_31_t2",
+          "title": "The While Loop",
+          "explanation": "• The `while` loop checks the condition **before** executing the code block.\n• If the condition is `false` right at the start, the code inside will never run.\n• It requires three main parts: Initialization, Condition, and Update.",
+          "examples": [
             {
-              language: "javascript",
-              code: "let a = 1;\nwhile (a <= 3) {\n  console.log(a);\n  a++;\n}",
-              explanation:
-                "• The loop runs while a is less than or equal to 3. Output: 1 2 3.",
-            },
-          ],
+              "language": "javascript",
+              "code": "let counter = 0; // Initialization\nwhile (counter < 3) { // Condition\n  console.log(\"Hello\");\n  counter++; // Update\n}",
+              "explanation": "• This loop prints 'Hello' exactly three times (for counter values 0, 1, and 2)."
+            }
+          ]
         },
         {
-          id: "sc_day_31_t3",
-          title: "Do-While Loop",
-          explanation:
-            "• The do-while loop is similar to the while loop, but it guarantees that the block of code executes at least once. The condition is checked after the first execution.",
-          examples: [
+          "id": "sc_day_31_t3",
+          "title": "The Do-While Loop",
+          "explanation": "• The `do-while` loop executes the code block **first**, then checks the condition.\n• Key Difference: It is guaranteed to run at least once, even if the condition is `false` from the beginning.\n• Note the semicolon `;` after the while condition at the end.",
+          "examples": [
             {
-              language: "javascript",
-              code: "let a = 1;\ndo {\n  console.log(a);\n  a++;\n} while (a <= 3);",
-              explanation:
-                "• The code runs first and then checks the condition. Output: 1 2 3.",
-            },
-          ],
+              "language": "javascript",
+              "code": "let a = 10;\ndo {\n  console.log(\"This runs once\");\n} while (a < 5);",
+              "explanation": "• Even though 10 is not less than 5, the message is printed once because the check happens after the execution."
+            }
+          ]
         },
         {
-          id: "sc_day_31_t4",
-          title: "Code Walkthrough Example",
-          explanation:
-            "• This example demonstrates how a counter variable controls loop execution and ensures termination.",
-          examples: [
+          "id": "sc_day_31_t4",
+          "title": "Avoiding Infinite Loops",
+          "explanation": "• An infinite loop occurs when the condition never becomes `false`.\n• Common causes:\n  - Forgetting to update the counter variable (e.g., missing `i++`).\n  - Setting a condition that is always true (e.g., `while (true)` without a break).\n• Always ensure the logic inside the loop leads toward the termination condition.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'let a = 5;\nlet counter = 0;\n\nwhile (counter < 3) {\n  a = a + 1;\n  console.log(a);\n  counter = counter + 1;\n}\n\nconsole.log("End");',
-              explanation: "• The loop runs 3 times. Output: 6 7 8 End.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_31_t5",
-          title: "Common Mistakes in Loops",
-          explanation:
-            "• Improper loop setup can lead to errors or infinite loops. It is important to initialize variables correctly, update them properly, and ensure the condition eventually becomes false.",
-          examples: [
-            {
-              language: "javascript",
-              code: "// Mistake 1: Missing Initialization\nlet a = 5;\nwhile (counter < 3) {\n  a = a + 1;\n  console.log(a);\n  counter = counter + 1;\n}",
-              explanation:
-                "• Error occurs because counter is not defined before the loop.",
-            },
-            {
-              language: "javascript",
-              code: "// Mistake 2: Incorrect Termination Condition\nlet a = 10;\nlet counter = 0;\nlet condition = (counter < 3);\n\nwhile (condition) {\n  a = a + 1;\n  console.log(a);\n  counter = counter + 1;\n}",
-              explanation:
-                "• The condition is not updated inside the loop, which may cause an infinite loop.",
-            },
-            {
-              language: "javascript",
-              code: "// Mistake 3: Not Updating Counter\nlet a = 1;\nlet counter = 1;\n\nwhile (counter < 3) {\n  a = a + 1;\n  console.log(a);\n}",
-              explanation:
-                "• Counter is never updated, so the loop may run infinitely.",
-            },
-          ],
-        },
-      ],
-    },
+              "language": "javascript",
+              "code": "// MISTAKE: Infinite Loop\nlet i = 1;\nwhile (i > 0) {\n  console.log(i);\n  i++; // i will always be > 0!\n}",
+              "explanation": "• Because 'i' keeps increasing, it will always stay greater than 0, causing the browser to crash or hang."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   32: [
     {
-      id: "sc_day_32",
-      title: "Leveraging Gen AI for Debugging & Building",
-      topics: [
+      "id": "sc_day_32",
+      "title": "Leveraging GenAI for Debugging & Building",
+      "topics": [
         {
-          id: "sc_day_32_t1",
-          title: "Introduction to Gen AI in Web Development",
-          explanation:
-            "• Generative AI (Gen AI) can significantly accelerate the development and debugging process when building static websites using HTML and CSS. It acts as an intelligent assistant that explains errors, suggests improvements, and helps developers understand core concepts faster.",
-        },
-        {
-          id: "sc_day_32_t2",
-          title: "Role of Gen AI in Debugging",
-          explanation:
-            "• Gen AI acts as a tutor during debugging. It explains errors, identifies possible causes, and connects issues to fundamental HTML and CSS concepts. This makes debugging faster, more structured, and concept-driven rather than trial-and-error.",
-        },
-        {
-          id: "sc_day_32_t3",
-          title: "Understanding Errors Using Gen AI",
-          explanation:
-            "• When encountering layout issues or unexpected behavior in HTML/CSS, Gen AI can break down the problem, explain why it occurs, and relate it to important concepts like box model, positioning, flexbox, alignment, image scaling, and layout grouping.",
-          examples: [
+          "id": "sc_day_32_t1",
+          "title": "Gen AI as a Debugging Tutor",
+          "explanation": "• Generative AI (Gen AI) acts as a virtual mentor that can explain complex coding errors instead of just fixing them.\n• Understanding vs. Fixing:\n  - You can prompt AI to explain **why** an error occurs and the underlying HTML/CSS concepts involved.\n  - This approach helps you learn fundamental concepts like the Box Model, Flexbox alignment, or CSS specificity while resolving the issue.",
+          "examples": [
             {
-              language: "text",
-              code: 'Prompt:\n\nI encountered an error while building a Static Website with HTML/CSS.\nCan you explain what the error means, why it might occur, and any relevant HTML/CSS concepts involved, without providing a fix?\n\nCode:\n"""\n<Your HTML/CSS Code Here>\n"""',
-              explanation:
-                "• This prompt helps you understand the root cause of the issue without directly jumping to the solution.",
-            },
-          ],
+              "language": "text",
+              "code": "Prompt: \"Explain why my images are overlapping in this flex container without giving me the fixed code.\"",
+              "explanation": "• By asking for an explanation first, you build the mental model needed to avoid similar bugs in the future."
+            }
+          ]
         },
         {
-          id: "sc_day_32_t4",
-          title: "Fixing Errors with Gen AI",
-          explanation:
-            "• Gen AI can analyze your code, identify structural or styling issues, explain underlying concepts, and guide you step-by-step toward fixing the issue. It can also provide corrected code if requested.",
-          examples: [
+          "id": "sc_day_32_t2",
+          "title": "Building from Mockups with AI",
+          "explanation": "• Gen AI can streamline the process of converting a visual design (mockup) into functional code.\n• Key Capabilities:\n  - Structure Mapping: AI identifies headers, sections, and footers from a design description.\n  - Style Replication: It suggests CSS properties for colors, fonts, spacing, and shadows to match the mockup's aesthetic.\n  - Asset Integration: It can help generate placeholders using external libraries like Unsplash for images or FontAwesome for icons.",
+          "examples": [
             {
-              language: "text",
-              code: 'Prompt:\n\nI encountered an issue while building a Static Website with HTML/CSS.\nAnalyze the code, explain what might be causing the issue, discuss the related concepts, and guide me through resolving it with necessary fixes.\n\nCode:\n"""\n<Your HTML/CSS Code Here>\n"""',
-              explanation:
-                "• This prompt helps you both understand and fix the issue with conceptual clarity.",
-            },
-          ],
+              "language": "text",
+              "code": "Role: \"Act as a front-end developer... build a website that replicates this mockup with 100% accuracy.\"",
+              "explanation": "• Using a specific 'Persona' prompt helps the AI focus on high-fidelity details like padding, border-radius, and font-weight."
+            }
+          ]
         },
         {
-          id: "sc_day_32_t5",
-          title: "Building Static Websites Using Gen AI",
-          explanation:
-            "• Gen AI can convert design mockups into complete HTML and CSS code. It helps match layout, spacing, colors, typography, shadows, and images with high accuracy.",
-          examples: [
+          "id": "sc_day_32_t3",
+          "title": "Creating Design Variants",
+          "explanation": "• You can use AI to iterate on a single design by requesting 'Variants'.\n• What defines a Variant?\n  - Visual changes: Different color palettes (Dark mode vs. Light mode).\n  - Structural changes: Reorganizing columns or moving sidebars (e.g., converting a horizontal nav to a vertical sidebar).\n  - Theme changes: Adapting a 'Corporate' site design to look 'Playful' or 'Minimalist'.",
+          "examples": [
             {
-              language: "text",
-              code: "Prompt:\n\nAct as a skilled front-end web developer specializing in creating perfect static websites from design mockups. Build a static website that replicates the provided design mockup with 100% accuracy.\n\nGuidelines:\n- Match layout and structure exactly.\n- Use valid Unsplash image links.\n- Match colors, fonts, spacing, borders, and shadows.\n- Use provided icons correctly.",
-              explanation:
-                "• This prompt instructs Gen AI to generate a pixel-perfect static website.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_32_t6",
-          title: "Building Variants Using Gen AI",
-          explanation:
-            "• Gen AI can generate creative variants of an existing design by modifying layout structure, colors, typography, and visual hierarchy while keeping the core idea intact.",
-          examples: [
-            {
-              language: "text",
-              code: "Prompt:\n\nAct as a skilled front-end developer. Transform the provided mockup into a creative variant with significant visual and structural differences.\n\nGuidelines:\n- Use different colors and spacing.\n- Apply new shadows and borders.\n- Use relevant Unsplash images.\n- Style icons according to the new theme.",
-              explanation:
-                "• This allows experimentation and creative exploration while maintaining structure.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_32_t7",
-          title: "Resources",
-          explanation:
-            "• Useful resources include Gen AI tools for debugging assistance and Unsplash for high-quality, royalty-free images when building static websites.",
-        },
-      ],
-    },
+              "language": "text",
+              "code": "Prompt: \"Create a creative variant of this layout with significant visual differences using a dark theme and neon accents.\"",
+              "explanation": "• This allows developers to quickly present multiple options to clients or test different user experiences."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   33: [
     {
-      id: "sc_day_33",
-      title: "JavaScript For Loop",
-      topics: [
+      "id": "sc_day_33",
+      "title": "For Loop",
+      "topics": [
         {
-          id: "sc_day_33_t1",
-          title: "Introduction to For Loop",
-          explanation:
-            "• The for loop is used to execute a block of code a specific number of times. It is commonly used when the number of iterations is known in advance, such as iterating over characters in a string or elements in an array.",
+          "id": "sc_day_33_t1",
+          "title": "Understanding the For Loop",
+          "explanation": "• The `for` loop is a compact way to handle repetition when you know exactly how many times the code should run.\n• It combines three essential steps into one line:\n  - **Initialization**: Where the loop starts (e.g., `let i = 0`).\n  - **Termination Condition**: The rule that keeps the loop running (e.g., `i < 5`).\n  - **Updation**: How the counter changes after each round (e.g., `i++`).",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "for (let i = 1; i <= 3; i++) {\n  console.log(\"Iteration: \" + i);\n}",
+              "explanation": "• This loop starts at 1, checks if it's ≤ 3, runs the code, and then increments. It stops once i becomes 4."
+            }
+          ]
         },
         {
-          id: "sc_day_33_t2",
-          title: "Syntax of For Loop",
-          explanation:
-            "• A for loop consists of three main parts: initialization, termination condition, and updation. The loop runs until the termination condition becomes false.",
-          examples: [
+          "id": "sc_day_33_t2",
+          "title": "Iterating Over Strings",
+          "explanation": "• Since strings are indexed (starting at 0), a `for` loop is perfect for visiting every character.\n• We use `i < word.length` as the condition because the last index is always one less than the total length of the string.",
+          "examples": [
             {
-              language: "javascript",
-              code: "for (initialization; termination_condition; updation) {\n  // Block of code\n}",
-              explanation:
-                "• Initialization sets the starting point, the condition controls execution, and updation modifies the loop variable after each iteration.",
-            },
-          ],
+              "language": "javascript",
+              "code": "let name = \"Code\";\nfor (let i = 0; i < name.length; i++) {\n  console.log(name[i]);\n}",
+              "explanation": "• The loop visits index 0 (C), 1 (o), 2 (d), and 3 (e). When i hits 4, the condition `4 < 4` is false, and it stops."
+            }
+          ]
         },
         {
-          id: "sc_day_33_t3",
-          title: "Iterating Over Characters in a String",
-          explanation:
-            "• The for loop can iterate over each character in a string using its index.",
-          examples: [
+          "id": "sc_day_33_t3",
+          "title": "Common Pitfalls: Off-by-One & Infinite Loops",
+          "explanation": "• **Off-by-One Error**: Using `i <= word.length` instead of `i < word.length`. This causes the loop to try and access an index that doesn't exist, returning `undefined`.\n• **Infinite Loop**: If the updation logic (like `i--` instead of `i++`) moves the counter away from the termination condition, the loop will never end.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'let word = "Hello";\n\nfor (let i = 0; i < word.length; i++) {\n  console.log(word[i]);\n}',
-              explanation:
-                "• The loop starts at index 0 and continues until i is less than word.length. Output: H e l l o.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_33_t4",
-          title: "Code Walkthrough",
-          explanation:
-            "• In the first iteration, i is 0, so word[0] is printed. After each iteration, i is incremented by 1. The loop stops when i equals word.length.",
-        },
-        {
-          id: "sc_day_33_t5",
-          title: "Common Mistakes in For Loop",
-          explanation:
-            "• Incorrect termination conditions or improper updates may cause infinite loops or off-by-one errors.",
-          examples: [
-            {
-              language: "javascript",
-              code: '// Mistake 1: Incorrect Update Causing Infinite Loop\nlet word = "Hello";\n\nfor (let i = 0; i < word.length; i++) {\n  console.log(word[i]);\n  i--;  // Incorrect update\n}',
-              explanation:
-                "• Decreasing i prevents it from reaching the termination condition, causing an infinite loop.",
-            },
-            {
-              language: "javascript",
-              code: '// Mistake 2: Off-by-One Error\nlet word = "Hello";\n\nfor (let i = 0; i <= word.length; i++) {\n  console.log(word[i]);\n}',
-              explanation:
-                "• Using <= instead of < causes the loop to run one extra time, resulting in undefined.",
-            },
-            {
-              language: "javascript",
-              code: '// Corrected Version\nlet word = "Hello";\n\nfor (let i = 0; i < word.length; i++) {\n  console.log(word[i]);\n}',
-              explanation:
-                "• The loop runs correctly from index 0 to word.length - 1.",
-            },
-          ],
-        },
-      ],
-    },
+              "language": "javascript",
+              "code": "// BUG: Accesses an extra index\nlet s = \"Hi\";\nfor (let i = 0; i <= s.length; i++) {\n  console.log(s[i]); // Prints 'H', 'i', then 'undefined'\n}",
+              "explanation": "• Because `s.length` is 2, the loop runs for i = 0, 1, and 2. But there is no character at index 2."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   34: [
     {
-      id: "sc_day_34",
-      title: "JavaScript Nested Loops",
-      topics: [
+      "id": "sc_day_34",
+      "title": "Nested Loops",
+      "topics": [
         {
-          id: "sc_day_34_t1",
-          title: "Introduction to Nested Loops",
-          explanation:
-            "• Nested loops are loops placed inside another loop. They are used when we need to repeat a set of actions multiple times for each iteration of an outer loop. The inner loop completes all its iterations for every single iteration of the outer loop.",
-        },
-        {
-          id: "sc_day_34_t2",
-          title: "Syntax of Nested Loops",
-          explanation:
-            "• A nested loop consists of an outer loop and an inner loop. The outer loop runs first, and for each iteration of the outer loop, the inner loop executes completely.",
-          examples: [
+          "id": "sc_day_34_t1",
+          "title": "Understanding Nested Loops",
+          "explanation": "• A nested loop is essentially a loop inside another loop.\n• Think of it like a clock: the **outer loop** is the hour hand, and the **inner loop** is the minute hand. The minute hand must complete a full circle (all iterations) before the hour hand moves forward by one.\n• They are commonly used for working with multi-dimensional data, such as grids, tables, or coordinates.",
+          "examples": [
             {
-              language: "javascript",
-              code: "for (initializationA; terminationA; updationA) {\n  // Block 1\n\n  for (initializationB; terminationB; updationB) {\n    // Block 2\n  }\n\n  // Block 3\n}\n\n// Block 4",
-              explanation:
-                "• The inner loop runs fully for every iteration of the outer loop.",
-            },
-          ],
+              "language": "javascript",
+              "code": "for (let i = 1; i <= 2; i++) {\n  for (let j = 1; j <= 3; j++) {\n    console.log(`Row ${i}, Col ${j}`);\n  }\n}",
+              "explanation": "• The inner loop runs 3 times for every 1 time the outer loop runs. Total executions: 2 * 3 = 6."
+            }
+          ]
         },
         {
-          id: "sc_day_34_t3",
-          title: "Nested Loop Example",
-          explanation:
-            "• This example demonstrates how the inner loop executes fully for each iteration of the outer loop.",
-          examples: [
+          "id": "sc_day_34_t2",
+          "title": "Execution Flow",
+          "explanation": "• 1. The outer loop initializes.\n• 2. If the outer condition is true, the inner loop starts.\n• 3. The inner loop runs from start to finish (until its condition is false).\n• 4. The outer loop updates its variable and checks its condition again.\n• 5. This repeats until the outer loop's condition becomes false.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'for (let a = 0; a < 3; a++) {\n  console.log("outer : " + a);\n\n  for (let b = 7; b < 9; b++) {\n    console.log(" inner : " + b);\n  }\n}\n\nconsole.log("End");',
-              explanation:
-                "• For each value of a (0, 1, 2), the inner loop runs for b = 7 and b = 8. After both loops finish, 'End' is printed.",
-            },
-          ],
+              "language": "javascript",
+              "code": "for (let a = 0; a < 2; a++) {\n  // Outer code\n  for (let b = 0; b < 2; b++) {\n    // Inner code\n  }\n}",
+              "explanation": "• The flow is: Outer(0) -> Inner(0) -> Inner(1) -> Outer(1) -> Inner(0) -> Inner(1) -> Finish."
+            }
+          ]
         },
         {
-          id: "sc_day_34_t4",
-          title: "Step-by-Step Execution",
-          explanation:
-            "• When a = 0, the inner loop runs completely. Then a becomes 1 and the inner loop runs again. Then a becomes 2 and the inner loop runs again. Only after the outer loop finishes does the program move forward.",
-        },
-        {
-          id: "sc_day_34_t5",
-          title: "Common Mistakes in Nested Loops",
-          explanation:
-            "• Incorrect termination conditions or missing updates in nested loops can lead to infinite loops or incorrect iteration counts.",
-          examples: [
+          "id": "sc_day_34_t3",
+          "title": "Common Nested Loop Pitfalls",
+          "explanation": "• **Variable Conflict**: Using the same variable name (like `i`) for both loops. This will break the logic of the outer loop.\n• **Infinite Inner Loops**: Forgetting to increment the inner variable, causing the program to hang while stuck inside the inner block.\n• **Performance Impact**: Every extra level of nesting increases the total operations exponentially. Two nested loops of 100 iterations result in 10,000 total operations.",
+          "examples": [
             {
-              language: "javascript",
-              code: '// Mistake 1: Infinite Loop (Missing Increment)\nfor (let a = 0; a < 3; a++) {\n  console.log("outer : " + a);\n\n  for (let b = 7; b < 9;) {  // Missing b++\n    console.log(" inner : " + b);\n  }\n}',
-              explanation:
-                "• Since b is never incremented, the inner loop never reaches its termination condition.",
-            },
-            {
-              language: "javascript",
-              code: '// Mistake 2: Off-by-One Error\nfor (let a = 0; a < 3; a++) {\n  console.log("outer : " + a);\n\n  for (let b = 7; b <= 8; b++) {\n    console.log(" inner : " + b);\n  }\n}',
-              explanation:
-                "• Using <= instead of < may cause confusion in defining ranges. Always ensure the termination condition matches the intended iteration range.",
-            },
-          ],
-        },
-      ],
-    },
+              "language": "javascript",
+              "code": "// BAD PRACTICE\nfor (let i = 0; i < 5; i++) {\n  for (let i = 0; i < 5; i++) { // ERROR: 'i' is already defined\n    console.log(i);\n  }\n}",
+              "explanation": "• Always use distinct names like `i` and `j` or `row` and `col` to avoid conflicts."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   35: [
     {
-      id: "sc_day_35",
-      title: "More CSS Concepts",
-      topics: [
+      "id": "sc_day_35",
+      "title": "More CSS Concepts",
+      "topics": [
         {
-          id: "sc_day_35_t1",
-          title: "Margin Variants",
-          explanation:
-            "• CSS margin properties control the space outside an element. You can apply margin to specific sides using margin-top, margin-right, margin-bottom, and margin-left.",
-          examples: [
+          "id": "sc_day_35_t1",
+          "title": "Margin and Padding Variants",
+          "explanation": "• Margin and Padding can be applied to all sides at once or individually for fine-tuned spacing.\n• **Directional Properties**: Use `-top`, `-right`, `-bottom`, and `-left` to target specific sides.\n• **Horizontal Centering**: Setting `margin-left: auto;` and `margin-right: auto;` on a block element with a fixed width will center it within its parent container.",
+          "examples": [
             {
-              language: "css",
-              code: ".color-box {\n  padding: 30px;\n  margin-top: 12px;\n}",
-              explanation: "• Adds space only to the top of the element.",
-            },
-          ],
+              "language": "css",
+              "code": ".box {\n  margin-top: 20px;    /* Space outside top */\n  padding-left: 10px;  /* Space inside left */\n  margin: 0 auto;      /* Shorthand to center horizontally */\n}",
+              "explanation": "• Individual variants provide control when you don't want uniform spacing around an element."
+            }
+          ]
         },
         {
-          id: "sc_day_35_t2",
-          title: "Margin Auto (Centering)",
-          explanation:
-            "• Using margin-left: auto and margin-right: auto allows horizontal centering of block-level elements inside their parent container.",
-          examples: [
+          "id": "sc_day_35_t2",
+          "title": "Relative Units: Percentages",
+          "explanation": "• Percentages (`%`) define sizes relative to the parent element.\n• This is a core concept of **Responsive Web Design**, allowing elements to shrink or grow as the browser window changes size.",
+          "examples": [
             {
-              language: "css",
-              code: ".color-box {\n  width: 300px;\n  padding: 30px;\n  margin-left: auto;\n  margin-right: auto;\n}",
-              explanation:
-                "• Centers the element horizontally within its container.",
-            },
-          ],
+              "language": "css",
+              "code": ".parent { width: 400px; }\n.child { width: 50%; } /* Results in 200px */",
+              "explanation": "• If the parent width changes to 1000px, the child automatically adjusts to 500px."
+            }
+          ]
         },
         {
-          id: "sc_day_35_t3",
-          title: "Percentages in CSS",
-          explanation:
-            "• Percentages allow element sizes to be defined relative to their parent element. This is useful for responsive design.",
-          examples: [
+          "id": "sc_day_35_t3",
+          "title": "Block vs. Inline Elements",
+          "explanation": "• **Block-level**: Always starts on a new line and takes up the full width available (e.g., `<div>`, `<h1>`, `<p>`).\n• **Inline**: Takes up only as much width as necessary and stays on the same line (e.g., `<span>`, `<a>`, `<img>`).\n• **The <span> Tag**: A generic inline container used to target specific words or phrases within a block-level element for styling.",
+          "examples": [
             {
-              language: "css",
-              code: ".color-box {\n  padding: 30px;\n  width: 50%;\n}",
-              explanation: "• Sets the width to 50% of the parent container.",
-            },
-          ],
+              "language": "html",
+              "code": "<p>This is a <span style=\"color: red;\">red</span> word.</p>",
+              "explanation": "• The `<span>` allows us to style the word 'red' without breaking the sentence onto a new line."
+            }
+          ]
         },
         {
-          id: "sc_day_35_t4",
-          title: "Padding Variants",
-          explanation:
-            "• Padding defines the space inside an element between content and border. You can set padding individually for each side.",
-          examples: [
+          "id": "sc_day_35_t4",
+          "title": "CSS Gradients",
+          "explanation": "• Gradients are smooth transitions between two or more colors, treated as `background-image`.\n• **Linear Gradient**: Colors transition along a straight line. You can specify directions like `to right` or `to bottom right`.\n• **Radial Gradient**: Colors transition outward from a central point (the center of the element by default).",
+          "examples": [
             {
-              language: "css",
-              code: ".color-box {\n  padding-top: 20px;\n  padding-right: 15px;\n  padding-bottom: 10px;\n  padding-left: 5px;\n}",
-              explanation:
-                "• Adds different internal spacing to each side of the element.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_35_t5",
-          title: "Block-Level vs Inline Elements",
-          explanation:
-            "• Block-level elements take full width and start on a new line. Inline elements take only the required width and stay on the same line.",
-          examples: [
-            {
-              language: "html",
-              code: "<h1>The Seven Wonders of the World</h1>\n<p>The Taj Mahal is one of the Seven Wonders.</p>",
-              explanation:
-                "• Block-level elements start on a new line and occupy full width.",
-            },
-            {
-              language: "html",
-              code: '<p>The <a href="#">Taj Mahal</a> is one of the Seven Wonders.</p>',
-              explanation: "• Inline elements stay within the same line.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_35_t6",
-          title: "Span Element",
-          explanation:
-            "• The <span> element is an inline container used for styling small portions of text without breaking the line.",
-          examples: [
-            {
-              language: "html",
-              code: '<p>The <span class="spanEle">Taj Mahal</span> is one of the Seven Wonders.</p>',
-              explanation: "• Used to style a specific portion of text.",
-            },
-            {
-              language: "css",
-              code: ".spanEle {\n  background-color: orange;\n  font-weight: bold;\n}",
-              explanation: "• Applies styling to the span element.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_35_t7",
-          title: "Gradients in CSS",
-          explanation:
-            "• Gradients create smooth transitions between two or more colors. They are commonly used as background images.",
-          examples: [
-            {
-              language: "css",
-              code: ".linear-gradient-background {\n  height: 100vh;\n  background-image: linear-gradient(#2196f3, #f44336);\n}",
-              explanation: "• Creates a linear gradient from blue to red.",
-            },
-            {
-              language: "css",
-              code: ".radial-gradient-background {\n  height: 100vh;\n  background-image: radial-gradient(#2196f3, #f44336);\n}",
-              explanation: "• Creates a radial gradient from center outward.",
-            },
-          ],
-        },
-        {
-          id: "sc_day_35_t8",
-          title: "Interview Questions",
-          explanation:
-            "• The <div> element is a block-level container used for grouping larger sections of content. The <span> element is an inline container used for styling small portions of text. Block-level elements occupy full width and start on a new line, while inline elements occupy only the necessary width and stay on the same line.",
-        },
-      ],
-    },
+              "language": "css",
+              "code": ".linear { background-image: linear-gradient(to right, blue, red); }\n.radial { background-image: radial-gradient(yellow, green); }",
+              "explanation": "• Linear gradients are great for headers, while radial gradients often create a spotlight effect."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   36: [

@@ -30,6 +30,7 @@ export default function InterviewPage() {
     patchProgress,
     interviewQuestions,
     interviewTotalCount,
+    questionsLoading,
     appendInterviewQuestions,
   } = useDayCache()
 
@@ -182,7 +183,20 @@ export default function InterviewPage() {
         Completed {checked.length} of {targetCount || 0}
       </p>
 
-      {interviewQuestions.length === 0 && <p>No interview questions available.</p>}
+      {questionsLoading && interviewQuestions.length === 0 && (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="surface-card p-4 animate-pulse">
+              <div className="h-4 w-3/4 rounded bg-[var(--border)]" />
+              <div className="mt-3 h-3 w-1/2 rounded bg-[var(--border)]" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!questionsLoading && interviewQuestions.length === 0 && (
+        <p>No interview questions available.</p>
+      )}
 
       {interviewQuestions.map((q, index) => {
         const isItemChecked = checked.includes(q.id)

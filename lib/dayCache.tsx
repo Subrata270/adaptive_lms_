@@ -72,6 +72,8 @@ export type DayCacheState = {
     interviewTotalCount: number
     scenarioQuestions: SimpleQuestion[]
     scenarioTotalCount: number
+    /** true while interview/scenario questions are being fetched for the first time */
+    questionsLoading: boolean
     access: AccessInfo
     /** Call to re-fetch everything for the current day from scratch */
     invalidate: () => void
@@ -147,6 +149,7 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
     const [interviewTotalCount, setInterviewTotalCount] = useState(0)
     const [scenarioQuestions, setScenarioQuestions] = useState<SimpleQuestion[]>([])
     const [scenarioTotalCount, setScenarioTotalCount] = useState(0)
+    const [questionsLoading, setQuestionsLoading] = useState(true)
     const [access, setAccess] = useState<AccessInfo>({
         userId: null,
         isAdmin: false,
@@ -195,6 +198,7 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
         const fetchAll = async () => {
             // Mark loading
             setAccess({ userId: null, isAdmin: false, loading: true, unauthenticated: false })
+            setQuestionsLoading(true)
             // Reset cached data for a fresh load
             setProgress(null)
             setInterviewQuestions([])
@@ -208,6 +212,7 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
 
             if (!ctx.user) {
                 setAccess({ userId: null, isAdmin: false, loading: false, unauthenticated: true })
+                setQuestionsLoading(false)
                 return
             }
 
@@ -225,12 +230,13 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
                     quiz_completed: true,
                     quiz_score: null,
                 })
-                // Admin: fetch questions immediately
+                // Admin: always fetch all questions
                 await Promise.all([
                     fetchInterviewQuestions(dayNumber, active),
                     fetchScenarioQuestions(dayNumber, active),
                 ])
                 if (active) {
+                    setQuestionsLoading(false)
                     loadedDayRef.current = dayNumber
                 }
                 return
@@ -239,22 +245,39 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
             const userId = ctx.user.id
 
             // ── 2. Ensure progress row exists ─────────────────────────────────────
-            // Import inline to avoid circular deps
             const { ensureDayProgressRow } = await import('@/lib/auth')
             await ensureDayProgressRow(userId, dayNumber)
             if (!active) return
 
-            // ── 3. Fetch progress row ─────────────────────────────────────────────
-            const { data: row, error: progressError } = await supabase
-                .from('student_day_progress')
-                .select(
-                    'recap_checked,recap_completed,interview_checked,interview_completed,scenario_checked,scenario_completed,quiz_completed,quiz_score'
-                )
-                .eq('student_id', userId)
-                .eq('day_number', dayNumber)
-                .maybeSingle()
+            // ── 3. Fetch progress + questions in parallel ─────────────────────────
+            const selectionSeed = `${RANDOM_SEED_PREFIX}:${userId}:${dayNumber}`
+
+            const [progressResult] = await Promise.all([
+                supabase
+                    .from('student_day_progress')
+                    .select(
+                        'recap_checked,recap_completed,interview_checked,interview_completed,scenario_checked,scenario_completed,quiz_completed,quiz_score'
+                    )
+                    .eq('student_id', userId)
+                    .eq('day_number', dayNumber)
+                    .maybeSingle(),
+                // ── Always fetch both question sets unconditionally ──────────────
+                // The unlock gate lives in the UI only, not in data fetching.
+                // This ensures questions are ready the moment the user navigates
+                // to Interview or Scenario after completing the previous section.
+                fetchInterviewQuestions(dayNumber, active, {
+                    limit: INTERVIEW_REQUIRED_COUNT,
+                    seed: `${selectionSeed}:interview`,
+                }),
+                fetchScenarioQuestions(dayNumber, active, {
+                    limit: SCENARIO_REQUIRED_COUNT,
+                    seed: `${selectionSeed}:scenario`,
+                }),
+            ])
 
             if (!active) return
+
+            const { data: row, error: progressError } = progressResult
             if (progressError) {
                 console.error('[DayCache] Failed to load progress:', progressError)
             }
@@ -271,45 +294,8 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
             }
 
             setAccess({ userId, isAdmin: false, loading: false, unauthenticated: false })
-
-            // ── 4. Fetch questions if sections are unlocked ───────────────────────
-            const selectionSeed = `${RANDOM_SEED_PREFIX}:${userId}:${dayNumber}`
-            const interviewUnlocked =
-                prog.recap_completed ||
-                prog.interview_completed ||
-                prog.scenario_completed ||
-                prog.quiz_completed
-
-            if (interviewUnlocked) {
-                const interviewTotal = await fetchInterviewQuestions(dayNumber, active, {
-                    limit: INTERVIEW_REQUIRED_COUNT,
-                    seed: `${selectionSeed}:interview`,
-                })
-                if (!active) return
-                if (interviewTotal === 0 && !prog.interview_completed) {
-                    await markSectionComplete('interview', userId, dayNumber)
-                    prog.interview_completed = true
-                    prog.interview_checked = []
-                }
-            }
-
-            const scenarioUnlocked =
-                prog.interview_completed || prog.scenario_completed || prog.quiz_completed
-
-            if (scenarioUnlocked) {
-                const scenarioTotal = await fetchScenarioQuestions(dayNumber, active, {
-                    limit: SCENARIO_REQUIRED_COUNT,
-                    seed: `${selectionSeed}:scenario`,
-                })
-                if (!active) return
-                if (scenarioTotal === 0 && !prog.scenario_completed) {
-                    await markSectionComplete('scenario', userId, dayNumber)
-                    prog.scenario_completed = true
-                    prog.scenario_checked = []
-                }
-            }
-
             setProgress(prog)
+            setQuestionsLoading(false)
 
             if (active) {
                 loadedDayRef.current = dayNumber
@@ -461,6 +447,7 @@ export function DayCacheProvider({ dayNumber, children }: Props) {
         interviewTotalCount,
         scenarioQuestions,
         scenarioTotalCount,
+        questionsLoading,
         access,
         invalidate,
         patchProgress,
