@@ -1,258 +1,159 @@
 export const recapContent = {
   1: [
     {
-      id: "sc_day_1",
-      title: "Introduction to Tech: Finding and Solving Problems with Technology",
-      topics: [
+      "id": "sc_day_1",
+      "title": "Introduction to Tech: Finding and Solving Problems with Technology",
+      "topics": [
         {
-          id: "sc_day_1_t1",
-          title: "What is Technology?",
-          explanation:
-            "• Technology is structured problem-solving using digital systems and tools.\n• It starts by identifying a real-world problem or pain point.\n• A solution is designed in the form of software or a system.\n• The system is built to handle many users efficiently.\n• Technology continuously improves using feedback and data."
+          "id": "sc_day_1_t1",
+          "title": "What Apps Do You Use?",
+          "explanation": "• We use apps daily for tasks like ordering food, sending money, and sharing photos.\n• These apps are built using technology to solve real-world problems.\n• Examples: Swiggy (food delivery), PhonePe (payments), Instagram (photo sharing)."
         },
         {
-          id: "sc_day_1_t2",
-          title: "Thinking Like a Tech Builder",
-          explanation:
-            "• A tech builder analyzes how apps work internally.\n• They ask what problem the app is solving.\n• They observe how data moves between frontend and backend.\n• They think about where data is stored and processed.\n• They focus on scalability and performance."
+          "id": "sc_day_1_t2",
+          "title": "Case Study 1: Swiggy – Finding Food Options",
+          "explanation": "• Problem: Finding food when tired, hungry, or in bad weather.\n• Swiggy shows nearby restaurants with menus and ratings.\n• Users can filter by cuisine, rating, or delivery time.\n• Technologies used:\n\t- Frontend: Displays the app interface with food images and filters.\n\t- Backend: Stores restaurant data and handles search queries.\n\t- AI/ML: Recommends restaurants based on past orders and preferences."
         },
         {
-          id: "sc_day_1_t3",
-          title: "Food Delivery App – Problem Solving",
-          explanation:
-            "• Helps users discover nearby restaurants.\n• Displays menus, ratings, and delivery times.\n• Allows filtering by cuisine and preferences.\n• Enables quick and simple order placement.\n• Provides live tracking of delivery status."
+          "id": "sc_day_1_t3",
+          "title": "Case Study 1: Swiggy – Ensuring Food Delivery",
+          "explanation": "• Problem: Ensuring food arrives on time, especially in bad weather or peak hours.\n• Swiggy provides live tracking, ETA updates, and real-time notifications.\n• Technologies used:\n\t- Frontend: Shows live map with delivery status and push notifications.\n\t- Backend: Integrates GPS data and calculates delivery time using traffic and distance.\n\t- AI/ML: Predicts delays and optimizes delivery routes using machine learning."
         },
         {
-          id: "sc_day_1_t4",
-          title: "Food App Architecture – Frontend",
-          explanation:
-            "• Displays restaurant listings and food images.\n• Shows search, filters, and order interface.\n• Displays live tracking and notifications."
+          "id": "sc_day_1_t4",
+          "title": "Case Study 2: PhonePe – Sending Money & Paying Bills",
+          "explanation": "• Problem: Sending money quickly and paying bills on time.\n• PhonePe offers instant transfers, bill payments, and transaction history.\n• Technologies used:\n\t- Frontend: Displays balance, transaction history, and payment options.\n\t- Backend: Processes transfers securely and integrates with bank accounts.\n\t- AI/ML: Detects fraud, flags suspicious activity, and suggests payment schedules."
         },
         {
-          id: "sc_day_1_t5",
-          title: "Food App Architecture – Backend",
-          explanation:
-            "• Stores restaurant and menu data.\n• Handles user authentication and orders.\n• Processes payments securely.\n• Calculates delivery time using GPS data."
+          "id": "sc_day_1_t5",
+          "title": "Case Study 3: Instagram – Sharing Photos",
+          "explanation": "• Problem: Sharing photos quickly with friends and getting social engagement.\n• Instagram offers filters, editing tools, likes, comments, and sharing.\n• Technologies used:\n\t- Frontend: Camera interface, Explore page, search, and suggested accounts.\n\t- Backend: Stores millions of photos/videos and manages metadata like likes and comments.\n\t- AI/ML: Recommends content, suggests accounts, and moderates inappropriate posts."
         },
-        {
-          id: "sc_day_1_t6",
-          title: "Food App Architecture – AI / ML",
-          explanation:
-            "• Recommends restaurants based on past behavior.\n• Predicts delivery delays using traffic data.\n• Optimizes delivery routes.\n• Personalizes food suggestions."
-        },
-        {
-          id: "sc_day_1_t7",
-          title: "Key Takeaway",
-          explanation:
-            "• Technology is more than coding.\n• It combines Frontend, Backend, and AI layers.\n• It solves real-world problems efficiently.\n• It continuously improves using data and intelligence."
-        }
       ]
     }
   ],
   2: [
     {
-      id: "sc_day_2",
-      title: "Intro to OS",
-      topics: [
+      "id": "sc_day_2",
+      "title": "Intro to OS",
+      "topics": [
         {
-          id: "cf_t1",
-          title: "Hardware",
-          explanation:
-            "• Hardware refers to all the physical and tangible components of a computer system.\n• It includes processing devices like CPU, memory components like RAM, storage devices such as HDD or SSD, and input/output devices like keyboard, mouse, monitor, and printer.\n• Hardware performs actual computation and physical data processing based on software instructions.\n• Without hardware, software cannot execute because software requires physical resources to run.\n• Hardware components communicate with each other through buses and system architecture inside the computer.",
+          "id": "sc_day_2_t1",
+          "title": "Hardware & Software",
+          "explanation": "• Hardware is the physical components of a computer.\n• Examples: CPU, memory, storage, input/output devices.\n• Software is the non-physical part — instructions that tell hardware how to perform tasks.\n• Software is the \"brains\" of the computer, enabling users to interact with hardware."
         },
-
         {
-          id: "cf_t2",
-          title: "Software",
-          explanation:
-            "• Software is a collection of programs and instructions that tell hardware how to perform specific tasks.\n• It is the logical and non-physical part of a computer system.\n• Software provides user-friendly interaction with hardware through graphical or command-based interfaces.\n• There are different types of software such as system software (Operating System), application software (Browser, MS Word), and utility software.\n• Software controls how hardware resources like CPU time and memory are allocated and used.",
+          "id": "sc_day_2_t2",
+          "title": "Operating System (OS)",
+          "explanation": "• An Operating System is the primary software managing hardware and software resources.\n• It acts as an intermediary between hardware and other software.\n• It manages hardware resources, provides a user interface, and controls execution of apps.\n• Types of Operating Systems:\n\t- Computer OS: Windows 11, Ubuntu, Mac OS 15.5\n\t- Mobile OS: iOS, Android"
         },
-
         {
-          id: "cf_t3",
-          title: "Operating System",
-          explanation:
-            "• The Operating System (OS) acts as a bridge between user applications and hardware components.\n• It manages CPU scheduling, memory allocation, storage management, and device control.\n• It provides a user interface, either graphical (GUI) or command-line (CLI).\n• It ensures multiple programs can run simultaneously using multitasking.\n• It handles security, user permissions, and system stability.\n• It manages file systems and organizes data into directories and files.\n• Examples of computer OS include Windows 11, Ubuntu, and macOS 15.5.\n• Examples of mobile OS include iOS and Android.",
+          "id": "sc_day_2_t3",
+          "title": "What is a Network?",
+          "explanation": "• A network connects multiple devices, allowing them to share resources and communicate.\n• The Internet is a vast network connecting billions of computing devices globally.\n• It allows exchange of data, communication, and access to resources across the world."
         },
-
         {
-          id: "cf_t4",
-          title: "Network",
-          explanation:
-            "• A network allows computers and devices to exchange data using communication protocols.\n• Devices in a network can share files, printers, and internet connections.\n• Networks use wired (Ethernet) or wireless (Wi-Fi) communication.\n• Networks can be categorized as LAN (Local Area Network), MAN (Metropolitan Area Network), or WAN (Wide Area Network).\n• Communication in a network follows protocols such as TCP/IP.",
+          "id": "sc_day_2_t4",
+          "title": "Internet and Roads: A Similarity",
+          "explanation": "• The Internet is like roads — both provide pathways for information (or vehicles) to travel.\n• Cargo Data: Data traveling through the network is like cargo transported in trucks.\n• Junctions: Routers act like road junctions, directing data to its destination.\n• Traffic: Networks can experience congestion based on the amount of data requests on the path."
         },
-
         {
-          id: "cf_t5",
-          title: "Internet",
-          explanation:
-            "• The Internet connects billions of devices across the globe.\n• It allows users to access websites, send emails, stream videos, and use online services.\n• Data on the Internet is transferred in small packets.\n• Each device on the Internet has a unique IP address for identification.\n• The Internet relies on routers and servers to manage and direct data traffic.\n• The Internet can be compared to a road transportation system where data acts like cargo, routers function like traffic junctions, and network cables act like roads.",
+          "id": "sc_day_2_t5",
+          "title": "Client & Server Communication",
+          "explanation": "• A Client is a device or software that sends requests to a server.\n• Example: When you open a browser and search, your browser acts as the client.\n• A Server listens for requests from clients and responds with the requested data.\n• The exchange of information happens through a network:\n\t- Client sends a request over the network.\n\t- Server processes the request and sends back the data."
         },
-
         {
-          id: "cf_t6",
-          title: "Client & Server Communication",
-          explanation:
-            "• A client is a device or software application that initiates a request.\n• Examples of clients include web browsers, mobile apps, and desktop applications.\n• Clients request resources such as web pages, images, or database data.\n• A server is a powerful system that listens for incoming client requests.\n• It processes the request using backend logic or database queries.\n• After processing, it sends the requested data back to the client.\n• Servers handle multiple client requests simultaneously.\n• The flow is: Client sends HTTP request → travels through routers → server processes → server sends response → client displays result.",
-        },
-
-        {
-          id: "cf_t7",
-          title: "Internet Browsers",
-          explanation:
-            "• Browsers act as clients in the client-server model.\n• They send HTTP or HTTPS requests to web servers.\n• They receive responses in the form of HTML, CSS, and JavaScript.\n• They render web pages visually using rendering engines.\n• Browsers manage cookies, cache, and local storage.\n• They provide security features such as sandboxing and HTTPS encryption.\n• Examples include Google Chrome, Microsoft Edge, Safari, and Mozilla Firefox.",
-        },
-      ],
-    },
+          "id": "sc_day_2_t6",
+          "title": "Internet Browsers",
+          "explanation": "• An Internet Browser is a software application used to access and view websites.\n• Common examples: Safari, Edge, Chrome.\n• Browsers act as clients that send requests to servers for web pages.\n• They display the requested content back to the user."
+        }
+      ]
+    }
   ],
 
-  3: [
-    {
-      id: "sc_day_3",
-      title: "Intro to Frontend",
-      topics: [
-        {
-          id: "adf_t1",
-          title: "Introduction to Application Development",
-          explanation:
-            "• Application development is the process of designing, building, and maintaining software applications.\n• An application (app) is software built for a specific purpose.\n• Apps can run on web browsers, desktops, or mobile devices.\n• Examples include messaging apps like WhatsApp, browsers like Google Chrome, and social media platforms like Instagram.\n• Application development involves planning, coding, testing, deployment, and maintenance.\n• Modern applications focus on performance, security, and user experience.\n• The development lifecycle ensures that applications are reliable, scalable, and meet user needs.\n• Understanding the fundamentals of application development is essential before diving into specific technologies like HTML, CSS, or JavaScript.",
-        },
+  3:
+    [
+      {
+        "id": "sc_day_3",
+        "title": "Introduction to Frontend",
+        "topics": [
+          {
+            "id": "sc_day_3_t1",
+            "title": "What is Application Development?",
+            "explanation": "• An application is software developed for a specific purpose.\n• Examples: WhatsApp, Chrome, Instagram.\n• \"App\" is short for \"Application\" — software that runs on computers or mobile devices.\n• Types of developers:\n\t- Frontend Developer: Focuses on the user-facing part (what users see).\n\t- Backend Developer: Works on server-side — databases, server logic, authentication.\n\t- Fullstack Developer: Handles both frontend and backend development."
+          },
+          {
+            "id": "sc_day_3_t2",
+            "title": "How Browsers See a Website",
+            "explanation": "• The browser interprets the website's code to render content we see.\n• What We See: Visual layout, text, images, and interactive elements.\n• What Browsers See: Code written in HTML, CSS, and JavaScript."
+          },
+          {
+            "id": "sc_day_3_t3",
+            "title": "HTML5 – HyperText Markup Language",
+            "explanation": "• HTML is the fundamental building block of web content.\n• HyperText: Text containing hyperlinks to navigate between pages or resources.\n• Markup: Adding remarks to text to indicate its importance and structure.\n• Parsing: Browser understands and separates components in the document (like verbs and nouns in a sentence).\n• Rendering: After parsing, the browser creates and displays the content on screen."
+          },
+          {
+            "id": "sc_day_3_t4",
+            "title": "CSS3 – Cascading Style Sheets",
+            "explanation": "• CSS is used to style the content on a webpage.\n• It controls:\n\t- Fonts\n\t- Colors\n\t- Size\n\t- Shapes\n\t- Positioning\n• CSS helps create visually appealing and user-friendly layouts."
+          },
+          {
+            "id": "sc_day_3_t5",
+            "title": "JavaScript",
+            "explanation": "• JavaScript adds interactivity to websites.\n• It can dynamically change content without requiring a page reload.\n• Examples: Form validation, interactive maps.\n• Provides rich, dynamic user experiences by responding to user input."
+          },
+          {
+            "id": "sc_day_3_t6",
+            "title": "Mobile App Development",
+            "explanation": "• Mobile apps are developed for Android and iOS platforms.\n• Android App Development:\n\t- Languages: Java, Kotlin\n• iOS App Development:\n\t- Languages: Swift, Objective-C"
+          },
+          {
+            "id": "sc_day_3_t7",
+            "title": "Responsive Web Design & Cross-Platform Technologies",
+            "explanation": "• Responsive Web Design ensures websites work properly across different devices and screen sizes.\n• Uses flexible layouts and media queries to adapt to various screen resolutions.\n• Cross-Platform Technologies allow apps to work on multiple platforms (Android & iOS):\n\t- React Native: Developed by Facebook, builds native mobile apps using JavaScript and React."
+          }
+        ]
+      }
 
-        {
-          id: "adf_t2",
-          title: "Types of Application Developers",
-          explanation:
-            "• There are different roles involved in building modern applications.\n\n• A Frontend Developer is responsible for designing and implementing the user interface.\n• They focus on layout, design, animations, and responsiveness.\n• Frontend developers work with HTML, CSS, and JavaScript.\n• They ensure the application is visually appealing and user-friendly.\n\n• A Backend Developer works on server-side logic and data processing.\n• They handle database management and API development.\n• Backend developers implement authentication and security mechanisms.\n• They ensure data consistency and system performance.\n\n• A Fullstack Developer combines frontend and backend development skills.\n• They can build complete applications independently.\n• Fullstack developers understand both UI design and server architecture.\n• They act as a bridge between frontend and backend teams.\n\n• Understanding these roles helps in choosing the right career path and understanding how teams collaborate to build applications.",
-        },
-
-        {
-          id: "adf_t3",
-          title: "How Browsers Interpret Websites",
-          explanation:
-            "• Understanding how web content is processed and displayed is fundamental to web development.\n• Users see text, images, layout, and interactive elements on a webpage.\n• Behind the scenes, browsers read HTML, CSS, and JavaScript code.\n• Browser engines convert this code into a visual representation that users can interact with.\n• The process includes parsing the code and rendering the visual output.\n• Different browsers use different rendering engines, but the core process remains the same.\n• Chrome uses the Blink engine, Firefox uses Gecko, and Safari uses WebKit.\n• Knowing how browsers interpret websites helps developers write efficient and compatible code.",
-        },
-
-        {
-          id: "adf_t4",
-          title: "HTML5 - Structure of Web Pages",
-          explanation:
-            "• HTML stands for HyperText Markup Language.\n• It defines the structure of a webpage using tags.\n• HyperText refers to clickable links that connect different resources on the web.\n• Markup refers to the structured formatting of content using specific tags and elements.\n• HTML5 is the latest version and introduced semantic tags like header, footer, article, and section.\n• HTML5 also introduced modern APIs for multimedia, storage, and geolocation.\n• HTML provides the skeleton of any web page.\n• Without HTML, there would be no structure for CSS to style or JavaScript to manipulate.\n• Every web developer must have a strong foundation in HTML before moving to advanced technologies.",
-        },
-
-        {
-          id: "adf_t5",
-          title: "Parsing and Rendering",
-          explanation:
-            "• Parsing and rendering are the internal browser processes for displaying web content.\n• Parsing involves reading and understanding the HTML structure sent by the server.\n• During parsing, the browser creates the DOM (Document Object Model), which is a tree-like representation of the HTML elements.\n• Rendering converts the DOM into visual content that users can see on the screen.\n• CSS styles are applied during the rendering phase to determine how elements look.\n• The browser combines the DOM and CSSOM (CSS Object Model) to create the render tree.\n• JavaScript can modify the DOM dynamically even after the initial rendering is complete.\n• Understanding parsing and rendering helps developers optimize page load performance and avoid layout thrashing.",
-        },
-
-        {
-          id: "adf_t6",
-          title: "CSS3 - Styling Web Pages",
-          explanation:
-            "• CSS (Cascading Style Sheets) is used to design and style the layout of websites.\n• CSS controls fonts, colors, sizes, spacing, and positioning of elements.\n• It enables responsive layouts that adapt to different screen sizes.\n• CSS supports animations and transitions for dynamic visual effects.\n• One of the key principles of CSS is the separation of content from design.\n• This means HTML handles structure while CSS handles presentation.\n• CSS3 introduced features like flexbox, grid, media queries, and custom properties.\n• Using CSS effectively improves user experience through visual enhancement.\n• A well-styled application looks professional and increases user engagement.",
-        },
-
-        {
-          id: "adf_t7",
-          title: "JavaScript - Adding Interactivity",
-          explanation:
-            "• JavaScript is the programming language that makes websites dynamic and interactive.\n• It allows dynamic content updates without requiring a full page reload.\n• JavaScript handles form validation and user input processing in real time.\n• It supports interactive features like maps, animations, sliders, and modals.\n• JavaScript communicates with servers using APIs (Application Programming Interfaces) to fetch and send data.\n• It creates rich and responsive user experiences that go beyond static HTML and CSS.\n• JavaScript runs in the browser and can also run on the server using Node.js.\n• Modern frameworks like React, Angular, and Vue are built on JavaScript.\n• Mastering JavaScript is essential for any web developer.",
-        },
-
-        {
-          id: "adf_t8",
-          title: "Mobile App Development",
-          explanation:
-            "• Mobile app development involves creating applications specifically for mobile platforms.\n\n• Android Development focuses on building apps for Android devices.\n• Android apps are primarily developed using Java and Kotlin programming languages.\n• Apps are distributed through the Google Play Store.\n• Android Studio is the official IDE for Android development.\n\n• iOS Development focuses on building apps for Apple devices like iPhone and iPad.\n• iOS apps are developed using Swift and Objective-C languages.\n• Apps are distributed through the Apple App Store.\n• Xcode is the official IDE for iOS development.\n\n• Both platforms have their own design guidelines and development ecosystems.\n• Choosing between Android and iOS development depends on the target audience and business requirements.\n• Cross-platform solutions can also target both platforms simultaneously.",
-        },
-
-        {
-          id: "adf_t9",
-          title: "Responsive Web Design",
-          explanation:
-            "• Responsive web design ensures that websites adapt to different screen sizes and devices.\n• It uses flexible grid layouts that resize proportionally based on the viewport.\n• CSS media queries are applied to change styles at specific breakpoints.\n• Content is adjusted for mobile, tablet, and desktop screens to provide the best experience.\n• Responsive design improves accessibility and usability for all users.\n• It provides a consistent user experience across devices without needing separate codebases.\n• Mobile-first design is a common approach where the design starts with the smallest screen and scales up.\n• Google prioritizes mobile-friendly websites in search rankings, making responsive design important for SEO.",
-        },
-
-        {
-          id: "adf_t10",
-          title: "Cross-Platform Technologies",
-          explanation:
-            "• Cross-platform technologies allow building applications for multiple platforms using a single codebase.\n• This approach significantly reduces development time and cost compared to building separate native apps.\n• Cross-platform frameworks use shared logic across platforms while still providing near-native performance.\n• React Native is a popular cross-platform framework developed by Facebook.\n• It allows developers to write mobile apps using JavaScript and React.\n• Other cross-platform technologies include Flutter (by Google), Xamarin, and Ionic.\n• While cross-platform solutions offer convenience, native development may still be preferred for performance-critical applications.\n• Understanding cross-platform technologies helps developers make informed decisions about the right approach for their projects.",
-        },
-      ],
-    },
-  ],
+    ],
 
   4: [
     {
-      id: "sc_day_4",
-      title: "Intro to Backend",
-      topics: [
+      "id": "sc_day_4",
+      "title": "Introduction to Backend",
+      "topics": [
         {
-          id: "bcc_t1",
-          title: "Introduction to Backend",
-          explanation:
-            "• The backend is the hidden infrastructure that powers applications.\n• Backend handles data storage, processing, and business logic.\n• It works behind the scenes and is not visible to users.\n• It manages servers, databases, and APIs.\n• The backend processes user requests and sends appropriate responses.\n• It ensures security, authentication, and performance of applications.\n• Key responsibilities include data storage (text, images, audio, video), server request and response handling, API communication between systems, and authentication and authorization.\n• Without a backend, applications cannot store data, process logic, or communicate with other services.",
+          "id": "sc_day_4_t1",
+          "title": "What is Backend?",
+          "explanation": "• Backend is the part of an application that handles data, storage, and processing.\n• It is the behind-the-scenes work users don't see but is essential for the app to function.\n• Backend manages:\n\t- Data storage: Text, images, audio, video, etc.\n\t- Server management: Handles requests and sends responses.\n\t- API interaction: Allows different systems to communicate with each other."
         },
-
         {
-          id: "bcc_t2",
-          title: "Data Management in Backend",
-          explanation:
-            "• Managing and storing application data efficiently is a core backend responsibility.\n• Data includes text, images, audio, video, and structured records.\n• All data occupies physical storage space on servers.\n• Data is measured in units such as Bytes, KB, MB, GB, and TB.\n• Efficient data storage improves performance and scalability of applications.\n• For example, a simple webpage text may use around 200 Bytes.\n• A single image may consume around 200 KB.\n• An e-commerce product page may consume around 1.5 MB due to multiple images and text.\n• Understanding data sizes helps developers make informed decisions about storage, bandwidth, and optimization strategies.",
+          "id": "sc_day_4_t2",
+          "title": "Data Management in Backend",
+          "explanation": "• Data includes all information that needs to be stored or processed — text, images, audio, videos.\n• Just like cargo occupies physical space, data occupies space on a storage device.\n• Units of measurement go from Bytes → KB → MB → GB → TB.\n• Real-world example:\n\t- Text on a webpage: ~200 Bytes\n\t- An image: ~200 KB\n\t- Amazon product page (10+ images, 100+ lines of text): ~1.5 MB"
         },
-
         {
-          id: "bcc_t3",
-          title: "Backend Architecture",
-          explanation:
-            "• Backend architecture consists of core components that make backend systems functional.\n\n• A Server is a remote computer that processes incoming requests.\n• It executes backend logic and business rules.\n• It sends processed responses back to users and can handle multiple users simultaneously.\n\n• A Database stores structured and unstructured data.\n• It organizes data into tables or collections.\n• Databases allow efficient retrieval and modification of data.\n• They ensure data consistency and integrity.\n\n• An API (Application Programming Interface) allows communication between frontend and backend.\n• It enables integration between different systems.\n• APIs transfer data in formats like JSON or XML.\n\n• These three components — Server, Database, and API — form the backbone of any backend system.",
+          "id": "sc_day_4_t3",
+          "title": "Backend Architecture & Components",
+          "explanation": "• Server: A remote computer that processes data, manages requests, and serves responses.\n• Database: A structured system for storing, organizing, and retrieving data.\n• API: The interface through which different applications or systems communicate.\n• Example — Amazon Backend:\n\t- Stock Availability: Checks whether an item is in stock.\n\t- Order Processing: Handles orders, updates data, and generates invoices.\n\t- Data Updates: Manages price changes, stock updates, and new product launches."
         },
-
         {
-          id: "bcc_t4",
-          title: "Real-World Backend Example (E-commerce)",
-          explanation:
-            "• Understanding backend operations through an Amazon-like e-commerce system helps visualize how backend components work together.\n• When a user searches for a product, the backend checks stock availability in the database.\n• When a customer places an order, the backend processes the order and updates product inventory after purchase.\n• The backend handles price updates and product launches by modifying database records.\n• It generates invoices and order confirmations that are sent to customers.\n• Payment processing, shipping notifications, and recommendation engines all rely on backend logic.\n• This real-world example demonstrates how servers, databases, and APIs collaborate to deliver a seamless shopping experience.",
+          "id": "sc_day_4_t4",
+          "title": "Frontend vs Backend",
+          "explanation": "• Frontend: The visual part users interact with — images, text, dropdowns.\n• Backend: The hidden infrastructure — servers, databases, and APIs.\n• Users cannot interact directly with the backend.\n• The frontend communicates with the backend on behalf of the user."
         },
-
         {
-          id: "bcc_t5",
-          title: "Frontend vs Backend",
-          explanation:
-            "• Understanding the difference between frontend and backend is essential for web development.\n• The frontend is the visual part that users interact with directly.\n• It includes buttons, text, images, animations, and layout.\n• The backend is the hidden infrastructure that powers the frontend.\n• Frontend sends requests to backend APIs when users perform actions.\n• The backend processes these requests, queries databases, and sends responses back.\n• Users cannot directly access servers or databases — they only interact with the frontend.\n• Frontend technologies include HTML, CSS, and JavaScript.\n• Backend technologies include Node.js, Python, Java, and databases like MongoDB or PostgreSQL.\n• Both frontend and backend must work together seamlessly to deliver a complete application.",
+          "id": "sc_day_4_t5",
+          "title": "Cloud Computing",
+          "explanation": "• The cloud is a network of servers accessed over the internet.\n• It allows running software and storing data without maintaining physical hardware.\n• On-Demand Availability: Businesses can scale infrastructure as needed.\n• Example: Rent 1000 servers for 2 hours or 1 year — all costs included.\n• Cloud service providers handle:\n\t- Security\n\t- Maintenance\n\t- Hardware procurement\n\t- Power and internet connection\n\t- Hardware replacement"
         },
-
         {
-          id: "bcc_t6",
-          title: "Cloud Computing",
-          explanation:
-            "• Cloud computing involves using remote servers over the internet instead of maintaining physical infrastructure.\n• The cloud provides on-demand computing resources such as servers, storage, and networking.\n• There is no need to purchase or maintain expensive hardware.\n• Cloud services offer scalability based on traffic needs — you can scale up during high demand and scale down during low demand.\n• Businesses pay only for the resources they actually use, following a pay-as-you-go model.\n• Cloud computing ensures high availability and disaster recovery.\n• For example, a company can rent 1000 servers for 2 hours during high traffic events and scale down during normal days to save cost.\n• Cloud computing has revolutionized how applications are deployed and managed.",
-        },
-
-        {
-          id: "bcc_t7",
-          title: "Cloud Service Providers",
-          explanation:
-            "• Cloud service providers are companies that provide cloud infrastructure and services to businesses and developers.\n• They provide security and maintenance for all hosted services.\n• They handle hardware procurement and replacement, eliminating the need for companies to manage physical servers.\n• Cloud providers ensure uninterrupted power supply and internet connectivity.\n• They offer automatic scaling solutions that adjust resources based on demand.\n• Major cloud service providers include Amazon Web Services (AWS), Microsoft Azure, and Google Cloud Platform (GCP).\n• Each provider offers a wide range of services including compute, storage, databases, AI/ML, and networking.\n• Choosing the right cloud provider depends on specific project requirements, pricing, and available services.",
-        },
-
-        {
-          id: "bcc_t8",
-          title: "Cloud Scaling",
-          explanation:
-            "• Cloud scaling is the process of adjusting server resources based on demand.\n• During high-traffic events like Prime Day or flash sales, applications need to scale up by adding more servers.\n• During regular traffic periods, resources can be scaled down to reduce costs.\n• This dynamic scaling optimizes performance and reduces operational cost significantly.\n• For example, renting 1000 servers for 2 hours may cost around Rs. 1600.\n• In contrast, maintaining 1000 servers for 1 year may cost around Rs. 72 lakhs.\n• Cloud scaling can be horizontal (adding more servers) or vertical (upgrading existing server capacity).\n• Auto-scaling features provided by cloud platforms automatically adjust resources based on predefined rules and metrics.\n• Proper scaling strategy ensures applications remain responsive without overspending on infrastructure.",
-        },
-
-        {
-          id: "bcc_t9",
-          title: "Core Backend Technologies",
-          explanation:
-            "• Core backend technologies are the fundamental building blocks that power backend systems.\n\n• The Server handles incoming user requests, processes business logic, and returns appropriate responses.\n• Popular server-side technologies include Node.js, Express.js, Django, Flask, and Spring Boot.\n\n• The Database stores and organizes application data.\n• It allows querying and updating data efficiently.\n• Databases can be relational (MySQL, PostgreSQL) or non-relational (MongoDB, Firebase).\n\n• The API facilitates communication between frontend and backend.\n• It ensures structured data exchange using standard protocols like REST or GraphQL.\n\n• Together, these technologies form the complete backend stack.\n• Understanding how servers, databases, and APIs work together is essential for building robust and scalable applications.",
-        },
-      ],
-    },
+          "id": "sc_day_4_t6",
+          "title": "Cloud Scaling",
+          "explanation": "• During high-traffic periods (e.g., Prime Day, Big Billion Days), companies scale up cloud resources.\n• On regular days, cloud resources scale down to save costs.\n• Cost example:\n\t- 1000 servers for 2 hours: ~Rs. 1,600\n\t- 1000 servers for 1 year: ~Rs. 72 lakhs"
+        }
+      ]
+    }
   ],
 
   5: [
@@ -292,7 +193,7 @@ export const recapContent = {
           id: "genai_t5",
           title: "Understanding the Term LLM",
           explanation:
-            "• Breaking down the meaning of Large Language Model helps understand its core nature.\n\n• Large refers to the billions of parameters in the model.\n• More parameters improve the model's contextual understanding and ability to generate nuanced responses.\n• Large datasets increase the model's capability to handle diverse topics.\n\n• Language means the model works primarily with text-based data.\n• It processes documents, conversations, and written content.\n• The model understands linguistic patterns, grammar, and semantics.\n\n• Model refers to the final trained system.\n• It uses learned patterns to generate meaningful output based on input prompts.\n• The model is the result of extensive training on data using neural network architectures.\n\n• Together, LLM describes a large-scale trained system specialized in understanding and generating human language.",
+            "• Breaking down the meaning of Large Language Model helps understand its core nature.\n• Large refers to the billions of parameters in the model.\n• More parameters improve the model's contextual understanding and ability to generate nuanced responses.\n• Large datasets increase the model's capability to handle diverse topics.\n• Language means the model works primarily with text-based data.\n• It processes documents, conversations, and written content.\n• The model understands linguistic patterns, grammar, and semantics.\n• Model refers to the final trained system.\n• It uses learned patterns to generate meaningful output based on input prompts.\n• The model is the result of extensive training on data using neural network architectures.\n• Together, LLM describes a large-scale trained system specialized in understanding and generating human language.",
         },
 
         {
@@ -328,26 +229,28 @@ export const recapContent = {
 
   6: [
     {
-      id: "sc_day_6",
-      title: "Introduction to GenAI in Web Development",
-      topics: [
+      "id": "sc_day_6",
+      "title": "Introduction to GenAI in Web Development",
+      "topics": [
         {
-          id: "sc_day_6_t1",
-          title: "Concept Overview",
-          explanation:
-            '• AI is transforming the way websites are built and designed.\n• Generative AI helps developers generate HTML and CSS from prompts.\n• A website is the visual interface users see in a browser.\n• Basic websites are built using HTML and CSS.\n• In real-world development, developers work using design mockups as references.\n• Understanding frontend fundamentals is essential before using AI tools effectively.'
+          "id": "sc_day_6_t1",
+          "title": "What is a Website?",
+          "explanation": "• A website is the visual and interactive interface users see and experience in browsers.\n• Built primarily using HTML and CSS with limited user interactions.\n• Examples of websites:\n\t- Library Dashboard\n\t- Shopping Portal\n\t- Modern Dashboard\n\t- Course Catalog\n\t- Recipe Book\n\t- Sign Up Form"
         },
         {
-          id: "sc_day_6_t2",
-          title: "Generative AI Models & GPT-4o",
-          explanation:
-            '• Multiple AI models are available such as GPT, Gemini, Claude, Meta, DeepSeek, and Grok.\n• These models can generate content and frontend code.\n• GPT-4o supports text, image, audio, and video inputs.\n• AI tools can convert design mockups into working HTML and CSS.\n• Clear prompts improve the quality and accuracy of generated websites.'
+          "id": "sc_day_6_t2",
+          "title": "Developing a Web Application",
+          "explanation": "• In real-world development, you are provided a reference design called a mockup or design file.\n• The mockup outlines what needs to be built — layout, structure, and appearance.\n• Developers replicate the mockup using HTML and CSS code."
         },
         {
-          id: "sc_day_6_t3",
-          title: "Prompt Guidelines for Website Generation",
-          explanation:
-            '• Provide clear instructions to replicate the mockup exactly.\n• Match layout, colors, fonts, spacing, borders, and shadows.\n• Use valid image links from Unsplash.\n• Keep HTML and CSS code separate.\n• Include animations and transitions to enhance user experience.'
+          "id": "sc_day_6_t3",
+          "title": "Generative AI Models",
+          "explanation": "• Several pre-trained AI models are available, each trained on different data:\n\t- GPT: chatgpt.com\n\t- Gemini: gemini.google.com\n\t- Meta AI: meta.ai\n\t- Claude: claude.ai\n\t- DeepSeek: chat.deepseek.com\n\t- Grok: grok.com\n• Any of these models can be used to generate website code."
+        },
+        {
+          "id": "sc_day_6_t4",
+          "title": "Using GPT-4o to Build Websites",
+          "explanation": "• GPT-4o can take text, audio, images, and video as input and generate text, audio, or images as output.\n• Prompt approach for building from a mockup:\n\t- Act as a skilled frontend developer.\n\t- Replicate the design mockup with 100% accuracy.\n\t- Match colors, fonts, styles, spacing, borders, and shadows.\n\t- Use valid Unsplash image links that fit the design.\n\t- Ensure icons are styled and placed correctly."
         },
       ]
     }
@@ -368,14 +271,14 @@ export const recapContent = {
           id: "adfs_t2",
           title: "Full Stack Development",
           explanation:
-            "• Full stack development is a development approach that combines both frontend and backend technologies.\n\n• The Frontend refers to everything visible to the user.\n• It includes UI design, screens, buttons, animations, and layouts.\n• The frontend handles user interactions directly.\n\n• The Backend handles data storage and business logic.\n• It processes user requests behind the scenes.\n• The backend manages authentication, payments, and database operations.\n\n• Full Stack combines both frontend and backend.\n• A full-stack developer works on both layers of the application.\n• Full-stack applications manage UI and server logic together.\n\n• For example, on Amazon, the frontend handles product listing and cart display, while the backend handles orders and payments.\n• On Swiggy, the frontend shows restaurants, while the backend processes orders and delivery tracking.\n• Full stack development provides a complete understanding of how applications work end to end.",
+            "• Full stack development is a development approach that combines both frontend and backend technologies.\n\n• The Frontend refers to everything visible to the user.\n• It includes UI design, screens, buttons, animations, and layouts.\n• The frontend handles user interactions directly.\n\n• The Backend handles data storage and business logic.\n• It processes user requests behind the scenes.\n• The backend manages authentication, payments, and database operations.\n\n• Full Stack combines both frontend and backend.\n• A full-stack developer works on both layers of the application.\n• Full-stack applications manage UI and server logic together.\n• For example, on Amazon, the frontend handles product listing and cart display, while the backend handles orders and payments.\n• On Swiggy, the frontend shows restaurants, while the backend processes orders and delivery tracking.\n• Full stack development provides a complete understanding of how applications work end to end.",
         },
 
         {
           id: "adfs_t3",
           title: "Frontend Development",
           explanation:
-            "• Frontend development focuses on the visible and interactive part of an application.\n• It is centered on user interface (UI) and user experience (UX).\n• Frontend includes layout design, colors, fonts, and responsiveness.\n• It handles user interactions like clicks, form submissions, and navigation.\n• The goal is to ensure the application looks attractive and is user-friendly.\n\n• The core technologies used in frontend development are:\n• HTML defines the structure or layout of the application.\n• CSS adds styling such as colors, shapes, spacing, and positioning.\n• JavaScript adds logic and interactivity like button clicks and dynamic content updates.\n\n• These three technologies work together to create the complete frontend experience.\n• Modern frontend frameworks like React, Angular, and Vue build on top of these core technologies.",
+            "• Frontend development focuses on the visible and interactive part of an application.\n• It is centered on user interface (UI) and user experience (UX).\n• Frontend includes layout design, colors, fonts, and responsiveness.\n• It handles user interactions like clicks, form submissions, and navigation.\n• The goal is to ensure the application looks attractive and is user-friendly.\n\n• The core technologies used in frontend development are:\n• HTML defines the structure or layout of the application.\n• CSS adds styling such as colors, shapes, spacing, and positioning.\n• JavaScript adds logic and interactivity like button clicks and dynamic content updates.\n• These three technologies work together to create the complete frontend experience.\n• Modern frontend frameworks like React, Angular, and Vue build on top of these core technologies.",
         },
 
         {
@@ -397,174 +300,151 @@ export const recapContent = {
 
   8: [
     {
-      id: "sc_day_8",
-      title: "Introduction to HTML",
-      topics: [
+      "id": "sc_day_8",
+      "title": "Introduction to HTML",
+      "topics": [
         {
-          id: "sc_day_8_t1",
-          title: "Concept Overview",
-          explanation:
-            '• This section gives you a clear conceptual foundation for "Introduction to HTML". You will learn the main ideas, definitions, and principles that underpin this area. Understanding these concepts first makes the hands-on work and assignments much easier. Pay attention to how the pieces fit together and how they relate to the rest of the curriculum. Take notes and revisit any part that feels unclear before moving to practice. The concept overview sets the stage for everything you will do in this day\'s learning.',
+          "id": "sc_day_8_t1",
+          "title": "Basic Structure of an HTML Document",
+          "explanation": "• Every HTML document follows a standard structure.\n• <!DOCTYPE html>: Declares the document type as HTML5.\n• <html>: Root element that wraps all content.\n• <head>: Contains metadata — not visible on the page.\n• <body>: Contains all visible content shown in the browser."
         },
         {
-          id: "sc_day_8_t2",
-          title: "Hands-on Practice",
-          explanation:
-            '• Here you apply the concepts of "Introduction to HTML" through guided exercises and examples. You will follow step-by-step instructions, write code or perform tasks, and see results in real time. Hands-on practice is where theoretical knowledge turns into practical skill. Use the editor, run your code, and experiment with small changes to deepen your understanding. If something does not work as expected, use the concepts from the overview to debug. Repeating and varying the exercises will help you retain what you learn and prepare you for the mini assignment.',
+          "id": "sc_day_8_t2",
+          "title": "HTML Elements – Heading, Paragraph & Button",
+          "explanation": "• Heading Element: <h1> defines a main heading.\n\t- Example: <h1>Tourism</h1>\n• Paragraph Element: <p> defines a paragraph of text.\n\t- Example: <p>Plan your trip wherever you want to go</p>\n• Button Element: <button> defines a clickable button.\n\t- Example: <button>Get Started</button>"
         },
         {
-          id: "sc_day_8_t3",
-          title: "Mini Assignment / Implementation",
-          explanation:
-            '• This mini assignment or implementation task lets you use what you have learned in "Introduction to HTML". You will build, implement, or solve something that ties together the concepts and practice from this day. Completing it reinforces your learning and shows how well you have understood the material. Use the concept overview and hands-on practice as reference while you work. Do your best to finish the assignment; it is a key part of tracking your progress. Submitting your work helps you and your mentors see how you are doing and where to focus next.',
+          "id": "sc_day_8_t3",
+          "title": "What is HTML?",
+          "explanation": "• HTML stands for HyperText Markup Language.\n• It is the standard markup language used to create web pages and web applications.\n• It defines the structure of content and tells the browser how to display elements like text, images, links, and buttons."
         },
-      ],
-    },
+        {
+          "id": "sc_day_8_t4",
+          "title": "How Do You Create a Webpage?",
+          "explanation": "• Step 1: Write HTML code using a proper structure.\n• Step 2: Save the file with a .html extension.\n• Step 3: Open the file in a web browser."
+        },
+        {
+          "id": "sc_day_8_t5",
+          "title": "Header vs Heading Elements in HTML",
+          "explanation": "• Heading Elements (<h1> to <h6>): Define titles and subtitles on a webpage.\n\t- <h1> is the most important, <h6> is the least.\n• <head> Element: Contains metadata such as:\n\t- Page title\n\t- Character encoding\n\t- Styles and external links"
+        },
+        {
+          "id": "sc_day_8_t6",
+          "title": "Common HTML Tags & Their Uses",
+          "explanation": "• <h1> to <h6>: Headings of different levels.\n• <p>: Paragraphs of text.\n• <a>: Hyperlinks to other pages or resources.\n• <img>: Images.\n• <button>: Clickable buttons.\n• <div>: Sections or containers to group content."
+        }
+      ]
+    }
   ],
 
   9: [
     {
-      id: "sc_day_9",
-      title: "Introduction to Programming & JavaScript Fundamentals",
-      topics: [
+      "id": "sc_day_9",
+      "title": "Introduction to JavaScript",
+      "topics": [
         {
-          id: "sc_day_9_t1",
-          title: "Introduction to Programming",
-          explanation:
-            "• Software is a collection of instructions given to hardware.\n• It enables computers to perform specific tasks.\n• Examples include browsers, apps, and operating systems.\n\n• Programming is the process of writing instructions to create software.\n• It involves logic, problem-solving, and implementation.\n• Programmers use programming languages to communicate with computers.\n\n• The instructions written by programmers are called code.\n• Code follows specific syntax rules.\n• Code must be error-free to execute properly.\n\n• A programming language is used to give instructions to a computer.\n• There are approximately 700+ programming languages.\n• Examples include JavaScript, Java, Python, and C++.\n\n• Syntax refers to the rules of a programming language.\n• It is similar to grammar rules in spoken languages.\n• Incorrect syntax results in errors.",
+          "id": "sc_day_9_t1",
+          "title": "Introduction to Programming",
+          "explanation": "• Software is a set of instructions given to hardware.\n• It enables computers to perform specific tasks.\n• Examples include browsers, apps, and operating systems.\n• Programming is the process of writing instructions to create software.\n• It involves logic, problem-solving, and implementation.\n• The instructions written by programmers are called code.\n• Code follows specific syntax rules and must be error-free to execute.\n• A programming language is used to give instructions to a computer.\n• There are approximately 700+ programming languages.\n• Examples include JavaScript, Java, Python, and C++.\n• Syntax refers to the rules of a programming language.\n• Similar to grammar rules in spoken languages like English or Hindi.\n• Incorrect syntax results in errors."
         },
-
         {
-          id: "sc_day_9_t2",
-          title: "Why JavaScript?",
-          explanation:
-            '• JavaScript is one of the most popular programming languages worldwide.\n• It is used for both frontend and backend development.\n• All major browsers support JavaScript.\n• Approximately 62% of developers use JavaScript globally.\n• It is easy to learn compared to many other languages.\n• It requires minimal code for simple tasks.\n\n• For example, printing Hello World in Java requires an entire class definition:\n• class HelloWorld { public static void main(String[] args) { System.out.println("Hello World!"); }}\n• In JavaScript, it takes just one line:\n• console.log("Hello World!");\n\n• Major companies using JavaScript include Google, Facebook, Netflix, PayPal, Uber, eBay, and Groupon.\n\n• Career opportunities with JavaScript include Web Developer, JavaScript Developer, Frontend Engineer, Backend Developer, Mobile App Developer, UI/UX Developer, and Game Developer.',
+          "id": "sc_day_9_t2",
+          "title": "Why JavaScript?",
+          "explanation": "• JavaScript is the most popular and versatile programming language worldwide.\n• Used for both frontend and backend development.\n• All major browsers support JavaScript.\n• Approximately 62.3% of developers use JavaScript globally.\n• Easy to learn — requires minimal code for simple tasks.\n• Comparison — printing Hello World:\n• Java requires an entire class definition with multiple lines.\n• JavaScript takes just one line: console.log(\"Hello World!\");\n• Major companies using JavaScript:\n• Google, Facebook, Netflix, PayPal, Uber, eBay, Groupon.\n• Career opportunities include:\n• Web Developer, Frontend Engineer, Backend Developer, Mobile App Developer, UI/UX Developer, Game Developer."
         },
-
         {
-          id: "sc_day_9_t3",
-          title: "ECMAScript",
-          explanation:
-            "• ECMAScript is the official standard specification that defines how JavaScript works.\n• JavaScript follows ECMAScript rules.\n• It ensures consistency across different browsers.\n• New features are introduced in each ECMAScript version.\n\n• Key versions include:\n• ES5 – Earlier standard version.\n• ES6 – Introduced let, const, and arrow functions.\n• ES2020 and ES2022 – Latest improvements and features.\n\n• Understanding ECMAScript versions helps developers know which features are available in different environments.",
+          "id": "sc_day_9_t3",
+          "title": "ECMAScript",
+          "explanation": "• ECMAScript is the official standard specification that defines how JavaScript works.\n• JavaScript follows ECMAScript rules.\n• Ensures JavaScript works consistently across different browsers and platforms.\n• Key versions:\n\t- ES5: Earlier standard version.\n\t- ES6: Introduced let, const, and arrow functions.\n\t- ES2020, ES2022: Latest improvements and features."
         },
-
         {
-          id: "sc_day_9_t4",
-          title: "Hello World in JavaScript",
-          explanation:
-            '• The simplest JavaScript program to display output is:\n• console.log("Hello World!");\n\n• This single line prints the message Hello World! to the browser console.\n\n• Common mistakes beginners make include:\n• Spelling mistake in console.log.\n• Using uppercase C in Console.log.\n• Missing quotation marks around the text.\n• Missing parentheses after log.\n• Missing semicolon at the end.\n\n• Avoid these errors to ensure your code executes correctly.',
-          examples: [
+          "id": "sc_day_9_t4",
+          "title": "Hello World in JavaScript",
+          "explanation": "• The simplest JavaScript program to display output is:\n• console.log(\"Hello World!\");\n• This single line prints Hello World! to the browser console.\n\n• Common mistakes beginners make:\n\t- Spelling mistake: consol.log()\n\t- Uppercase C: Console.log()\n\t- Missing quotes: console.log(Hello World!)\n\t- Missing parentheses: console.log(\"Hello World!\"\n\t- Missing semicolon at the end",
+          "examples": [
             {
-              language: "javascript",
-              code: 'console.log("Hello World!");',
-              explanation:
-                "• console.log prints output to the browser console.\n• The text must be enclosed in quotation marks.\n• Semicolon marks the end of the statement.",
-            },
-          ],
+              "language": "javascript",
+              "code": "console.log(\"Hello World!\");",
+              "explanation": "• console.log prints output to the browser console.\n• The text must be enclosed in quotation marks.\n• Semicolon marks the end of the statement."
+            }
+          ]
         },
-
         {
-          id: "sc_day_9_t5",
-          title: "Printing Numbers vs Strings",
-          explanation:
-            '• Numbers do not require quotation marks in JavaScript.\n• Text (strings) must be enclosed in quotation marks.\n\n• console.log(2 + 5) evaluates the arithmetic and prints the result 7.\n• console.log("2 + 5") treats the content as text and prints 2 + 5 as a string.\n\n• Understanding this difference is important because it affects how JavaScript processes and displays data.',
-          examples: [
+          "id": "sc_day_9_t5",
+          "title": "Printing Numbers vs Strings",
+          "explanation": "• Numbers do not require quotation marks in JavaScript.\n• Text (strings) must be enclosed in quotation marks.\n• console.log(2 + 5) evaluates the arithmetic and prints 7.\n• console.log(\"2 + 5\") treats the content as text and prints 2 + 5.\n• This difference affects how JavaScript processes and displays data.",
+          "examples": [
             {
-              language: "javascript",
-              code: 'console.log(2 + 5);\nconsole.log("2 + 5");',
-              explanation:
-                "• First line prints 7 because JavaScript evaluates the arithmetic expression.\n• Second line prints 2 + 5 as text because it is enclosed in quotation marks.",
-            },
-          ],
+              "language": "javascript",
+              "code": "console.log(2 + 5);\nconsole.log(\"2 + 5\");",
+              "explanation": "• First line prints 7 — JavaScript evaluates the arithmetic expression.\n• Second line prints 2 + 5 as text — enclosed in quotation marks."
+            }
+          ]
         },
-
         {
-          id: "sc_day_9_t6",
-          title: "JavaScript as a Calculator",
-          explanation:
-            "• JavaScript can perform arithmetic operations directly.\n\n• Addition uses the + symbol. Example: console.log(2 + 5); prints 7.\n• Subtraction uses the - symbol. Example: console.log(5 - 2); prints 3.\n• Multiplication uses the * symbol. Example: console.log(2 * 5); prints 10.\n• Division uses the / symbol. Example: console.log(6 / 3); prints 2.\n\n• These basic arithmetic operations are fundamental to programming and data processing in JavaScript.",
-          examples: [
+          "id": "sc_day_9_t6",
+          "title": "JavaScript as a Calculator",
+          "explanation": "• JavaScript can perform arithmetic operations directly.\n• Addition: + symbol. Example: console.log(2 + 5); prints 7.\n• Subtraction: - symbol. Example: console.log(5 - 2); prints 3.\n• Multiplication: * symbol. Example: console.log(2 * 5); prints 10.\n• Division: / symbol. Example: console.log(6 / 3); prints 2.\n• Decimal results are also supported:\n\t- console.log(1 + 1.5); prints 2.5\n\t- console.log(5 / 2); prints 2.5",
+          "examples": [
             {
-              language: "javascript",
-              code: "console.log(2 + 5);\nconsole.log(5 - 2);\nconsole.log(2 * 5);\nconsole.log(6 / 3);",
-              explanation:
-                "• Addition: 2 + 5 prints 7.\n• Subtraction: 5 - 2 prints 3.\n• Multiplication: 2 * 5 prints 10.\n• Division: 6 / 3 prints 2.",
-            },
-          ],
-        },
+              "language": "javascript",
+              "code": "console.log(2 + 5);\nconsole.log(5 - 2);\nconsole.log(2 * 5);\nconsole.log(6 / 3);",
+              "explanation": "• Addition: 2 + 5 prints 7.\n• Subtraction: 5 - 2 prints 3.\n• Multiplication: 2 * 5 prints 10.\n• Division: 6 / 3 prints 2."
+            }
+          ]
+        }
 
-        {
-          id: "sc_day_9_t7",
-          title: "Frequently Asked Interview Questions",
-          explanation:
-            "• What is a programming language?\n• A programming language is a language used to give instructions to the computer in a way it understands.\n\n• What is JavaScript?\n• JavaScript is a programming language used to create software, especially web applications. It follows ECMAScript rules.\n\n• Where and why is JavaScript used?\n• JavaScript is used in frontend and backend development because it is supported by all major browsers and is easy to learn.\n\n• What is the main purpose of JavaScript?\n• The main purpose of JavaScript is to write code that creates interactive and dynamic web applications.",
-        },
-      ],
-    },
+      ]
+    }
   ],
 
   10: [
     {
-      id: "sc_day_10",
-      title: "Leveraging GenAI for Accelerated Learning",
-      topics: [
+      "id": "sc_day_10",
+      "title": "Leveraging GenAI for Accelerated Learning",
+      "topics": [
         {
-          id: "sc_day_10_t1",
-          title: "Leveraging GenAI for Accelerated Learning in Web Development",
-          explanation:
-            "• Leveraging Generative AI for accelerated learning refers to using AI tools to make the learning process faster, clearer, and more effective, especially while learning web technologies like HTML and CSS.\n• Generative AI can assist learners by explaining concepts, answering questions instantly, and guiding them through difficult topics.\n\n• Gen AI has the potential to transform how learners approach web development.\n• Instead of struggling alone or relying only on static resources, learners can interact with AI to gain personalized explanations based on their current understanding level.\n• This interaction reduces confusion and speeds up concept clarity.\n\n• Generative AI does not replace learning; instead, it enhances learning by acting as a support system.\n• It helps learners grasp concepts more efficiently and encourages continuous exploration and improvement.\n\n• Example: When a learner is building a website using HTML and CSS and does not understand why a layout behaves a certain way, Gen AI can explain the concept clearly, allowing the learner to fix issues quickly and continue learning without long interruptions.",
+          "id": "sc_day_10_t1",
+          "title": "Understanding AI as a Learning Tool",
+          "explanation": "• AI can enhance your learning experience, tailored to your current skill set.\n• AI tools help you write code faster but should not replace your understanding.\n• Think of AI as a learning partner available 24/7.\n• Use AI as a tutor to help you:\n\t- Think through problems\n\t- Explore concepts deeply\n\t- Reason and build logic\n• To truly master JavaScript, grasp its core concepts, logic, and problem-solving creativity."
         },
-
         {
-          id: "sc_day_10_t2",
-          title: "Role of GenAI in Learning HTML and CSS",
-          explanation:
-            "• Generative AI plays the role of a tutor in the learning journey of HTML and CSS.\n• It is available 24/7 and does not depend on class timings or instructor availability.\n• Learners can ask questions at any time and receive instant explanations.\n\n• Gen AI can break down tough concepts, explain them using simple language, and even quiz learners to reinforce understanding.\n• This makes learning HTML and CSS more interactive and less intimidating for beginners.\n\n• By providing explanations, clarifications, and practice opportunities, Gen AI ensures that learners can move forward with confidence and build strong foundations in web development.\n\n• Example: If a learner is confused about how HTML structure and CSS styling work together, Gen AI can explain both step by step, helping the learner understand how content and design interact on a webpage.",
+          "id": "sc_day_10_t2",
+          "title": "Available AI Tools",
+          "explanation": "• Several AI tools are available, each with different features:\n\t- GPT: chatgpt.com\n\t- LLAMA: meta.ai\n\t- Gemini: gemini.google.com\n\t- Claude: claude.ai\n• Any of these can be used to accelerate your learning."
         },
-
         {
-          id: "sc_day_10_t3",
-          title: "How GenAI Helps in Learning New HTML and CSS Concepts",
-          explanation:
-            "• Generative AI enhances learning by simplifying complex HTML and CSS concepts into easy-to-understand explanations.\n• It uses analogies, examples, and beginner-friendly language to make abstract ideas more relatable.\n\n• Instead of overwhelming learners with technical jargon, Gen AI adapts explanations to the learner's level.\n• This approach helps learners understand concepts deeply rather than memorizing rules.\n\n• By breaking down topics into smaller parts, Gen AI reduces learning gaps and makes the learning process smoother and more engaging.\n\n• Example: A learner struggling with CSS styling can ask Gen AI to explain it in simple terms.\n• The AI may compare HTML to the structure of a house and CSS to decoration, helping the learner visualize the concept clearly.",
+          "id": "sc_day_10_t3",
+          "title": "The Three-Step Approach to AI Learning",
+          "explanation": "• Step 1: Use AI tools like ChatGPT or Gemini.\n• Step 2: Implement structured prompting.\n• Step 3: Enhance your learning experience with the output.\n\n• Foundation First — build skills AI can't replace:\n\t- Learn how to ask the right questions.\n\t- Understand concepts using AI explanations.\n\t- Build a strong foundation before relying on AI."
         },
-
         {
-          id: "sc_day_10_t4",
-          title: "Clarifying Doubts Using Structured Prompts",
-          explanation:
-            "• Generative AI becomes more effective when learners use structured prompts.\n• Structured prompts ask AI to act as an experienced HTML and CSS developer and explain specific doubts in simple terms.\n\n• Structured prompts help learners focus on exactly what they do not understand.\n• Instead of receiving general explanations, learners get targeted clarifications broken down into smaller, easier parts.\n\n• This method ensures that confusion is resolved quickly and learning continues smoothly without frustration.\n\n• Example: If a learner is confused about a specific CSS property, they can ask Gen AI to explain only that part using real-world examples and child-friendly language, making the explanation clear and memorable.",
+          "id": "sc_day_10_t4",
+          "title": "The Power of Better Prompts",
+          "explanation": "• Learning to write better prompts is a skill that amplifies your growth with AI.\n• A vague request gets a vague answer.\n• A clear, specific prompt gives a detailed explanation.\n\n• Instead of asking: \"Show me how to write a JavaScript program\"\n• Ask:\n\t- How does it work?\n\t- Can you give me an analogy?\n\t- Can you break it down step by step?\n\n• Example first prompt for beginners:\n\t- \"I'm completely new to programming. Explain how to write my first JavaScript program like you're teaching a 10-year-old. I want to understand what each part does before I try it.\""
         },
-
         {
-          id: "sc_day_10_t5",
-          title: "Active Learning Using AI Questioning Techniques",
-          explanation:
-            "• Generative AI supports active learning by asking learners questions instead of only providing answers.\n• This approach encourages learners to think, reason, and reflect on what they know.\n\n• This approach is similar to the Feynman technique, where understanding is tested through explanation and questioning.\n• Gen AI asks questions, evaluates responses, and provides feedback to identify misconceptions.\n\n• This method strengthens foundational knowledge and ensures learners truly understand HTML and CSS concepts.\n\n• Example: While learning HTML, Gen AI may ask a learner why a particular tag is used.\n• If the learner struggles, AI provides feedback and guidance, helping the learner improve understanding step by step.",
+          "id": "sc_day_10_t5",
+          "title": "Using AI for Code Explanation",
+          "explanation": "• Gen AI simplifies code into clear, step-by-step explanations.\n• Useful when you encounter code you don't fully understand.\n\n• Example prompt for code explanation:\n\t- \"Explain what the given code does and break it down step by step in simple terms for a school kid in India who has just learned JavaScript.\"\n\n• AI tools have special study features designed to help you learn more effectively."
         },
-
         {
-          id: "sc_day_10_t6",
-          title: "Testing Knowledge Through Quizzes and Coding Questions",
-          explanation:
-            "• Generative AI can generate quizzes and coding questions to test a learner's understanding of HTML and CSS.\n• These quizzes can be interactive, presenting one question at a time and waiting for the learner's response.\n\n• Gen AI can provide immediate feedback, track progress, and increase difficulty gradually without introducing new concepts.\n• This ensures structured and focused learning.\n\n• Testing knowledge regularly helps reinforce concepts and identify areas that need improvement.\n\n• Example: After completing a CSS topic, a learner can request a quiz.\n• Gen AI asks questions, explains correct and incorrect answers, and continues only when the learner demonstrates proper understanding.",
+          "id": "sc_day_10_t6",
+          "title": "Using AI for Code Generation",
+          "explanation": "• AI can generate code from scratch based on a structured prompt.\n• Structured prompt template:\n\t- Problem: Add a title for the program.\n\t- Description: Briefly describe what the program should achieve.\n\t- Input: Describe the format of the input.\n\t- Output: Describe the expected output format.\n\t- Sample Test Cases: List inputs and expected outputs including edge cases."
         },
-
         {
-          id: "sc_day_10_t7",
-          title: "Explaining HTML and CSS Code with GenAI",
-          explanation:
-            "• Generative AI helps learners understand difficult code by first explaining what the code does overall and then breaking it into individual steps.\n• This step-by-step explanation makes code easier to understand for beginners.\n\n• Prompts where AI acts like a teacher explaining code to a school student help remove fear and confusion around reading code.\n\n• By understanding code logic clearly, learners gain confidence and improve their coding skills.\n\n• Example: When a learner encounters an HTML file they do not understand, Gen AI can explain the purpose of the file, then describe each tag and style rule in simple language.",
+          "id": "sc_day_10_t7",
+          "title": "Using AI for Quiz Generation",
+          "explanation": "• Testing knowledge is a critical part of learning — AI can create personalized quizzes.\n• Comprehensive quiz prompt includes:\n\t- Variety of question types: MCQ, true/false, short answer.\n\t- Questions covering different aspects of the concept.\n\t- AI waits for your response before moving to the next question.\n\t- Explains correct answer and why your response was right or wrong.\n\n• To increase difficulty, follow up with:\n\t- \"Increase the difficulty of questions on [concept] and ask hard, tricky questions. If I can't answer, provide explanations.\""
         },
-
         {
-          id: "sc_day_10_t8",
-          title: "AI Tools for Accelerated Learning of HTML and CSS",
-          explanation:
-            "• Several AI tools are designed to support learning by organizing, summarizing, and exploring content efficiently.\n• These tools help learners manage study material and deepen understanding.\n\n• Tools such as NotebookLM, Perplexity AI, YouLearn, and StudyPal provide features like document summarization, mind maps, study guides, citations, and real-time answers.\n\n• These tools complement Generative AI by improving research, revision, and structured learning.\n\n• Example: A learner can upload HTML and CSS notes into NotebookLM to create summaries and mind maps, and use Perplexity AI to search for explanations with reliable sources and follow-up questions.",
-        },
-      ],
-    },
+          "id": "sc_day_10_t8",
+          "title": "Using AI for Coding Problem Generation",
+          "explanation": "• AI can generate personalized coding challenges based on topics you've learned.\n• Comprehensive problem generation prompt includes:\n\t- Clearly explain the task and what needs to be accomplished.\n\t- Define input format with constraints (size, types, edge cases).\n\t- Specify expected output format and constraints.\n\t- Provide sample test cases with input and expected output.\n\t- Include edge cases: empty inputs, large numbers, etc.\n\t- Ensure the problem is challenging but solvable with learned concepts.\n\t- After submission, AI reviews the solution and suggests improvements."
+        }
+      ]
+    }
   ],
 
   11: [
@@ -626,236 +506,249 @@ export const recapContent = {
 
   12: [
     {
-      id: "sc_day_12",
-      title: "Variables & Datatypes in JavaScript",
-      topics: [
+      "id": "sc_day_12",
+      "title": "Variables & Datatypes in JavaScript",
+      "topics": [
         {
-          id: "sc_day_12_t1",
-          title: "What is a Variable? Variable Declaration in JavaScript",
-          explanation:
-            "• A variable in JavaScript is like a container used to store data values.\n• These values can represent numbers, text, or other data types that a program needs to work with.\n• The value stored in a variable can change during program execution, depending on how the variable is declared.\n\n• Every value stored inside a variable is called data.\n• Variables help programmers store data once and reuse or update it multiple times without rewriting the value again and again.\n\n• JavaScript allows variable declaration using let, const, and var.\n\n• Example: Imagine a program that stores a user's age. Initially, the age is 10.\n• Later, when the user grows older, the value needs to be updated.\n• Instead of changing the value everywhere in the program, the programmer changes it in one place by updating the variable.\n• This shows how variables act as containers whose values can change.",
+          "id": "sc_day_12_t1",
+          "title": "What is a Variable?",
+          "explanation": "• Variables are like containers for storing values.\n• Values stored in variables can be changed.\n• Every value stored is a type of data.\n\n• In JavaScript, a variable can be declared in 3 ways:\n\t- let\n\t- const\n\t- var"
         },
-
         {
-          id: "sc_day_12_t2",
-          title: "let, const, and var — Differences and Examples",
-          explanation:
-            "• JavaScript provides three keywords to declare variables, each with different behavior.\n\n• let allows variable declaration without assigning a value initially.\n• Variables declared using let can be reassigned later, making them useful when values change during execution.\n\n• const requires initialization at the time of declaration.\n• Once a value is assigned, it cannot be changed.\n• Attempting to reassign a const variable results in an error.\n\n• var is an older way of declaring variables.\n• Variables declared with var can be reassigned and redeclared, which can cause unexpected issues.\n• Because of this, let and const are recommended over var.\n\n• Example:\n• Using let, a variable can first store 10 and later be updated to store 15.\n• Using const, once a value like 7 is stored, it remains fixed throughout the program.\n• Using var, the same variable name can be declared again and assigned a new value, which may confuse the program flow.",
-          examples: [
+          "id": "sc_day_12_t2",
+          "title": "Declaring Variables – let",
+          "explanation": "• Initialization is not mandatory with let.\n• Variables declared with let can be reassigned.\n\n• Example:\n\t- let x; x = 10; → prints 10\n\t- x = 15; → prints 15",
+          "examples": [
             {
-              language: "javascript",
-              code: 'let age = 10;\nage = 15;\nconsole.log(age);\n\nconst pi = 7;\nconsole.log(pi);\n\nvar name = "Alice";\nvar name = "Bob";\nconsole.log(name);',
-              explanation:
-                "• let allows reassignment — age changes from 10 to 15.\n• const value is fixed — pi stays 7 and cannot be changed.\n• var allows redeclaration — name is declared twice without error.",
-            },
-          ],
+              "language": "javascript",
+              "code": "let x;\nx = 10;\nconsole.log(x);\nx = 15;\nconsole.log(x);",
+              "explanation": "• let allows declaring a variable without a value.\n• The variable can be reassigned to a new value later."
+            }
+          ]
         },
-
         {
-          id: "sc_day_12_t3",
-          title: "JavaScript Variable Naming Rules",
-          explanation:
-            "• JavaScript follows strict rules for naming variables to ensure programs run correctly and are easy to understand.\n\n• A variable name must start with a letter, underscore (_), or dollar sign ($).\n• It can include letters, numbers, underscores, and dollar signs after the first character.\n\n• Variable names cannot start with numbers.\n• Variable names cannot contain spaces.\n• Variable names cannot use reserved keywords — words already used by JavaScript for its own functionality.\n\n• Using meaningful variable names improves readability and reduces errors.\n\n• Example:\n• userName clearly indicates it stores a user's name — valid.\n• _totalAmount suggests a stored total value — valid.\n• 2name starts with a number — invalid and causes an error.\n• user name contains a space — invalid.\n• Using let as a variable name is also not allowed because JavaScript already uses it as a keyword.",
-        },
-
-        {
-          id: "sc_day_12_t4",
-          title: "JavaScript Data Types and Their Categories",
-          explanation:
-            "• In JavaScript, every value belongs to a data type.\n• Data types define what kind of data a variable can store.\n• JavaScript data types are divided into two main categories: Primitive and Non-Primitive (Reference) types.\n\n• Primitive data types store a single value.\n• Examples include Number, Boolean, String, and Undefined.\n• These types are simple and store direct values.\n\n• Non-Primitive data types store multiple values or complex data.\n• Examples include Arrays, Objects, and Functions.\n• These types are used to store collections of data or logic.\n\n• Example:\n• A number like 10 is a primitive value because it stores a single number.\n• A string like Hello stores a sequence of characters.\n• An array, on the other hand, can store multiple values together, such as a list of numbers or names.",
-        },
-
-        {
-          id: "sc_day_12_t5",
-          title: "Primitive Data Types and the typeof Operator",
-          explanation:
-            "• Primitive data types include Number, Boolean, String, and Undefined.\n\n• The Number type includes both integers and floating-point values.\n• Boolean values can only be true or false (written in lowercase).\n• Strings represent text and must be written inside single quotes, double quotes, or backticks.\n• Undefined means a variable has been declared but no value has been assigned to it.\n\n• The typeof() operator is used to check the type of a value stored in a variable.\n\n• Example:\n• If a variable stores 900, it is treated as a Number.\n• If it stores 9.2, it is still a Number.\n• A variable storing false is a Boolean.\n• A variable declared but not assigned any value automatically becomes undefined.\n• Using typeof, JavaScript confirms each of these types during execution.",
-          examples: [
+          "id": "sc_day_12_t3",
+          "title": "Declaring Variables – const",
+          "explanation": "• Initialization is mandatory with const.\n• Once a value is assigned, it cannot be reassigned.\n• Declaring const without a value throws a SyntaxError.\n• Trying to reassign a const variable throws a TypeError.",
+          "examples": [
             {
-              language: "javascript",
-              code: "let a = 900;\nconsole.log(typeof(a));\n\nlet b = 9.2;\nconsole.log(typeof(b));\n\nlet c = false;\nconsole.log(typeof(c));\n\nlet d;\nconsole.log(typeof(d));",
-              explanation:
-                "• typeof(900) returns 'number'.\n• typeof(9.2) returns 'number' — both integers and floats are Number type.\n• typeof(false) returns 'boolean'.\n• typeof(undefined variable) returns 'undefined'.",
-            },
-          ],
+              "language": "javascript",
+              "code": "const x = 7;\nx = 9;",
+              "explanation": "• const requires a value at declaration.\n• Reassigning throws: TypeError: Assignment to constant variable."
+            }
+          ]
+        },
+        {
+          "id": "sc_day_12_t4",
+          "title": "Declaring Variables – var",
+          "explanation": "• var is an older way of declaring variables.\n• Reassign and redeclare are both possible with var.\n• Still supported but not recommended.\n• Use let and const instead to avoid common pitfalls from redeclaring the same variable.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "var x;\nx = 10;\nconsole.log(x);\nvar x = 15;\nconsole.log(x);",
+              "explanation": "• var allows redeclaring the same variable without errors.\n• This can cause unexpected bugs — prefer let and const."
+            }
+          ]
+        },
+        {
+          "id": "sc_day_12_t5",
+          "title": "Variable Naming Rules",
+          "explanation": "• Valid variable names:\n\t- Must start with a letter, underscore (_), or dollar sign ($).\n\t- Can contain letters, numbers, _, $.\n• Invalid variable names:\n\t- Cannot start with a number. Example: 2name\n\t- Cannot use spaces. Example: user name\n\t- Cannot use reserved keywords. Example: let, if, for\n\n• Reserved names are words already used by JavaScript:\n\t- let, var, const, if, else, for, while, return, function, class, etc."
+        },
+        {
+          "id": "sc_day_12_t6",
+          "title": "Data Types in JavaScript",
+          "explanation": "• JavaScript values are of two categories:\n\t- Primitive Types: Store single values.\n\t- Non-Primitive (Reference) Types: Store multiple values.\n\n• Primitive Types:\n\t- Number: All integers and floats. Example: 900, 9.2\n\t- Boolean: true or false (lowercase only).\n\t- String: Stream of characters in single, double, or backtick quotes.\n\t- Undefined: Variable declared but no value assigned.\n\n• Non-Primitive Types:\n\t- Array\n\t- Object\n\t- Functions",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "let a = 900;\nlet b = 9.2;\nconsole.log(typeof(a));\nconsole.log(typeof(b));\n\nlet isApproved = false;\nconsole.log(typeof(isApproved));\n\nconsole.log('Hello');\nconsole.log(\"Hello\");\nconsole.log(`Hello`);\n\nlet age;\nconsole.log(age);",
+              "explanation": "• typeof(900) and typeof(9.2) both return number.\n• typeof(false) returns boolean.\n• Strings can use single, double, or backtick quotes.\n• Undeclared variable prints undefined."
+            }
+          ]
+        },
+        {
+          "id": "sc_day_12_t7",
+          "title": "Semicolons in JavaScript",
+          "explanation": "• Semicolons terminate statements in JavaScript.\n• They mark where one statement ends and another begins.\n\n• JavaScript has Automatic Semicolon Insertion (ASI):\n\t- Automatically inserts semicolons when omitted.\n\t- Relying on ASI can lead to unexpected bugs.\n\n• Best practice — always use semicolons:\n\t- Clarity: Statements are clearly separated.\n\t- Avoid Errors: Prevents issues caused by ASI.\n\t- Consistency: Makes code easier to maintain.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "let x = 10;\nlet y = 20;\nconsole.log(x + y);",
+              "explanation": "• Each statement ends with a semicolon.\n• Output: 30"
+            }
+          ]
         },
 
-        {
-          id: "sc_day_12_t6",
-          title: "Importance of Semicolons in JavaScript",
-          explanation:
-            "• Semicolons are used to mark the end of statements in JavaScript.\n• They help the JavaScript engine understand where one instruction ends and the next begins.\n\n• JavaScript has a feature called Automatic Semicolon Insertion (ASI), which automatically inserts semicolons when they are missing.\n• However, relying on ASI can lead to unexpected bugs and confusing behavior.\n\n• Therefore, using semicolons consistently is considered a best practice for clarity, error prevention, and maintainability.\n\n• Example:\n• When multiple statements are written on the same line without semicolons, JavaScript may misinterpret them.\n• This can cause incorrect results or errors.\n• By always adding semicolons, developers clearly separate instructions, making the code easier to read and less error-prone.",
-          examples: [
-            {
-              language: "javascript",
-              code: "let x = 10;\nlet y = 20;\nconsole.log(x + y);",
-              explanation:
-                "• Each statement ends with a semicolon.\n• This clearly separates variable declarations from the console.log call.\n• The output is 30 — clean and predictable.",
-            },
-          ],
-        },
-      ],
-    },
+      ]
+    }
   ],
 
   13: [
     {
-      id: "sc_day_13",
-      title: "Introduction to CSS | Part 1",
-      topics: [
+      "id": "sc_day_13",
+      "title": "Introduction to CSS – Part 1",
+      "topics": [
         {
-          id: "sc_day_13_t1",
-          title: "Container Element — The div Tag",
-          explanation:
-            "• The HTML div element defines a container.\n• A container is used to group other HTML elements together.\n• It helps in organizing content and applying styles efficiently.\n• The div tag is the most commonly used container in HTML.\n• It is a block-level element, meaning it takes up the full width of its parent by default.\n\n• Containers make it easy to apply a single style to a group of elements at once.\n• They are essential for building layouts and structuring page content.",
-          examples: [
+          "id": "sc_day_13_t1",
+          "title": "Container Element – div",
+          "explanation": "• The HTML <div> element defines a container.\n• Used to group other elements together.\n• Helps in organizing content and applying styles efficiently.\n\n• Example: wrapping h1, p, and button inside a div groups them as one unit.",
+          "examples": [
             {
-              language: "html",
-              code: "<div>\n  <h1>Tourism</h1>\n  <p>Plan your trip wherever you want to go</p>\n  <button>Get Started</button>\n</div>",
-              explanation:
-                "• The div wraps the h1, p, and button elements into one group.\n• Any style applied to the div will affect all elements inside it.\n• This makes layout and styling much easier to manage.",
-            },
-          ],
+              "language": "html",
+              "code": "<div>\n  <h1>Tourism</h1>\n  <p>Plan your trip wherever you want to go</p>\n  <button>Get Started</button>\n</div>",
+              "explanation": "• div wraps multiple elements into a single container.\n• Styles applied to the div affect all elements inside it."
+            }
+          ]
         },
-
         {
-          id: "sc_day_13_t2",
-          title: "CSS Syntax",
-          explanation:
-            "• CSS (Cascading Style Sheets) is used to style HTML elements.\n• It controls colors, fonts, spacing, layout, and alignment, making webpages visually appealing and well-structured.\n\n• CSS follows a specific syntax structure:\n• A selector targets the HTML element to style.\n• A property defines what aspect to style (such as color or font-size).\n• A value defines how to style it (such as red or 16px).\n\n• Multiple property-value pairs can be written inside a single rule block.\n• CSS rules apply styles based on priority and cascading order.",
-          examples: [
+          "id": "sc_day_13_t2",
+          "title": "CSS Syntax",
+          "explanation": "• CSS rules follow a specific structure called syntax.\n• Selector: Selects the HTML element to style.\n• Property: Defines what to style (e.g., color, font, alignment).\n• Value: Defines how to style it.\n\n• Format:\n\t- selector { property: value; }",
+          "examples": [
             {
-              language: "css",
-              code: "selector {\n  property1: value1;\n  property2: value2;\n}",
-              explanation:
-                "• selector — targets the HTML element to style.\n• property — defines what to style (e.g., color, font-size).\n• value — defines how to style it (e.g., red, 16px).\n• Multiple properties can be listed inside one rule block.",
-            },
-          ],
+              "language": "css",
+              "code": "selector {\n  property1: value1;\n  property2: value2;\n}",
+              "explanation": "• Each property-value pair ends with a semicolon.\n• Multiple properties can be defined inside one rule block."
+            }
+          ]
         },
-
         {
-          id: "sc_day_13_t3",
-          title: "Text Align Property and Class Selectors",
-          explanation:
-            "• The CSS text-align property specifies the horizontal alignment of the text in an HTML element.\n\n• Possible values for text-align:\n• center — Aligns the text to the center.\n• left — Aligns the text to the left.\n• right — Aligns the text to the right.\n\n• Class selectors are used to apply styles to multiple HTML elements.\n• They are defined using a dot (.) followed by the class name.\n• All HTML elements that have that class name will receive the same styles.\n\n• For example, a class named h-center with text-align: center will center the text of every element that uses this class.",
-          examples: [
+          "id": "sc_day_13_t3",
+          "title": "Text Align Property",
+          "explanation": "• The CSS text-align property specifies the horizontal alignment of text in an HTML element.\n\n• Values:\n\t- center: Aligns the text to the center.\n\t- left: Aligns the text to the left.\n\t- right: Aligns the text to the right.",
+          "examples": [
             {
-              language: "css",
-              code: ".h-center {\n  text-align: center;\n}",
-              explanation:
-                "• The dot before h-center defines a class selector.\n• Any HTML element with class='h-center' will have its text centered.\n• Class selectors can be reused on multiple elements across the page.",
-            },
-            {
-              language: "html",
-              code: '<!DOCTYPE html>\n<html>\n  <head></head>\n  <body>\n    <div class="h-center">\n      <h1>Tourism</h1>\n      <p>Plan your trip wherever you want to go</p>\n      <button>Get Started</button>\n    </div>\n  </body>\n</html>',
-              explanation:
-                "• The div has class h-center applied to it.\n• This centers all text inside the div — the heading, paragraph, and button.\n• The CSS class selector targets the div and applies text-align: center.",
-            },
-          ],
+              "language": "css",
+              "code": ".h-center {\n  text-align: center;\n}",
+              "explanation": "• .h-center is a class selector applied to any element with class=\"h-center\".\n• All text inside that element will be centered."
+            }
+          ]
         },
-
         {
-          id: "sc_day_13_t4",
-          title: "Frequently Asked Interview Questions",
-          explanation:
-            "• What is CSS?\n• CSS (Cascading Style Sheets) is used to style HTML elements.\n• It controls colors, fonts, spacing, layout, and alignment, making webpages visually appealing and well-structured.\n\n• What are the fundamentals of CSS?\n• The fundamentals of CSS are:\n• Selector — selects the HTML element to style.\n• Property — defines what to style.\n• Value — defines how to style.\n• CSS rules follow specific syntax and apply styles based on priority and cascading order.\n\n• What is a container in HTML?\n• A container is an HTML element used to group other elements together.\n• The div tag is the most commonly used container.\n• It helps in organizing content and applying styles efficiently.\n\n• What are class selectors in CSS?\n• Class selectors are used to apply styles to multiple HTML elements.\n• They are defined using a dot (.) followed by the class name.\n• For example, .h-center { text-align: center; } applies styles to all elements that have the h-center class.",
+          "id": "sc_day_13_t4",
+          "title": "What is CSS?",
+          "explanation": "• CSS stands for Cascading Style Sheets.\n• Used to style HTML elements.\n• Controls:\n\t- Colors\n\t- Fonts\n\t- Spacing\n\t- Layout\n\t- Alignment\n• Makes webpages visually appealing and well-structured."
         },
-      ],
-    },
+        {
+          "id": "sc_day_13_t5",
+          "title": "Fundamentals of CSS",
+          "explanation": "• CSS has three core fundamentals:\n\t- Selector: Selects the HTML element to target.\n\t- Property: Defines what aspect to style.\n\t- Value: Defines how to apply the style.\n• CSS rules apply styles based on priority and cascading order."
+        },
+      ]
+    }
   ],
 
   14: [
     {
-      id: "sc_day_14",
-      title: "Introduction to CSS | Part 2",
-      topics: [
+      "id": "sc_day_14",
+      "title": "Introduction to CSS | Part 2",
+      "topics": [
         {
-          id: "sc_day_14_t1",
-          title: "Concept Overview",
-          explanation:
-            "• This section introduces you to CSS Text and Background properties. You will understand how the 'color' property is used to change the text color of elements like headings and paragraphs. You will also learn how the 'background-color' property is used to style the background of elements such as divs, sections, and cards. Understanding how CSS selectors (like class selectors) work is important because CSS applies styles based on these selectors. This conceptual clarity will help you understand how structure (HTML) and styling (CSS) work together to build visually appealing web pages. Take time to understand how properties, values, and selectors connect before moving to practice.",
+          "id": "sc_day_14_t1",
+          "title": "CSS Color Property",
+          "explanation": "• The CSS color property specifies the color of the text.\n• Applied using a class selector.\n\n• Sample color values:\n\t- blue\n\t- grey\n\t- lightblue\n\t- orange\n\t- red\n\t- green",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".main-heading {\n  color: blue;\n}\n.paragraph {\n  color: grey;\n}",
+              "explanation": "• .main-heading sets the heading text color to blue.\n• .paragraph sets the paragraph text color to grey."
+            }
+          ]
         },
         {
-          id: "sc_day_14_t2",
-          title: "Hands-on Practice",
-          explanation:
-            "• In this section, you will apply CSS text and background properties to real HTML elements. You will create class selectors such as '.main-heading', '.paragraph', and '.card' and apply 'color' and 'background-color' properties to them. Practice changing different color values like blue, red, green, lightblue, and grey. Modify the HTML structure and observe how CSS affects the output. Try experimenting with different elements and see how the visual appearance changes instantly in the browser. This practical experimentation strengthens your understanding of how CSS styling works in real-world scenarios.",
+          "id": "sc_day_14_t2",
+          "title": "CSS Background Color Property",
+          "explanation": "• The CSS background-color property specifies the background color of an HTML element.\n• Can be applied to any element including divs, headings, and buttons.",
+          "examples": [
+            {
+              "language": "css",
+              "code": ".card {\n  background-color: lightblue;\n}",
+              "explanation": "• .card sets the background color of the div to lightblue.\n• All content inside the div sits on top of this background."
+            }
+          ]
         },
-      ],
-    },
+        {
+          "id": "sc_day_14_t3",
+          "title": "Combining Color & Background Color",
+          "explanation": "• color and background-color can be used together to style elements.\n• color targets the text inside an element.\n• background-color targets the background behind the content.",
+          "examples": [
+            {
+              "language": "html",
+              "code": "<div class=\"card\">\n  <h1 class=\"main-heading\">Tourism</h1>\n  <p class=\"paragraph\">Plan your trip wherever you want to go</p>\n</div>",
+              "explanation": "• .card gives the container a lightblue background.\n• .main-heading makes the heading text blue.\n• .paragraph makes the paragraph text grey."
+            }
+          ]
+        }
+      ]
+    }
   ],
 
   15: [
     {
-      id: "sc_day_15",
-      title: "Type Conversion",
-      topics: [
+      "id": "sc_day_15",
+      "title": "Type Conversion",
+      "topics": [
         {
-          id: "sc_day_15_t1",
-          title: "JavaScript Dialog Boxes",
-          explanation:
-            "• JavaScript provides built-in dialog boxes for user interaction.\n\n• alert() displays a message in a popup and waits for the user to press OK.\n• confirm() asks the user to confirm an action and returns true (OK) or false (Cancel).\n• prompt() takes input from the user and always returns the value as a string.\n\n• Important: No matter what you enter in prompt(), it is treated as a string.",
+          "id": "sc_day_15_t1",
+          "title": "JavaScript Dialog Boxes",
+          "explanation": "• alert: Displays a message in a pop-up and waits for the user to press OK.\n\t- Example: alert(\"Hello World\");\n\n• confirm: Asks the user to confirm an action with OK or Cancel.\n\t- Returns true if OK is pressed, false otherwise.\n\t- Example: const choice = confirm(\"Do you want to logout?\");\n\n• prompt: Takes input from the user via a text field with OK or Cancel.\n\t- Always returns the input as a string regardless of what is entered.\n\t- Example: const age = prompt(\"Enter your age:\");",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "alert(\"Hello World\");\n\nconst choice = confirm(\"Do you want to logout?\");\nconsole.log(choice);\n\nconst age = prompt(\"Enter your age:\");\nconsole.log(age);",
+              "explanation": "• alert shows a message.\n• confirm returns true or false.\n• prompt returns user input always as a string."
+            }
+          ]
         },
         {
-          id: "sc_day_15_t2",
-          title: "String Concatenation",
-          explanation:
-            '• The + operator concatenates strings in JavaScript.\n• If both operands are strings, they are joined together.\n• Example: "Elon" + " " + "Musk" becomes "Elon Musk".\n• When using prompt inputs, values are treated as strings, so + performs concatenation instead of addition.',
+          "id": "sc_day_15_t2",
+          "title": "String Concatenation with +",
+          "explanation": "• When + is used with two strings, JavaScript performs string concatenation.\n• prompt() always returns a string, so adding two prompt values with + concatenates them.\n\n• Example: Entering \"Elon\" and \"Musk\" and using + results in \"Elon Musk\".",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "const first_name = prompt(\"Enter first name\");\nconst last_name = prompt(\"Enter last name\");\nconsole.log(first_name + \" \" + last_name);",
+              "explanation": "• + between two strings concatenates them.\n• A space string \" \" is added between first and last name."
+            }
+          ]
         },
         {
-          id: "sc_day_15_t3",
-          title: "Type Conversion Overview",
-          explanation:
-            "• Type conversion is the process of converting one data type into another.\n• JavaScript supports two types of conversion:\n\n• Implicit Conversion → Automatically handled by JavaScript.\n• Explicit Conversion → Manually done by the programmer using functions.",
+          "id": "sc_day_15_t3",
+          "title": "Type Conversion – Overview",
+          "explanation": "• Type conversion is the process of converting data of one type to another.\n• Example: Converting a String to a Number.\n\n• Two types of type conversion:\n\t- Implicit: JavaScript automatically converts one data type into another when needed.\n\t- Explicit: The programmer manually converts one data type using functions."
         },
         {
-          id: "sc_day_15_t4",
-          title: "Implicit Type Conversion",
-          explanation:
-            '• Implicit conversion happens automatically.\n\n• When using + with a string, JavaScript converts numbers to strings.\n• Example: "5" + 5 results in "55".\n\n• When using arithmetic operators like -, JavaScript converts strings to numbers.\n• Example: "5" - 5 results in 0.\n\n• Implicit conversion can cause unexpected bugs if not handled carefully.',
+          "id": "sc_day_15_t4",
+          "title": "Implicit Type Conversion",
+          "explanation": "• JavaScript automatically converts data types when needed.\n\n• Addition with string:\n\t- \"5\" + 5 → 55 (number is converted to string because one operand is a string)\n\n• Subtraction with string:\n\t- \"5\" - 5 → 0 (string is converted to number because - is an arithmetic operator)\n\n• Note: Implicit conversion can cause bugs if you are not aware of how JavaScript handles mixed types.",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "console.log(\"5\" + 5);\nconsole.log(\"5\" - 5);",
+              "explanation": "• \"5\" + 5 prints 55 — number is coerced to string.\n• \"5\" - 5 prints 0 — string is coerced to number."
+            }
+          ]
         },
         {
-          id: "sc_day_15_t5",
-          title: "Explicit Type Conversion",
-          explanation:
-            "• Explicit conversion is manually converting data types to avoid unexpected results.\n• Common conversion methods include:\n\n• Number() → Converts value to number.\n• String() → Converts value to string.\n• toString() → Converts number to string.\n• Boolean() → Converts value to boolean.",
+          "id": "sc_day_15_t5",
+          "title": "Explicit Type Conversion",
+          "explanation": "• Explicit conversion manually converts data types to avoid unexpected results.\n\n• Types of explicit conversions:\n\t- String to Number: Number()\n\t- Number to String: String()\n\t- Number to String: toString()\n\t- Any to Boolean: Boolean()",
+          "examples": [
+            {
+              "language": "javascript",
+              "code": "let a = prompt(\"Enter digit a\");\nlet b = prompt(\"Enter digit b\");\nlet result = Number(a) + Number(b);\nconsole.log(result);\n\nlet x = 10;\nx = String(x);\nconsole.log(typeof(x));\n\nlet y = 20;\ny = y.toString();\nconsole.log(typeof(y));\n\nlet z = 1;\nz = Boolean(z);\nconsole.log(z);",
+              "explanation": "• Number() converts string input to number so + performs addition not concatenation.\n• String() and toString() both convert a number to a string.\n• Boolean(1) returns true, Boolean(0) returns false."
+            }
+          ]
         },
         {
-          id: "sc_day_15_t6",
-          title: "String to Number Conversion",
-          explanation:
-            '• Number() converts a string into a number if the value is valid.\n• Example: Number("5") becomes 5.\n\n• When adding numbers taken from prompt(), convert them using Number() to avoid string concatenation.\n• Example: Number(a) + Number(b) ensures proper numeric addition.',
-        },
-
-        {
-          id: "sc_day_15_t7",
-          title: "Number to String Conversion",
-          explanation:
-            '• String() converts numbers into strings.\n• toString() method also converts numbers to strings.\n• Example: 10 becomes "10" after conversion.\n• After conversion, typeof will return string.',
-        },
-
-        {
-          id: "sc_day_15_t8",
-          title: "Boolean Conversion",
-          explanation:
-            '• Boolean() converts values into true or false.\n\n• Examples:\n• Boolean(0) → false\n• Boolean(1) → true\n• Boolean("") → false\n• Boolean("Hello") → true\n\n• Non-empty values are generally true, empty or zero-like values are false.',
-        },
-
-        {
-          id: "sc_day_15_t9",
-          title: "Truthy and Falsy Values",
-          explanation:
-            '• Every value in JavaScript is either truthy or falsy.\n\n• Falsy values (7 total):\n• false, 0, -0, "", null, undefined, NaN.\n\n• All other values are Truthy.\n• Examples of truthy values: true, 1, -1, "hello", "0", [], {}.\n• Understanding truthy and falsy helps in writing clean conditional statements.',
-        },
-
-        {
-          id: "sc_day_15_t10",
-          title: "Interview Quick Points",
-          explanation:
-            "• Type conversion changes one data type into another.\n• Implicit conversion is automatic and done by JavaScript.\n• Explicit conversion is manual and done using functions like Number(), String(), and Boolean().\n• Understanding type conversion prevents logical bugs in applications.",
-        },
-      ],
-    },
+          "id": "sc_day_15_t6",
+          "title": "Truthy and Falsy Values",
+          "explanation": "• Every value in JavaScript is treated as either truthy or falsy in conditions.\n\n• Falsy values (only 6):\n\t- false\n\t- 0 and -0\n\t- \"\" (empty string)\n\t- null\n\t- undefined\n\t- NaN\n\n• Truthy values (infinite), examples:\n\t- true, 1, -1\n\t- \"hello\", \"0\", \"false\"\n\t- [] (empty array)\n\t- {} (empty object)"
+        }
+      ]
+    }
   ],
 
   16: [
